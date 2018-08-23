@@ -1,6 +1,4 @@
-**------------------------------!!!INTERNAL USE ONLY!!!------------------------------------**
-
-# Infineon's OPTIGA&trade; Trust X1 hostcode repository
+# Infineon's OPTIGA&trade; Trust X1 hostcode
 
 ## Description
 
