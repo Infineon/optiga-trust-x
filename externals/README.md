@@ -1,0 +1,1 @@
+Store here external components, which are required to run examples or projects
