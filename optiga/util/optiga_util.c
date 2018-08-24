@@ -607,40 +607,42 @@ optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms)
 	optiga_lib_status_t status = OPTIGA_LIB_ERROR;
 	sOpenApp_d sOpenApp;
 
-	// OPTIGA Initialisation phase
-	//Invoke optiga_comms_open to initialize the IFX I2C Protocol and security chip
-	optiga_comms_status = OPTIGA_COMMS_BUSY;
-	p_comms.upper_layer_handler = __optiga_util_comms_event_handler;
-	status = optiga_comms_open(&p_comms);
-	if(E_COMMS_SUCCESS != status)
-	{
-		configPRINTF( ("Failure: optiga_comms_open(): 0x%04X\n\r", status) );
-		break;
-	}
+	do {
+		// OPTIGA Initialisation phase
+		//Invoke optiga_comms_open to initialize the IFX I2C Protocol and security chip
+		optiga_comms_status = OPTIGA_COMMS_BUSY;
+		p_comms.upper_layer_handler = __optiga_util_comms_event_handler;
+		status = optiga_comms_open(&p_comms);
+		if(E_COMMS_SUCCESS != status)
+		{
+			status = OPTIGA_LIB_ERROR;
+			break;
+		}
 
-	//Wait until IFX I2C initialization is complete
-	while(optiga_comms_status == OPTIGA_COMMS_BUSY)
-	{
-		pal_os_timer_delay_in_milliseconds(1);
-	}
+		//Wait until IFX I2C initialization is complete
+		while(optiga_comms_status == OPTIGA_COMMS_BUSY)
+		{
+			pal_os_timer_delay_in_milliseconds(1);
+		}
 
-	if((OPTIGA_COMMS_SUCCESS != status) || (optiga_comms_status == OPTIGA_COMMS_ERROR))
-	{
-		configPRINTF( ("Failure: optiga_comms_status(): 0x%04X\n\r", status) );
-		break;
-	}
-	
-	//Set OPTIGA comms context in Command library before invoking the use case APIs or command library APIs
-	//This context will be used by command libary to communicate with OPTIGA using IFX I2C Protocol.
-	CmdLib_SetOptigaCommsContext(p_comms);
+		if((OPTIGA_COMMS_SUCCESS != status) || (optiga_comms_status == OPTIGA_COMMS_ERROR))
+		{
+			status = OPTIGA_LIB_ERROR;
+			break;
+		}
+		
+		//Set OPTIGA comms context in Command library before invoking the use case APIs or command library APIs
+		//This context will be used by command libary to communicate with OPTIGA using IFX I2C Protocol.
+		CmdLib_SetOptigaCommsContext(p_comms);
 
-	//Open the application in Security Chip
-	sOpenApp.eOpenType = eInit;
-	status = CmdLib_OpenApplication(&sOpenApp);
-	if(CMD_LIB_OK == status)
-	{
-		status = OPTIGA_LIB_SUCCESS;
-	}
+		//Open the application in Security Chip
+		sOpenApp.eOpenType = eInit;
+		status = CmdLib_OpenApplication(&sOpenApp);
+		if(CMD_LIB_OK == status)
+		{
+			status = OPTIGA_LIB_SUCCESS;
+		}
+	} while(FALSE);
 
 	return status;
 }

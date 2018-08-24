@@ -137,7 +137,6 @@ typedef enum eOID_d
  * Initializes the communication with OPTIGA for the given instance. <br>
  *
  *<b>Pre Conditions:</b>
- * - The optiga_comms_open() function should be called
  *
  *<b>API Details:</b>
  * - Initiate open application command to optiga.<br>
@@ -170,9 +169,8 @@ typedef enum eOID_d
  * \param[in]      p_comms       Pointer to the communication parameters initialised before
  * - Error codes from lower layer will be returned as it is.<br>
  *
- * \retval  #OPTIGA_UTIL_SUCCESS                               Successful invocation of optiga cmd module
- * \retval  #OPTIGA_UTIL_ERROR_INVALID_INPUT                   Wrong Input arguments provided
- * \retval  #OPTIGA_UTIL_ERROR_INSTANCE_IN_USE                 Same instance with ongoing request servicing used
+ * \retval  #OPTIGA_LIB_SUCCESS                                Successful invocation of optiga cmd module
+ * \retval  #OPTIGA_LIB_ERROR								   Error during function execurition
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
 optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms);
@@ -206,7 +204,6 @@ optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms);
  *
  * \retval  #OPTIGA_UTIL_SUCCESS                               Successful invocation of optiga cmd module
  * \retval  #OPTIGA_UTIL_ERROR_INVALID_INPUT                   Wrong Input arguments provided
- * \retval  #OPTIGA_UTIL_ERROR_INSTANCE_IN_USE                 Same instance with ongoing request servicing used
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
 optiga_lib_status_t optiga_util_read_data(uint16_t optiga_oid,
