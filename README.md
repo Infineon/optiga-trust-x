@@ -28,20 +28,22 @@ The [OPTIGA™ Trust X1](https://www.infineon.com/dgdl/Infineon-DPS310-DS-v01_00
 ## Hostcode strucuture
 ### Repository overview
 The four folders in this repository are: 
-1) certifcates - X.509 CA certificates used either to verify an End Device Certificate (stored inside OPTIGA™ Trust X) or used as an Trust Anchor CA stored by default inside a dedicated Trust Anchor certificate slot inside OPTIGA™ Trust X
-    * Infineon OPTIGA(TM) Trust X CA 101 - Certificate Authority certificate used to issue productive security chip samples
-    * OPTIGA_Trust_X_InfineonTestCA - Certificate Authority certificate used to issue test security ship samples
-2) examples
-    * optiga - a collection of examples showing usage of various tool box functions of the security chip
-    * ecdsa_utils - helping function to encode/decode ecdsa signatures to/from ASN.1 format
-    * mbedtls - porting functions to offload crypto operation onto the security chip for mbedTLS (compatible with versions >= 2.7)
-3) optiga - core library, see moredetails in the [Hostcode architecture](#hostcode_architecture) section
-4) pal - Supported Platform Abstraction Layer implementation. See [Porting guide](#porting_guide)
+1) **certifcates** - X.509 CA certificates used either to verify an End Device Certificate (stored inside OPTIGA™ Trust X) or used as an Trust Anchor CA stored by default inside a dedicated Trust Anchor certificate slot inside OPTIGA™ Trust X
+    * **Infineon OPTIGA(TM) Trust X CA 101** - Certificate Authority certificate used to issue productive security chip samples
+    * **OPTIGA_Trust_X_InfineonTestCA** - Certificate Authority certificate used to issue test security ship samples
+2) **examples**
+    * **optiga** - a collection of examples showing usage of various tool box functions of the security chip
+    * **ecdsa_utils** - helping function to encode/decode ecdsa signatures to/from ASN.1 format
+    * **mbedtls** - porting functions to offload crypto operation onto the security chip for mbedTLS (compatible with versions >= 2.7)
+3) **optiga** - core library, see moredetails in the [Hostcode architecture](#hostcode_architecture) section
+4) **pal** - Supported Platform Abstraction Layer implementation. See [Porting guide](#porting_guide)
 
 ### <a name="hostcode_architecture"></a>Hostcode architecture
+
 ![hostcode architecture](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic.jpg)
 
 ### Hostcode architecture with mapped sources/headers
+The figure uses relative to <repo_root>/optiga/ paths
 ![hostcode architecture mapped](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic_mapped.jpg)
 
 ## Get started and Application Notes
