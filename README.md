@@ -42,6 +42,8 @@ The four folders in this repository are:
 
 ![hostcode architecture](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic.jpg)
 
+Detailed modules description you can find in [Wiki](https://github.com/Infineon/optiga-trust-x/wiki) of the project
+
 ### Hostcode architecture with mapped sources/headers
 The figure uses relative to <repo_root>/optiga/ paths
 
