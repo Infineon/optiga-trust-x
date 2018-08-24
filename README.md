@@ -44,6 +44,7 @@ The four folders in this repository are:
 
 ### Hostcode architecture with mapped sources/headers
 The figure uses relative to <repo_root>/optiga/ paths
+
 ![hostcode architecture mapped](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic_mapped.jpg)
 
 ## Get started and Application Notes
