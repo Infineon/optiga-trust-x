@@ -32,6 +32,7 @@
 #include "optiga/optiga_util.h"
 #include "optiga/comms/optiga_comms.h"
 #include "optiga/cmd/CommandLib.h"
+#include "optiga/pal/pal_os_timer.h"
 
 ///Length of metadata
 #define LENGTH_METADATA             0x1C
@@ -164,7 +165,7 @@ typedef enum eAccessConditionID_d
     eACID_NEV = 0xFF
 } eAccessConditionID_d;
 
-
+static host_lib_status_t optiga_comms_status;
 
 #ifdef MODULE_ENABLE_READ_WRITE
 /**
@@ -596,11 +597,39 @@ static int32_t __optiga_util_verify_ac(eMetaDataTag_d PeMetaDataTag, sACVector_d
     return i4Status;
 }
 
+static void __optiga_util_comms_event_handler(void* upper_layer_ctx, host_lib_status_t event)
+{
+	optiga_comms_status = event;
+}
+
 optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms)
 {
 	optiga_lib_status_t status = OPTIGA_LIB_ERROR;
 	sOpenApp_d sOpenApp;
 
+	// OPTIGA Initialisation phase
+	//Invoke optiga_comms_open to initialize the IFX I2C Protocol and security chip
+	optiga_comms_status = OPTIGA_COMMS_BUSY;
+	p_comms.upper_layer_handler = __optiga_util_comms_event_handler;
+	status = optiga_comms_open(&p_comms);
+	if(E_COMMS_SUCCESS != status)
+	{
+		configPRINTF( ("Failure: optiga_comms_open(): 0x%04X\n\r", status) );
+		break;
+	}
+
+	//Wait until IFX I2C initialization is complete
+	while(optiga_comms_status == OPTIGA_COMMS_BUSY)
+	{
+		pal_os_timer_delay_in_milliseconds(1);
+	}
+
+	if((OPTIGA_COMMS_SUCCESS != status) || (optiga_comms_status == OPTIGA_COMMS_ERROR))
+	{
+		configPRINTF( ("Failure: optiga_comms_status(): 0x%04X\n\r", status) );
+		break;
+	}
+	
 	//Set OPTIGA comms context in Command library before invoking the use case APIs or command library APIs
 	//This context will be used by command libary to communicate with OPTIGA using IFX I2C Protocol.
 	CmdLib_SetOptigaCommsContext(p_comms);
