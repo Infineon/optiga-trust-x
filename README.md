@@ -27,7 +27,7 @@ The [OPTIGA™ Trust X1](https://www.infineon.com/dgdl/Infineon-DPS310-DS-v01_00
 
 ## Hostcode strucuture
 ### Repository overview
-The four folders in these repository are: 
+The four folders in this repository are: 
 1) certifcates - X.509 CA certificates used either to verify an End Device Certificate (stored inside OPTIGA™ Trust X) or used as an Trust Anchor CA stored by default inside a dedicated Trust Anchor certificate slot inside OPTIGA™ Trust X
     * Infineon OPTIGA(TM) Trust X CA 101 - Certificate Authority certificate used to issue productive security chip samples
     * OPTIGA_Trust_X_InfineonTestCA - Certificate Authority certificate used to issue test security ship samples
