@@ -44,7 +44,6 @@ The four folders in these repository are:
 ### Hostcode architecture with mapped sources/headers
 ![hostcode architecture mapped](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic_mapped.jpg)
 
-The figure below depicts an overview of the 
 ## Get started and Application Notes
 Get started guide is based on the OPTIGA™ Trust X evaluation kit hardware and DAVE™ 4 (Digital Application Virtual Engineer) IDE. The detailed description you can find in the respective GitHub [repository](https://github.com/Infineon/getstarted-optiga-trust-x).
 
