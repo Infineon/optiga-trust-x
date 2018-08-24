@@ -202,10 +202,10 @@ optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms);
  * \param[in,out]  bytes_to_read    Valid pointer to the length of data to be read from data object
  *                                  - When the data is successfully retrieved, it is updated with actual data length retrieved
  *
- * \retval  #OPTIGA_UTIL_SUCCESS                               Successful invocation of optiga cmd module
- * \retval  #OPTIGA_UTIL_ERROR_INVALID_INPUT                   Wrong Input arguments provided
+ * \retval  #OPTIGA_LIB_SUCCESS                                Successful invocation of optiga cmd module
+ * \retval  #OPTIGA_LIB_ERROR								   Error during function execurition
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
- */
+  */
 optiga_lib_status_t optiga_util_read_data(uint16_t optiga_oid,
                                           uint16_t offset,
                                           uint8_t * buffer,
@@ -234,11 +234,10 @@ optiga_lib_status_t optiga_util_read_data(uint16_t optiga_oid,
  * \param[in,out]  bytes_to_read   Valid pointer to the length of metadata to be read from data object
  *                                 - When the metadata is successfully retrieved, it is updated with actual metadata length retrieved
  *
- * \retval  #OPTIGA_UTIL_SUCCESS                               Successful invocation of optiga cmd module
- * \retval  #OPTIGA_UTIL_ERROR_INVALID_INPUT                   Wrong Input arguments provided
- * \retval  #OPTIGA_UTIL_ERROR_INSTANCE_IN_USE                 Same instance with ongoing request servicing used
+ * \retval  #OPTIGA_LIB_SUCCESS                                Successful invocation of optiga cmd module
+ * \retval  #OPTIGA_LIB_ERROR								   Error during function execurition
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
- */
+  */
 optiga_lib_status_t optiga_util_read_metadata(uint16_t optiga_oid,
                                               uint8_t * buffer,
                                               uint16_t * bytes_to_read);
@@ -268,12 +267,10 @@ optiga_lib_status_t optiga_util_read_metadata(uint16_t optiga_oid,
  * \param[in,out]  buffer         Valid pointer to the buffer with user data to write
  * \param[in]      bytes_to_write Length of data to be written
  *
- * \retval  #OPTIGA_UTIL_SUCCESS                               Successful invocation of optiga cmd module
- * \retval  #OPTIGA_UTIL_ERROR_INVALID_INPUT                   Wrong Input arguments provided
- * \retval  #OPTIGA_UTIL_ERROR_INSTANCE_IN_USE                 Same instance with ongoing request servicing used
- * \retval  #OPTIGA_CMD_ERROR_MEMORY_INSUFFICIENT              Length of the buffer to copy the metadata is less than actual length of metadata
+ * \retval  #OPTIGA_LIB_SUCCESS                                Successful invocation of optiga cmd module
+ * \retval  #OPTIGA_LIB_ERROR								   Error during function execurition
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
- */
+  */
 optiga_lib_status_t optiga_util_write_data(uint16_t optiga_oid,
 										   uint8_t write_type,
                                            uint16_t offset,
@@ -303,11 +300,10 @@ optiga_lib_status_t optiga_util_write_data(uint16_t optiga_oid,
  * \param[in,out]  buffer         Valid pointer to the buffer with metadata to write
  * \param[in]      bytes_to_write Length of metadata to be written
  *
- * \retval  #OPTIGA_UTIL_SUCCESS                               Successful invocation of optiga cmd module
- * \retval  #OPTIGA_UTIL_ERROR_INVALID_INPUT                   Wrong Input arguments provided
- * \retval  #OPTIGA_UTIL_ERROR_INSTANCE_IN_USE                 Same instance with ongoing request servicing used
+ * \retval  #OPTIGA_LIB_SUCCESS                                Successful invocation of optiga cmd module
+ * \retval  #OPTIGA_LIB_ERROR								   Error during function execurition
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
- */
+  */
 optiga_lib_status_t optiga_util_write_metadata(uint16_t optiga_oid,
                                                uint8_t * buffer,
                                                uint8_t bytes_to_write);
