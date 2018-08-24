@@ -35,7 +35,7 @@ The four folders in this repository are:
     * **optiga** - a collection of examples showing usage of various tool box functions of the security chip
     * **ecdsa_utils** - helping function to encode/decode ecdsa signatures to/from ASN.1 format
     * **mbedtls** - porting functions to offload crypto operation onto the security chip for mbedTLS (compatible with versions >= 2.7)
-3) **optiga** - core library, see moredetails in the [Hostcode architecture](#hostcode_architecture) section
+3) **optiga** - core library, learn more details in the [Hostcode architecture](#hostcode_architecture) section
 4) **pal** - Supported Platform Abstraction Layer implementation. See [Porting guide](#porting_guide)
 
 ### <a name="hostcode_architecture"></a>Hostcode architecture
