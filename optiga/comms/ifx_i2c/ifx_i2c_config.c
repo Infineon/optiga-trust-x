@@ -58,7 +58,7 @@ ifx_i2c_context_t ifx_i2c_context_0 =
     /// i2c-master frequency
     400,
     /// IFX-I2C frame size
-#ifndef DL_MAX_FRAME_SIZE
+#if (DL_MAX_FRAME_SIZE >= 0x0115)
     0x0115,
 #else
 	DL_MAX_FRAME_SIZE,

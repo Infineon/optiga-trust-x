@@ -612,7 +612,7 @@ optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms)
 		//Invoke optiga_comms_open to initialize the IFX I2C Protocol and security chip
 		optiga_comms_status = OPTIGA_COMMS_BUSY;
 		p_comms->upper_layer_handler = __optiga_util_comms_event_handler;
-		status = optiga_comms_open(&p_comms);
+		status = optiga_comms_open(p_comms);
 		if(E_COMMS_SUCCESS != status)
 		{
 			status = OPTIGA_LIB_ERROR;
