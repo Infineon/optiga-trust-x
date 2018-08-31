@@ -33,7 +33,7 @@
 
 #include "optiga/optiga_crypt.h"
 #include "optiga/optiga_util.h"
-#include "optiga/pal/pal_crypt.h"
+#include "pal_crypt.h"
 
 ///size of public key for NIST-P256
 #define LENGTH_PUB_KEY_NISTP256     0x41

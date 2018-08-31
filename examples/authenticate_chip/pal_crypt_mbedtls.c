@@ -33,9 +33,10 @@
 
 //#include "optiga/pal/pal_os_random.h"
 #include "optiga/pal/pal_os_timer.h"
-#include "optiga/pal/pal_crypt.h"
 #include "optiga/common/MemoryMgmt.h"
 #include "ecdsa_utils.h"
+
+#include "pal_crypt.h"
 
 /// @cond hidden
 
