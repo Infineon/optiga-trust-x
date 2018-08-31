@@ -39,17 +39,6 @@
 // if the highest bit of the integer is set we need an extra byte
 #define  DER_OVERHEAD ((2 + 1) * 2)
 
-/**
- * @brief Encodes the ECDSA signature components (r, s) in ASN.1 format.
- *
- * @param[in]   r            Component r of the ECDSA signature
- * @param[in]   r_len        Length of the r component of the ECDSA signature
- * @param[in]   s            Component s of the ECDSA signature
- * @param[in]   s_len        Length of the s component of the ECDSA signature
- * @param[out]  asn_sig      Buffer where the resulting ASN.1-encoded ECDSA signature will be copied into
- * @param[out]  asn_sig_len  Length of the actual data that was copied into the output buffer
- * @returns     OPTIGA_LIB_SUCCESS on success, OPTIGA_LIB_ERROR on error
- */
 optiga_lib_status_t ecdsa_rs_to_asn1(const uint8_t  *r, size_t r_len,
 									 const uint8_t  *s, size_t s_len,
 									  	   uint8_t  *asn_sig, size_t *asn_sig_len)
