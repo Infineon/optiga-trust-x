@@ -392,7 +392,7 @@ typedef enum eFragSeq_d
     eContinue = 0x02
 }eFragSeq_d;
 
-static host_lib_status_t optiga_comms_status;
+volatile static host_lib_status_t optiga_comms_status;
 
 //lint --e{715, 818} suppress "This is ignored as app_event_handler_t handler function prototype requires this argument.This will be used for object based implementation"
 static void optiga_comms_event_handler(void* upper_layer_ctx, host_lib_status_t event)
