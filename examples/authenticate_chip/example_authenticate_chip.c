@@ -33,6 +33,7 @@
 
 #include "optiga/optiga_crypt.h"
 #include "optiga/optiga_util.h"
+#include "optiga/common/AuthLibSettings.h"
 #include "pal_crypt.h"
 
 ///size of public key for NIST-P256
@@ -55,8 +56,6 @@
 
 ///size of end entity certificate of OPTIGA™ Trust X
 #define LENGTH_OPTIGA_CERT          512
-
-#define MODULE_ENABLE_ONE_WAY_AUTH
 
 #ifdef MODULE_ENABLE_ONE_WAY_AUTH
 
@@ -269,7 +268,7 @@ optiga_lib_status_t example_authenticate_chip(void)
 		}
 
 		// Verify the certificate against the given CA
-		status = pal_crypt_validate_certificate(optiga_ca_certificate, sizeof(optiga_ca_certificate), chip_cert, chip_cert_size);
+		status = pal_crypt_verify_certificate(optiga_ca_certificate, sizeof(optiga_ca_certificate), chip_cert, chip_cert_size);
 		if(CRYPTO_LIB_OK != status)
 		{
 			break;

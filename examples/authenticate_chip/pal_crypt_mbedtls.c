@@ -31,11 +31,11 @@
 * @{
 */
 
-//#include "optiga/pal/pal_os_random.h"
 #include "optiga/pal/pal_os_timer.h"
 #include "optiga/common/MemoryMgmt.h"
-#include "ecdsa_utils.h"
+#include "optiga/optiga_crypt.h"
 
+#include "ecdsa_utils.h"
 #include "pal_crypt.h"
 
 /// @cond hidden
@@ -119,7 +119,7 @@ optiga_lib_status_t pal_crypt_generate_sha256(uint8_t* p_input, uint16_t inlen, 
     return CRYPTO_LIB_OK;
 }
 
-optiga_lib_status_t  pal_crypt_validate_certificate(const uint8_t* p_cacert, uint16_t cacert_size,
+optiga_lib_status_t  pal_crypt_verify_certificate(const uint8_t* p_cacert, uint16_t cacert_size,
 		                                            const uint8_t* p_cert, uint16_t cert_size)
 {
     int32_t status  = (int32_t)CRYPTO_LIB_ERROR;
@@ -180,7 +180,7 @@ optiga_lib_status_t pal_crypt_get_public_key(const uint8_t* p_cert, uint16_t cer
     int32_t status  = (int32_t)CRYPTO_LIB_ERROR;
     int32_t ret;
     mbedtls_x509_crt mbedtls_cert;
-    uint32_t mbedtls_flags;
+    size_t pubkey_size = 0;
     // We know, that we will work with ECC
     mbedtls_ecp_keypair * mbedtls_keypair = NULL;
 
@@ -210,12 +210,13 @@ optiga_lib_status_t pal_crypt_get_public_key(const uint8_t* p_cert, uint16_t cer
 
         mbedtls_keypair = (mbedtls_ecp_keypair* )mbedtls_cert.pk.pk_ctx;
         if ( (ret = mbedtls_ecp_point_write_binary(&mbedtls_keypair->grp, &mbedtls_keypair->Q,
-        		                                   MBEDTLS_ECP_PF_UNCOMPRESSED, p_pubkey_size,
+        		                                   MBEDTLS_ECP_PF_UNCOMPRESSED, &pubkey_size,
 												   p_pubkey, *p_pubkey_size)) != 0 )
         {
 			status = (int32_t)CRYPTO_LIB_CERT_PARSE_FAIL;
 			break;
         }
+        *p_pubkey_size = pubkey_size;
 
         status =   CRYPTO_LIB_OK;
     }while(FALSE);
@@ -252,7 +253,7 @@ optiga_lib_status_t  pal_crypt_verify_signature(const uint8_t* p_pubkey, uint16_
 
 optiga_lib_status_t pal_crypt_init(void)
 {
-	int32_t status  = (int32_t)CRYPTO_LIB_NULL_PARAM;
+	int32_t status  = (int32_t)CRYPTO_LIB_OK;
 
 	mbedtls_entropy_init( &entropy );
 	uint8_t personalization[32];

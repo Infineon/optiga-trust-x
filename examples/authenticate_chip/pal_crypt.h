@@ -34,7 +34,6 @@
 
 #include <stdint.h>
 #include "optiga/common/Datatypes.h"
-#include "optiga/cmd/CommandLib.h"
 
 ///Requested operation completed without any error
 #define CRYPTO_LIB_OK                               OPTIGA_LIB_SUCCESS
@@ -111,24 +110,49 @@ typedef struct sCertificate_d
 optiga_lib_status_t pal_crypt_generate_sha256(uint8_t* p_input, uint16_t inlen, uint8_t* p_digest);
 
 /**
- * \brief Parses raw X509 v3 certificate into a custom defined certificate structure.
- */
-optiga_lib_status_t  pal_crypt_validate_certificate(const uint8_t* p_cacert, uint16_t cacert_size,
-                                                    const uint8_t* p_cert, uint16_t cert_size);
-
+* Extract public key from the certificate using crypto library
+*
+*\param[in] p_cert					Pointer to the certificate buffer
+*\param[in] cert_size				Certificate buffer size
+*\param[in] p_pubkey				Pointer to the buffer where to store a public key
+*\param[in][out] p_pubkey_size		Variable where to store Public Key
+*
+*\retval  #CRYPTO_LIB_OK
+*\retval  #CRYPTO_LIB_ERROR
+*\retval  #CRYPTO_LIB_CERT_PARSE_FAIL
+*\retval  #CRYPTO_LIB_NULL_PARAM
+*\retval  #CRYPTO_LIB_LENZERO_ERROR
+*/
 optiga_lib_status_t pal_crypt_get_public_key(const uint8_t* p_cert, uint16_t cert_size,
 		                                           uint8_t* p_pubkey, uint16_t* p_pubkey_size);
 
 /**
-* Verifies the signature using the given public key.<br>
+* \brief Parses raw X509 v3 certificate into a custom defined certificate structure.
+*
+*\param[in] p_cacert				Pointer to the CA certificate buffer. Should be DER encoded binary certificate. Should start from 0x30
+*\param[in] cacert_size				CA Certificate buffer size
+*\param[in] p_cert					Pointer to the certificate buffer. This certificate is verified against the given CA. Should start from 0x30
+*\param[in][out] cert_size			Certificate buffer size
+*
+*\retval  #CRYPTO_LIB_OK
+*\retval  #CRYPTO_LIB_ERROR
+*\retval  #CRYPTO_LIB_CERT_PARSE_FAIL
+*\retval  #CRYPTO_LIB_NULL_PARAM
+*\retval  #CRYPTO_LIB_LENZERO_ERROR
+ */
+optiga_lib_status_t  pal_crypt_verify_certificate(const uint8_t* p_cacert, uint16_t cacert_size,
+                                                  const uint8_t* p_cert, uint16_t cert_size);
+
+/**
+* Verifies the signature using the given public key.
 *
 *
-*\param[in] p_pubkey
-*\param[in] pubkey_size
-*\param[in] p_signature
-*\param[in] signature_size
-*\param[in] p_digest
-*\param[in] digest_size
+*\param[in] p_pubkey				Pointer to the public key buffer used to verify the signature
+*\param[in] pubkey_size				Public key buffer size
+*\param[in] p_signature				Pointer to the signature buffer
+*\param[in] signature_size			Signature buffer size
+*\param[in] p_digest				Pointer to the digest buffer (Should be sha256 hash)
+*\param[in] digest_size				Digest buffer size
 *
 *\retval  #CRYPTO_LIB_OK
 *\retval  #CRYPTO_LIB_ERROR
@@ -140,7 +164,12 @@ optiga_lib_status_t pal_crypt_get_public_key(const uint8_t* p_cert, uint16_t cer
 optiga_lib_status_t  pal_crypt_verify_signature(const uint8_t* p_pubkey, uint16_t pubkey_size,
 		                                        const uint8_t* p_signature, uint16_t signature_size,
 									                  uint8_t* p_digest, uint16_t digest_size);
-
+/**
+* Initislise underlying crypto library if required
+*
+*\retval  #CRYPTO_LIB_OK
+*\retval  #CRYPTO_LIB_NULL_PARAM
+*/
 optiga_lib_status_t pal_crypt_init(void);
 
 /**
@@ -159,24 +188,6 @@ optiga_lib_status_t pal_crypt_init(void);
 *\retval  #CMD_DEV_ERROR
 */
 optiga_lib_status_t  pal_crypt_random(uint16_t random_size, uint8_t* p_random);
-
-/**
-* Generates seed for initializing the crypto pseudo random generator. <br>
-* - Reads 24 bytes of random data bytes from and stores it.The data bytes are read only once.<br>
-* - Subsequent requests for seed generation uses the stored random data bytes. <br>
-* - Concatenates counter to the random bytes and computes HASH(SHA256) on the concatenated value. <br>
-* - Maximum length of generated seed is 32 bytes. <br>
-*
-*
-*\param[in,out] p_seed           Pointer to seed
-*\param[in]     seed_length      Length of the seed
-*
-*\retval  #RESULT_OK on Success
-*\retval  #CRYPTO_LIB_NULL_PARAM
-*\retval  #CRYPTO_LIB_ERROR
-*\retval  #CMD_DEV_ERROR
-*/
-optiga_lib_status_t pal_crypt_seed_random(uint8_t* p_seed, uint32_t seed_length);
 
 
 #endif //PAL_CRYPT
