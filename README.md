@@ -26,28 +26,7 @@ The [OPTIGA™ Trust X1](https://www.infineon.com/dgdl/Infineon-DPS310-DS-v01_00
 * Cryptographic Tool Box based on ECC NIST P256, P384 and SHA256 (sign, verify, key generation, ECDH, session key derivation)   
 
 ## Hostcode strucuture
-### Repository overview
-The four folders in this repository are: 
-1) **certifcates** - X.509 CA certificates used either to verify an End Device Certificate (stored inside OPTIGA™ Trust X) or used as an Trust Anchor CA stored by default inside a dedicated Trust Anchor certificate slot inside OPTIGA™ Trust X
-    * **Infineon OPTIGA(TM) Trust X CA 101** - Certificate Authority certificate used to issue productive security chip samples
-    * **OPTIGA_Trust_X_InfineonTestCA** - Certificate Authority certificate used to issue test security ship samples
-2) **examples**
-    * **optiga** - a collection of examples showing usage of various tool box functions of the security chip
-    * **ecdsa_utils** - helping function to encode/decode ecdsa signatures to/from ASN.1 format
-    * **mbedtls** - porting functions to offload crypto operation onto the security chip for mbedTLS (compatible with versions >= 2.7)
-3) **optiga** - core library, find more in the [Hostcode architecture](#hostcode_architecture) section
-4) **pal** - Supported Platform Abstraction Layer implementation. See [Porting guide](#porting_guide)
-
-### <a name="hostcode_architecture"></a>Hostcode architecture
-
-![hostcode architecture](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic.jpg)
-
-Detailed modules description you can find in [Wiki](https://github.com/Infineon/optiga-trust-x/wiki) of the project
-
-### Hostcode architecture with mapped sources/headers
-The figure uses relative to <repo_root>/optiga/ paths
-
-![hostcode architecture mapped](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic_mapped.jpg)
+Detailed modules description you can find on [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki) of this project
 
 ## Get started and Application Notes
 Get started guide is based on the OPTIGA™ Trust X evaluation kit hardware and DAVE™ 4 (Digital Application Virtual Engineer) IDE. The detailed description you can find in the respective GitHub [repository](https://github.com/Infineon/getstarted-optiga-trust-x).

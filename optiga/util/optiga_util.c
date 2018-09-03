@@ -611,8 +611,8 @@ optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms)
 		// OPTIGA Initialisation phase
 		//Invoke optiga_comms_open to initialize the IFX I2C Protocol and security chip
 		optiga_comms_status = OPTIGA_COMMS_BUSY;
-		p_comms.upper_layer_handler = __optiga_util_comms_event_handler;
-		status = optiga_comms_open(&p_comms);
+		p_comms->upper_layer_handler = __optiga_util_comms_event_handler;
+		status = optiga_comms_open(p_comms);
 		if(E_COMMS_SUCCESS != status)
 		{
 			status = OPTIGA_LIB_ERROR;
@@ -647,7 +647,6 @@ optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms)
 	return status;
 }
 
-#include "stdio.h"
 optiga_lib_status_t optiga_util_read_data(uint16_t optiga_oid, uint16_t offset,
                                           uint8_t * p_buffer, uint16_t* buffer_size)
 {
@@ -687,8 +686,6 @@ optiga_lib_status_t optiga_util_read_data(uint16_t optiga_oid, uint16_t offset,
 
     return status;
 }
-
-#include "stdio.h"
 
 optiga_lib_status_t optiga_util_read_metadata(uint16_t optiga_oid, uint8_t * p_buffer, uint16_t* buffer_size)
 {

@@ -33,14 +33,6 @@
 
 #include "optiga/optiga_crypt.h"
 
-/**
- * @brief decodes two ASN.1 integers to the R and S components of a ECC signature
- * @param[in] asn1 buffer containing the ASN.1 encoded R and S values
- * @param[in] asn1_len length of the asn1 buffer
- * @param[out] rs buffer where to write the R and S values
- * @param[in,out] rs_len length of the rs buffer, contains the bytes written afterwards
- * @returns OPTIGA_LIB_SUCCESS on success, OPTIGA_LIB_ERROR else
- */
 optiga_lib_status_t asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
 									 uint8_t * rs, size_t * rs_len)
 {
