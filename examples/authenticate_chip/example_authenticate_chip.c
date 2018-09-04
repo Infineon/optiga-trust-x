@@ -148,6 +148,7 @@ static optiga_lib_status_t __get_chip_cert(uint16_t cert_oid,
 		*/
 		case 0x30:
 			/* The certificate can be directly used */
+			status = OPTIGA_LIB_SUCCESS;
 			break;
 		/* TLS Identity. Tag = 0xC0; Length = Value length (2 Bytes); Value = Certificate Chain
 		 * Format of a "Certificate Structure Message" used in TLS Handshake
@@ -159,6 +160,7 @@ static optiga_lib_status_t __get_chip_cert(uint16_t cert_oid,
 			p_tmp_cert_pointer = p_tmp_cert_pointer + 9;
 			*p_cert_size = *p_cert_size - 9;
 			memcpy(p_cert, p_tmp_cert_pointer, *p_cert_size);
+			status = OPTIGA_LIB_SUCCESS;
 			break;
 		/* USB Type-C identity
 		 * Tag = 0xC2; Length = Value length (2 Bytes); Value = USB Type-C Certificate Chain [USB Auth].
@@ -172,6 +174,8 @@ static optiga_lib_status_t __get_chip_cert(uint16_t cert_oid,
 		}
 
 	}while(FALSE);
+
+	return status;
 }
 
 /**

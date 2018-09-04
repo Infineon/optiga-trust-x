@@ -116,8 +116,8 @@ optiga_lib_status_t optiga_crypt_hash_start(optiga_hash_context_t * hash_ctx)
 }
 
 optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
-                                               bool_t source_of_data_to_hash,
-                                               void * data_to_hash)
+                                             uint8_t source_of_data_to_hash,
+                                             void * data_to_hash)
 {
     optiga_lib_status_t return_value;
     sCalcHash_d hash_options;
@@ -146,7 +146,7 @@ optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
     uint8_t chaining = 0;
 
     hash_options.eHashAlg      = (eHashAlg_d)(hash_ctx->hash_algo);
-    hash_options.eHashDataType = (eDataType_d)source_of_data_to_hash;
+    hash_options.eHashDataType = source_of_data_to_hash == OPTIGA_CRYPT_HOST_DATA?eDataStream:eOIDData;
     hash_options.eHashSequence = eContinueHash;
 
     //Hash context
@@ -168,7 +168,7 @@ optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
     remaining_comm_bfr_sz_with_export = max_comms_buffer -(CALC_HASH_FIXED_OVERHEAD_SIZE +  \
                                         CALC_HASH_IMPORT_OR_EXPORT_OVERHEAD_SIZE);
 
-    if ((eDataType_d)source_of_data_to_hash == eDataStream)
+    if ((eDataType_d)source_of_data_to_hash == OPTIGA_CRYPT_HOST_DATA)
     {
         hash_options.sDataStream.prgbStream = (uint8_t *)(((hash_data_from_host_t *)data_to_hash)->buffer);
         size_of_data_to_hash       = ((hash_data_from_host_t *)data_to_hash)->length;
@@ -363,13 +363,13 @@ optiga_lib_status_t optiga_crypt_ecdsa_verify (uint8_t * digest,
     verifysign_options.eSignScheme         = eECDSA_FIPS_186_3_WITHOUT_HASH;
     verifysign_options.sPubKeyInput.eAlgId = (eAlgId_d )(((public_key_from_host_t *)public_key)->curve);
 
-    if (public_key_source_type == 0x00)
+    if (public_key_source_type == OPTIGA_CRYPT_HOST_DATA)
     {
         verifysign_options.eVerifyDataType = eDataStream;
         verifysign_options.sPubKeyInput.sDataStream.prgbStream = (uint8_t *)((( public_key_from_host_t *)public_key)->public_key);
         verifysign_options.sPubKeyInput.sDataStream.wLen = (((public_key_from_host_t *)public_key)->length);
     }
-    else
+    else if (public_key_source_type == OPTIGA_CRYPT_OID_DATA)
     {
         verifysign_options.eVerifyDataType = eOIDData;
         verifysign_options.wOIDPubKey      = *((uint16_t *)public_key);

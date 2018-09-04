@@ -102,7 +102,8 @@ optiga_lib_status_t example_optiga_crypt_ecdsa_verify(void)
                                                    sizeof(digest),
                                                    signature,
                                                    sizeof(signature),
-                                                   0, // 1 stands for OID in the public_key_details
+												   // OPTIGA_CRYPT_OID_DATA stands for OID in the public_key_details
+												   OPTIGA_CRYPT_HOST_DATA,
                                                    &public_key_details);
 
         if(return_status != OPTIGA_LIB_SUCCESS)

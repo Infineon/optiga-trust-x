@@ -129,7 +129,7 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
 
     status = optiga_crypt_ecdsa_verify ( (uint8_t *) buf, blen,
                                          (uint8_t *) p, signature_len,
-                                        0, (void *)&public_key );
+										 OPTIGA_CRYPT_HOST_DATA, (void *)&public_key );
     if ( status != OPTIGA_LIB_SUCCESS )
     {
        return ( MBEDTLS_ERR_PK_BAD_INPUT_DATA );

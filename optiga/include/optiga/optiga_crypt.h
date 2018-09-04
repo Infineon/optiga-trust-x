@@ -135,6 +135,11 @@ typedef enum optiga_hash_type
     OPTIGA_HASH_TYPE_SHA_256 = 0xE2
 } optiga_hash_type_t;
 
+/** @brief Data is provided by host*/
+#define OPTIGA_CRYPT_HOST_DATA        (0x01)
+/** @brief Data in internal to optiga OID */
+#define OPTIGA_CRYPT_OID_DATA         (0x00)
+
 /**
  * \brief To specify the data coming from the host for hashing.
  */
