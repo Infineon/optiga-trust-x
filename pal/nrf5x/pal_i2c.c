@@ -188,7 +188,10 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
  */
 pal_status_t pal_i2c_deinit(const pal_i2c_t* p_i2c_context)
 {
-	nrf_twi_mngr_uninit(&m_app_twi);
+    if(initialized) {
+        nrf_twi_mngr_uninit(&m_app_twi);
+    }
+    initialized = false;
     return PAL_STATUS_SUCCESS;
 }
 
