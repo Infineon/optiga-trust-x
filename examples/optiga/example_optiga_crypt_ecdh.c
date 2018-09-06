@@ -101,11 +101,11 @@ optiga_lib_status_t example_optiga_crypt_ecdh(void)
          * Perform ECDH using the Peer Public key
          *       - Use ECC NIST P 256 Curve
          *       - Provide the peer public key details
-         *       - Export the generated shared secret with protected I2C communication
+         *       - Export the generated shared secret
          */
         return_status = optiga_crypt_ecdh(optiga_key_id,
                                           &peer_public_key_details, 
-                                          TRUE, 
+                                          TRUE,
                                           shared_secret);
         if (OPTIGA_LIB_SUCCESS != return_status)
         {
