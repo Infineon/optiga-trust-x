@@ -30,35 +30,7 @@
 */
 
 #include "optiga/optiga_crypt.h"
-
-/// To hold the current command module status
-static uint8_t cmd_interface_aquired = 0;
-/*
- * Please ensure the optiga_lib_ctx->cmd_interface_aquired is initialized to zero for the first time
- * TBD; input parameter to be changed to context approach
- *
- */
-optiga_lib_status_t optiga_cmd_lock_exclusive (void)
-{
-    if(cmd_interface_aquired == 0)
-    {
-        cmd_interface_aquired++;
-        if(cmd_interface_aquired == 1)
-        {
-            return OPTIGA_LIB_SUCCESS;
-        }
-    }
-    return OPTIGA_LIB_STATUS_BUSY;
-}
-
-/*
- * TBD; input parameter to be changed to context approach
- *
- */
-void optiga_cmd_unlock (void)
-{
-    cmd_interface_aquired = 0;
-}
+#include "optiga/pal/pal_os_lock.h"
 
 optiga_lib_status_t optiga_crypt_random(optiga_rng_types_t rng_type,
                                         uint8_t * random_data,
@@ -76,9 +48,9 @@ optiga_lib_status_t optiga_crypt_random(optiga_rng_types_t rng_type,
     rand_response.wBufferLength = random_data_length;
     rand_response.wRespLength   = 0;
 
-    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+    while (pal_os_lock_acquire() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_GetRandom(&rand_options,&rand_response);
-    optiga_cmd_unlock();
+    pal_os_lock_release();
 
     if (CMD_LIB_OK != return_value)
     {
@@ -104,9 +76,9 @@ optiga_lib_status_t optiga_crypt_hash_start(optiga_hash_context_t * hash_ctx)
     hash_options.sContextInfo.dwContextLen   = hash_ctx->context_buffer_length;
     hash_options.sContextInfo.eContextAction = eExport;
 
-    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+    while (pal_os_lock_acquire() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_CalcHash(&hash_options);
-    optiga_cmd_unlock();
+    pal_os_lock_release();
 
     if (CMD_LIB_OK != return_value)
     {
@@ -196,9 +168,9 @@ optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
 
     while (1)
     {   
-        while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+        while (pal_os_lock_acquire() != OPTIGA_LIB_SUCCESS);
         return_value = CmdLib_CalcHash(&hash_options);
-        optiga_cmd_unlock();
+        pal_os_lock_release();
 
         if (CMD_LIB_OK != return_value)
         {
@@ -261,9 +233,9 @@ optiga_lib_status_t optiga_crypt_hash_finalize(optiga_hash_context_t * hash_ctx,
 		hash_options.sOutHash.wBufferLength  = 32;
 	}
 
-    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+    while (pal_os_lock_acquire() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_CalcHash(&hash_options);
-    optiga_cmd_unlock();
+    pal_os_lock_release();
     
     if (CMD_LIB_OK != return_value)
     {
@@ -307,9 +279,9 @@ optiga_lib_status_t optiga_crypt_ecc_generate_keypair(optiga_ecc_curve_t curve_i
 
 
 
-    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+    while (pal_os_lock_acquire() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_GenerateKeyPair(&keypair_options,&public_key_out);
-    optiga_cmd_unlock();
+    pal_os_lock_release();
 
     if (CMD_LIB_OK != return_value)
     {     
@@ -339,9 +311,9 @@ optiga_lib_status_t optiga_crypt_ecdsa_sign (uint8_t * digest,
     sign.prgbStream = signature;
     sign.wLen       =  *signature_length;
 
-    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+    while (pal_os_lock_acquire() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_CalculateSign(&sign_options,&sign);
-    optiga_cmd_unlock();
+    pal_os_lock_release();
 
     if (CMD_LIB_OK != return_value)
     {
@@ -383,9 +355,9 @@ optiga_lib_status_t optiga_crypt_ecdsa_verify (uint8_t * digest,
     sign.prgbStream = signature;
     sign.wLen       = signature_length;
 
-    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+    while (pal_os_lock_acquire() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_VerifySign(&verifysign_options, &dgst, &sign);
-    optiga_cmd_unlock();
+    pal_os_lock_release();
 
     if(CMD_LIB_OK == return_value)
     {
@@ -424,9 +396,9 @@ optiga_lib_status_t optiga_crypt_ecdh(optiga_key_id_t private_key,
         shared_secret_options.wOIDSharedSecret = *((uint16_t *)shared_secret);
     }
 
-    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+    while (pal_os_lock_acquire() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_CalculateSharedSecret(&shared_secret_options, &sharedsecret);
-    optiga_cmd_unlock();
+    pal_os_lock_release();
 
     if(CMD_LIB_OK == return_value)
     {
@@ -473,9 +445,9 @@ optiga_lib_status_t optiga_crypt_tls_prf_sha256(uint16_t secret,
 		derivekey_options.wOIDDerivedKey = *((uint16_t *)derived_key);
     }
 
-    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+    while (pal_os_lock_acquire() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_DeriveKey(&derivekey_options, &derivekey_output_buffer);
-    optiga_cmd_unlock();
+    pal_os_lock_release();
 
     if(CMD_LIB_OK == return_value)
     {
