@@ -202,11 +202,12 @@ optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
 
         if (CMD_LIB_OK != return_value)
         {
-            return OPTIGA_LIB_ERROR;
+            break;
         }
 
         if (!chaining)
         {
+        	return_value = OPTIGA_LIB_SUCCESS;
             break;
         }
         else
@@ -233,7 +234,8 @@ optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
             hash_options.sDataStream.wLen = remaining_comm_buffer_size;
         }
     }
-    return OPTIGA_LIB_SUCCESS;
+
+    return return_value;
 }
 
 optiga_lib_status_t optiga_crypt_hash_finalize(optiga_hash_context_t * hash_ctx,
@@ -385,11 +387,12 @@ optiga_lib_status_t optiga_crypt_ecdsa_verify (uint8_t * digest,
     return_value = CmdLib_VerifySign(&verifysign_options, &dgst, &sign);
     optiga_cmd_unlock();
 
-    if (CMD_LIB_OK != return_value)
+    if(CMD_LIB_OK == return_value)
     {
-        return OPTIGA_LIB_ERROR;
+    	return_value = OPTIGA_LIB_SUCCESS;
     }
-    return OPTIGA_LIB_SUCCESS;
+
+    return return_value;
 }
 
 optiga_lib_status_t optiga_crypt_ecdh(optiga_key_id_t private_key,
@@ -425,11 +428,12 @@ optiga_lib_status_t optiga_crypt_ecdh(optiga_key_id_t private_key,
     return_value = CmdLib_CalculateSharedSecret(&shared_secret_options, &sharedsecret);
     optiga_cmd_unlock();
 
-    if (CMD_LIB_OK != return_value)
+    if(CMD_LIB_OK == return_value)
     {
-        return OPTIGA_LIB_ERROR;
+    	return_value = OPTIGA_LIB_SUCCESS;
     }
-    return OPTIGA_LIB_SUCCESS;
+
+    return return_value;
 }
 
 
@@ -473,9 +477,10 @@ optiga_lib_status_t optiga_crypt_tls_prf_sha256(uint16_t secret,
     return_value = CmdLib_DeriveKey(&derivekey_options, &derivekey_output_buffer);
     optiga_cmd_unlock();
 
-    if(CMD_LIB_OK != return_value)
+    if(CMD_LIB_OK == return_value)
     {
-         return OPTIGA_LIB_ERROR;
+    	return_value = OPTIGA_LIB_SUCCESS;
     }
-    return OPTIGA_LIB_SUCCESS;
+
+    return return_value;
 }
