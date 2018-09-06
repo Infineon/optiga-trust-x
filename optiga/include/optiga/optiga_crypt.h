@@ -417,7 +417,6 @@ optiga_lib_status_t optiga_crypt_ecdsa_sign(uint8_t * digest,
  *
  *<b>API Details:</b>
  * - Verifies the signature over the given provided with the input data using public key.
- * - It invokes the callback handler of the instance, when it is asynchronously completed.
  *
  *<b>Notes:</b>
  * - Error codes from lower layers will be returned as it is to the application.<br>
