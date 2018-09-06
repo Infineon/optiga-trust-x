@@ -339,7 +339,7 @@ optiga_lib_status_t optiga_crypt_ecdsa_sign (uint8_t * digest,
 
     while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_CalculateSign(&sign_options,&sign);
-    optiga_cmd_unlock();       
+    optiga_cmd_unlock();
 
     if (CMD_LIB_OK != return_value)
     {
@@ -381,9 +381,9 @@ optiga_lib_status_t optiga_crypt_ecdsa_verify (uint8_t * digest,
     sign.prgbStream = signature;
     sign.wLen       = signature_length;
 
-    //while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
+    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_VerifySign(&verifysign_options, &dgst, &sign);
-    //optiga_cmd_unlock();
+    optiga_cmd_unlock();
 
     if (CMD_LIB_OK != return_value)
     {
@@ -432,7 +432,7 @@ optiga_lib_status_t optiga_crypt_ecdh(optiga_key_id_t private_key,
     return OPTIGA_LIB_SUCCESS;
 }
 
-#include "stdio.h"
+
 optiga_lib_status_t optiga_crypt_tls_prf_sha256(uint16_t secret,
                                                 uint8_t * label,
                                                 uint16_t label_length,
@@ -469,7 +469,7 @@ optiga_lib_status_t optiga_crypt_tls_prf_sha256(uint16_t secret,
 		derivekey_options.wOIDDerivedKey = *((uint16_t *)derived_key);
     }
 
-    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS); 
+    while (optiga_cmd_lock_exclusive() != OPTIGA_LIB_SUCCESS);
     return_value = CmdLib_DeriveKey(&derivekey_options, &derivekey_output_buffer);
     optiga_cmd_unlock();
 
