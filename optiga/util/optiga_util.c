@@ -165,7 +165,7 @@ typedef enum eAccessConditionID_d
     eACID_NEV = 0xFF
 } eAccessConditionID_d;
 
-static host_lib_status_t optiga_comms_status;
+volatile static host_lib_status_t optiga_comms_status;
 
 #ifdef MODULE_ENABLE_READ_WRITE
 /**
