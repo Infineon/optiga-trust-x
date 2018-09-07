@@ -1,13 +1,13 @@
-# Infineon's OPTIGA&trade; Trust X1 hostcode
+# Infineon's OPTIGA&trade; Trust X hostcode
 
 ## Description
 
 <img src="https://github.com/Infineon/Assets/blob/master/Pictures/OPTIGA-Trust-X.png">
 
-This repository contains a target-agnostic C library for the [OPTIGA™ Trust X1](https://www.infineon.com/optiga-trust-x) security chip.
+This repository contains a target-agnostic C library for the [OPTIGA™ Trust X](https://www.infineon.com/optiga-trust-x) security chip.
 
 ## Summary
-The [OPTIGA™ Trust X1](https://www.infineon.com/dgdl/Infineon-DPS310-DS-v01_00-EN.pdf) is a security solution based on a secure micrcontroller. Each device is shipped with a unique elliptic-curve keypair and a corresponding X.509 certificate. OPTIGA™ Trust X enables easy integration into existing PKI infrastructure.
+The [OPTIGA™ Trust X](https://www.infineon.com/dgdl/Infineon-DPS310-DS-v01_00-EN.pdf) is a security solution based on a secure micrcontroller. Each device is shipped with a unique elliptic-curve keypair and a corresponding X.509 certificate. OPTIGA™ Trust X enables easy integration into existing PKI infrastructure.
 
 ## Key Features and Benefits
 * High-end security controller
