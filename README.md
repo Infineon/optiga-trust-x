@@ -47,7 +47,14 @@ Infineon's GitHub offers various application notes for OPTIGA™ Trust X securit
 * OPTIGA™ Trust X Shield2Go (link pending)
 
 ## Porting Guide
-Platform Abstraction Layer (PAL) overview and Porting Guide are presented on [Wiki](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide) page
+You might find a list of supported Platforms [here](https://github.com/Infineon/optiga-trust-x/tree/master/pal). These are:
+* Espressif ESP32 with Amazon freeRTOS
+* Espressif ESP32 with freeRTOS
+* Nordic NRF52
+* Raspberry Pi (Embedded Linux)
+* Infineon XMC microcontrollers
+
+For other platform please refer to our porting guide on [Wiki](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide) page
 
 ## Contributing
 
