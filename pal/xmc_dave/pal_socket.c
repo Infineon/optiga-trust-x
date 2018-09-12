@@ -37,6 +37,8 @@
 #include "optiga/pal/pal_socket.h"
 #include "optiga/pal/pal_os_timer.h"
 
+#ifdef MODULE_ENABLE_DTLS_MUTUAL_AUTH
+
 /**********************************************************************************************************************
  * MACROS
  *********************************************************************************************************************/
@@ -505,6 +507,8 @@ void pal_socket_receive_handler(void * arg, struct udp_pcb * upcb, struct pbuf *
     pbuf_free(p_pbuf);
     return;
 }
+
+#endif
 /// @endcond
 /**
 * @}

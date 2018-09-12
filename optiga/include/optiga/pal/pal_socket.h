@@ -36,6 +36,7 @@
 /**********************************************************************************************************************
  * HEADER FILES
  *********************************************************************************************************************/
+#ifdef MODULE_ENABLE_DTLS_MUTUAL_AUTH
 
 #ifndef WIN32
     #include "optiga/common/Datatypes.h"
@@ -186,6 +187,8 @@ int32_t pal_socket_send(const pal_socket_t* p_socket, uint8_t *p_data,
  * \brief Closes the socket communication and release the udp port
  */
 void pal_socket_close(pal_socket_t* p_socket);
+
+#endif
 
 #endif //_PAL_SOCKET_H_
 
