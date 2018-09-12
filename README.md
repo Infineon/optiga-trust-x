@@ -25,8 +25,17 @@ The [OPTIGA™ Trust X](https://www.infineon.com/dgdl/Infineon-DPS310-DS-v01_00-
 * Common Criteria Certified EAL6+ (high) hardware
 * Cryptographic Tool Box based on ECC NIST P256, P384 and SHA256 (sign, verify, key generation, ECDH, session key derivation)   
 
-## Hostcode strucuture
-Detailed modules description you can find on [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki) of this project
+## Overview
+
+![hostcode architecture](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic.jpg)
+
+1. See [OPTIGA Crypt API](https://github.com/Infineon/optiga-trust-x/wiki/OPTIGA-Crypt-API) and [OPTIGA Util API](https://github.com/Infineon/optiga-trust-x/wiki/OPTIGA-Util-API) to know more about optiga_crypt and optiga_util modules
+2. Information about the OPTIGA™ Trust X Command Library can be found in the [Solution Reference Manual v1.35](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_SolutionReferenceManual_v1.35.pdf)
+In the same document you can find explanation of all Object IDs (OIDs) available for users as well as detailed technical explanation for all features and envisioned use cases.
+3. Infineon I<sup>2</sup>C Protocol implementation details can be found [here](https://github.com/Infineon/Assets/raw/master/PDFs/IFXI2CProtocol_v1.65.pdf)
+4. Platform Abstraction Layer (PAL) overview and Porting Guide are presented in the [Wiki](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide)
+
+For more information please refer to the [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki) of this project
 
 ## Get started and Application Notes
 Get started guide is based on the OPTIGA™ Trust X evaluation kit hardware and DAVE™ 4 (Digital Application Virtual Engineer) IDE. The detailed description you can find in the respective GitHub [repository](https://github.com/Infineon/getstarted-optiga-trust-x).
@@ -36,6 +45,9 @@ Infineon's GitHub offers various application notes for OPTIGA™ Trust X securit
 ## Evaluation and developement kits
 * [OPTIGA™ Trust X evaluation and demonstration kit](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-trust-x-eval-kit/)
 * OPTIGA™ Trust X Shield2Go (link pending)
+
+## Porting Guide
+Platform Abstraction Layer (PAL) overview and Porting Guide are presented on [Wiki](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide) page
 
 ## Contributing
 
