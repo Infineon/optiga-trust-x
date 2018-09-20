@@ -141,40 +141,42 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
 
 #if defined(MBEDTLS_ECDSA_GENKEY_ALT)
 int mbedtls_ecdsa_genkey( mbedtls_ecdsa_context *ctx, mbedtls_ecp_group_id gid,
-                  int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+                        int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-	optiga_lib_status_t status;
+    optiga_lib_status_t status;
     uint8_t public_key [100];
     size_t public_key_len = sizeof( public_key );
     optiga_ecc_curve_t curve_id;
-	mbedtls_ecp_group *grp = &ctx->grp;
+    mbedtls_ecp_group *grp = &ctx->grp;
+    uint16_t privkey_oid = OPTIGA_KEY_STORE_ID_E0F0;
  
-	mbedtls_ecp_group_load( &ctx->grp, gid );
+    mbedtls_ecp_group_load( &ctx->grp, gid );
  
     //checking group against the supported curves of Optiga Trust X
     if ( ( grp->id != MBEDTLS_ECP_DP_SECP256R1 ) &&
-		 ( grp->id != MBEDTLS_ECP_DP_SECP384R1 ) )
-	{
-		return 1;
-	}
-	grp->id == MBEDTLS_ECP_DP_SECP256R1 ? ( curve_id = OPTIGA_ECC_NIST_P_256 )
-                                                : ( curve_id = OPTIGA_ECC_NIST_P_384 ); 
-    //invoke optiga command to generate a key pair.
-	status = optiga_crypt_ecc_generate_keypair( curve_id,
-                                                (optiga_key_usage_t)( OPTIGA_KEY_USAGE_KEY_AGREEMENT | OPTIGA_KEY_USAGE_AUTHENTICATION ),
-												OPTIGA_KEY_STORE_ID_E0F0,
-												public_key,
-												(uint16_t *)&public_key_len ) ;
-	if ( status != OPTIGA_LIB_SUCCESS )
+        ( grp->id != MBEDTLS_ECP_DP_SECP384R1 ) )
     {
-		status = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
+        return 1;
+    }
+    grp->id == MBEDTLS_ECP_DP_SECP256R1 ? ( curve_id = OPTIGA_ECC_NIST_P_256 )
+                                        : ( curve_id = OPTIGA_ECC_NIST_P_384 ); 
+    //invoke optiga command to generate a key pair.
+    status = optiga_crypt_ecc_generate_keypair( curve_id,
+                                                (optiga_key_usage_t)( OPTIGA_KEY_USAGE_KEY_AGREEMENT | OPTIGA_KEY_USAGE_AUTHENTICATION ),
+                                                FALSE,
+                                                &privkey_oid,
+                                                public_key,
+                                                (uint16_t *)&public_key_len ) ;
+    if ( status != OPTIGA_LIB_SUCCESS )
+    {
+        status = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
     }
 
     //store public key generated from optiga into mbedtls structure .
-	if ( mbedtls_ecp_point_read_binary( grp, &ctx->Q,(unsigned char *)&public_key[3],(size_t )public_key_len-3 ) != 0 )
-	{
-		return 1;
-	}
+    if ( mbedtls_ecp_point_read_binary( grp, &ctx->Q,(unsigned char *)&public_key[3],(size_t )public_key_len-3 ) != 0 )
+    {
+        return 1;
+    }
 
     return status;
 }					  
