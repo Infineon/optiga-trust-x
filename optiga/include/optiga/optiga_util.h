@@ -156,7 +156,7 @@ typedef enum eOID_d
  *			status = optiga_util_open_application(&optiga_comms);
  *			if(OPTIGA_LIB_SUCCESS != status)
  *			{
- *				configPRINTF( ("Failure: CmdLib_OpenApplication(): 0x%04X\n\r", status) );
+ *				// optiga_util_open_application() failed
  *				break;
  *			}
  *
