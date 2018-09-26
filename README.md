@@ -1,4 +1,4 @@
-# Infineon's OPTIGA&trade; Trust X hostcode
+# Infineon's OPTIGA&trade; Trust X Application Notes Framework
 
 ## Description
 
