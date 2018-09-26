@@ -4,7 +4,7 @@
 
 <img src="https://github.com/Infineon/Assets/blob/master/Pictures/OPTIGA-Trust-X.png">
 
-This repository contains a target-agnostic C library for the [OPTIGA™ Trust X](https://www.infineon.com/optiga-trust-x) security chip.
+This repository contains a target-agnostic Application Notes Framework for the [OPTIGA™ Trust X](https://www.infineon.com/optiga-trust-x) security chip. It is a basis for other application notes.
 
 ## Summary
 The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_Datasheet_v2.5.pdf) is a security solution based on a secure micrcontroller. Each device is shipped with a unique elliptic-curve keypair and a corresponding X.509 certificate. OPTIGA™ Trust X enables easy integration into existing PKI infrastructure.
@@ -37,14 +37,14 @@ In the same document you can find explanation of all Object IDs (OIDs) available
 
 For more information please refer to the [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki) of this project
 
-## Get started and Application Notes
-Get started guide is based on the OPTIGA™ Trust X evaluation kit hardware and DAVE™ 4 (Digital Application Virtual Engineer) IDE. The detailed description you can find in the respective GitHub [repository](https://github.com/Infineon/getstarted-optiga-trust-x).
-
-Infineon's GitHub offers various application notes for OPTIGA™ Trust X security solutions, you can find get started guide mentioned above there as well. The up-to-date list of application notes is [here](https://github.com/Infineon/appnotes-optiga-trust-x)
-
 ## Evaluation and developement kits
 * [OPTIGA™ Trust X evaluation and demonstration kit](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-trust-x-eval-kit/)
 * OPTIGA™ Trust X Shield2Go (link pending)
+
+## Get Started
+1. [Get Started Guide](https://github.com/Infineon/getstarted-optiga-trust-x)
+2. [On-Chip DTLS Example](https://github.com/Infineon/onchipdtls-optiga-trust-x)
+3. [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
 
 ## Documentation
 For high level description and some important excerpts from the documentation please refer to [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki)
