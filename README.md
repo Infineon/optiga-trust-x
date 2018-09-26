@@ -7,7 +7,7 @@
 This repository contains a target-agnostic C library for the [OPTIGA™ Trust X](https://www.infineon.com/optiga-trust-x) security chip.
 
 ## Summary
-The [OPTIGA™ Trust X](https://www.infineon.com/dgdl/Infineon-DPS310-DS-v01_00-EN.pdf) is a security solution based on a secure micrcontroller. Each device is shipped with a unique elliptic-curve keypair and a corresponding X.509 certificate. OPTIGA™ Trust X enables easy integration into existing PKI infrastructure.
+The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_Datasheet_v2.5.pdf) is a security solution based on a secure micrcontroller. Each device is shipped with a unique elliptic-curve keypair and a corresponding X.509 certificate. OPTIGA™ Trust X enables easy integration into existing PKI infrastructure.
 
 ## Key Features and Benefits
 * High-end security controller
@@ -45,6 +45,15 @@ Infineon's GitHub offers various application notes for OPTIGA™ Trust X securit
 ## Evaluation and developement kits
 * [OPTIGA™ Trust X evaluation and demonstration kit](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-trust-x-eval-kit/)
 * OPTIGA™ Trust X Shield2Go (link pending)
+
+## Documentation
+For high level description and some important excerpts from the documentation please refer to [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki)
+
+Other related documents can be found below:
+1. [OPTIGA™ Trust X Datasheet v2.5](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_Datasheet_v2.5.pdf)
+2. [OPTIGA™ Solution Reference Manual v1.35](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_SolutionReferenceManual_v1.35.pdf)
+3. [OPTIGA™ Keys and Certificates v1.2](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_KeysAndCertificates_v1.2.pdf)
+4. [Infineon I<sup>2</sup>C protocol specification v1.65](https://github.com/Infineon/Assets/raw/master/PDFs/IFXI2CProtocol_v1.65.pdf)
 
 ## Porting Guide
 You might find a list of supported Platforms [here](https://github.com/Infineon/optiga-trust-x/tree/master/pal). These are:
