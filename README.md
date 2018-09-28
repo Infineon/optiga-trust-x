@@ -49,7 +49,7 @@ For more information please refer to the [Wiki page](https://github.com/Infineon
 ## Documentation
 For high level description and some important excerpts from the documentation please refer to [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki)
 
-Other related documents can be found below:
+Other downloadable PDF documents can be found below:
 1. [OPTIGA™ Trust X Datasheet v2.5](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_Datasheet_v2.5.pdf)
 2. [OPTIGA™ Solution Reference Manual v1.35](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_SolutionReferenceManual_v1.35.pdf)
 3. [OPTIGA™ Keys and Certificates v1.2](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_KeysAndCertificates_v1.2.pdf)
