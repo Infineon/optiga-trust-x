@@ -36,7 +36,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/timers.h"
-#include "freertos/queue.h"
+#include "freertos/semphr.h"
 #include "esp_log.h"
 #include "optiga/pal/pal_os_event.h"
 #include "optiga/pal/pal.h"
@@ -45,7 +45,7 @@
 /**********************************************************************************************************************
  * MACROS
  *********************************************************************************************************************/
-#define MAX_CALLBACKS	5
+
 /*********************************************************************************************************************
  * LOCAL DATA
  *********************************************************************************************************************/
@@ -53,17 +53,15 @@
 
 typedef struct callbacks {
 	/// Callback function when timer elapses
-	volatile register_callback clb;
+	volatile register_callback func;
 	/// Pointer to store upper layer callback context (For example: Ifx i2c context)
-	void * clb_ctx;
+	void * args;
 }pal_os_event_clbs_t;
 
-static xTimerHandle otxTimer[MAX_CALLBACKS];
-static pal_os_event_clbs_t clbs[MAX_CALLBACKS];
+static pal_os_event_clbs_t clb_ctx_0;
 
-QueueHandle_t xQueueCallbacks;
-
-PRIVILEGED_DATA static portMUX_TYPE xTaskQueueMutex = portMUX_INITIALIZER_UNLOCKED;
+SemaphoreHandle_t xSemaphore = NULL;
+TimerHandle_t     xTimer = NULL;
 
 /**
 *  Timer callback handler. 
@@ -77,46 +75,33 @@ PRIVILEGED_DATA static portMUX_TYPE xTaskQueueMutex = portMUX_INITIALIZER_UNLOCK
 */
 void vTimerCallback( TimerHandle_t xTimer )
  {
-	uint8_t timer_id = 0;
-	pal_os_event_clbs_t clb_params;
     /* Optionally do something if the pxTimer parameter is NULL. */
     configASSERT( xTimer );
-//
-    taskENTER_CRITICAL(&xTaskQueueMutex);
 
-    /* The number of times this timer has expired is saved as the
-	timer's ID.  Obtain the count. */
-    timer_id = ( uint8_t ) pvTimerGetTimerID( xTimer );
-
-    clb_params.clb = clbs[timer_id].clb;
-    clb_params.clb_ctx = clbs[timer_id].clb_ctx;
     /*
-     * You cann't call callback from the timer callback, this might lead to a corruption
-     * Use queues instead to activate corresponding handler
+     * You can't call callback from the timer callback, this might lead to a corruption
+     * Use a semaphore instead
      * */
-    xQueueSend( xQueueCallbacks, ( void * ) &clb_params, ( TickType_t ) 10 );
-
-    taskEXIT_CRITICAL(&xTaskQueueMutex);
+    xSemaphoreGive( xSemaphore );
 }
 
 /// @endcond
 
 void vTaskCallbackHandler( void * pvParameters )
 {
-	pal_os_event_clbs_t clb_params;
 	register_callback func = NULL;
 	void * func_args = NULL;
-	/* See if we can obtain the element from the Queue.  If the Queue is not
+	/* See if we can obtain the element from the semaphore.  If the semaphore is not
 	available wait block the task to see if it becomes free.
 	portMAX_DELAY works only if INCLUDE_vTaskSuspend id define to 1
 	*/
 	do {
-		if( xQueueReceive( xQueueCallbacks, &( clb_params ), ( TickType_t ) portMAX_DELAY ) )
-		{
-			if (clb_params.clb)
+		if( xSemaphoreTake( xSemaphore, ( TickType_t ) portMAX_DELAY ) == pdTRUE )
+        {
+			if (clb_ctx_0.func)
 			{
-				func = clb_params.clb;
-				func_args = clb_params.clb_ctx;
+				func = clb_ctx_0.func;
+				func_args = clb_ctx_0.args;
 				func((void*)func_args);
 			}
 		}
@@ -135,45 +120,45 @@ void vTaskCallbackHandler( void * pvParameters )
 */
 pal_status_t pal_os_event_init(void)
 {
-	uint8_t i = 0;
-	char tmr_name[10];
-	TaskHandle_t xHandle = NULL;
+	pal_status_t status = PAL_STATUS_FAILURE;
+	BaseType_t xReturned;
 
-	for (i = 0; i < MAX_CALLBACKS; i++)
-	{
-		if (otxTimer[i] == NULL)
+	do {
+		/* Create a semaphore and take it now */
+		xSemaphore = xSemaphoreCreateMutex();
+		if( xSemaphore == NULL )
 		{
-			sprintf(tmr_name, "OTXTmr_%d", i);
-			otxTimer[i] = xTimerCreate(  tmr_name,        /* Just a text name, not used by the kernel. */
-									( 100 / portTICK_PERIOD_MS ),    /* The timer period in ticks. */
-									pdFALSE,         /* The timers will auto-reload themselves when they expire. */
-									( void * ) i,   /* Assign each timer a unique id equal to its array index. */
-									vTimerCallback  /* Each timer calls the same callback when it expires. */
-									);
-
-			if( otxTimer[i] == NULL )
-			{
-				/* There was insufficient FreeRTOS heap available for the semaphore to
-				be created successfully. */
-			    return PAL_STATUS_FAILURE;
-			}
+			break;
 		}
+		xSemaphoreTake( xSemaphore, ( TickType_t ) 10 );
 
-	}
+		/* Create the handler for the callbacks. */
+		xReturned = xTaskCreate( vTaskCallbackHandler,       /* Function that implements the task. */
+								"otx_os_tsk",                /* Text name for the task. */
+								configMINIMAL_STACK_SIZE*5,  /* Stack size in words, not bytes. */
+								NULL,        /* Parameter passed into the task. */
+								5,           /* Priority at which the task is created. */
+								NULL );      /* Used to pass out the created task's handle. */
+		if( xReturned == NULL )
+		{
+			break;
+		}
+								
+		xTimer = xTimerCreate("otx_os_tmr",        /* Just a text name, not used by the kernel. */
+							  1 / portTICK_PERIOD_MS,    /* The timer period in ticks. */
+							  pdFALSE,         /* The timers will auto-reload themselves when they expire. */
+							  ( void * ) NULL,   /* Assign each timer a unique id equal to its array index. */
+							  vTimerCallback  /* Each timer calls the same callback when it expires. */
+							  );
+		if( xTimer == NULL )
+		{
+			break;
+		}
+		status = PAL_STATUS_SUCCESS;
 
-	/* Create a queue capable of containing MAX_CALLBACKS timers id values. */
-	xQueueCallbacks = xQueueCreate( MAX_CALLBACKS, sizeof( pal_os_event_clbs_t ) );
-
-	/* Create the handler for the callbacks. */
-	xTaskCreate( vTaskCallbackHandler,       /* Function that implements the task. */
-				"ClbksHndlr",          /* Text name for the task. */
-				configMINIMAL_STACK_SIZE*5,      /* Stack size in words, not bytes. */
-				NULL,    /* Parameter passed into the task. */
-				5,/* Priority at which the task is created. */
-				&xHandle );      /* Used to pass out the created task's handle. */
-
-
-	return PAL_STATUS_SUCCESS;
+	} while(0);
+				
+	return status;
 }
 /**
 * Platform specific event call back registration function to trigger once when timer expires.
@@ -193,28 +178,14 @@ void pal_os_event_register_callback_oneshot(register_callback callback,
                                             void* callback_args, 
                                             uint32_t time_us)
 {
-	uint8_t i = 0;
-
-    for (i = 0; i < MAX_CALLBACKS; i++)
-    {
-    	taskENTER_CRITICAL(&xTaskQueueMutex);
-    	if( xTimerIsTimerActive( otxTimer[i] ) == pdFALSE )
-		{
-    		if (time_us < 1000) {
-    			time_us = 1000;
-    		}
-    		xTimerChangePeriod( otxTimer[i], (time_us / 1000) / portTICK_PERIOD_MS, 10 );
-    		clbs[i].clb = callback;
-    		clbs[i].clb_ctx = callback_args;
-
-    		taskEXIT_CRITICAL(&xTaskQueueMutex);
-    		break;
-		} else if ( i == (MAX_CALLBACKS - 1) )
-		{
-			ESP_LOGE("PAL_OS_EVENT", "No available Timers");
-		}
-    	taskEXIT_CRITICAL(&xTaskQueueMutex);
-    }
+	if (time_us < 1000) {
+		time_us = 1000;
+	}
+	
+	clb_ctx_0.func = callback;
+	clb_ctx_0.args = callback_args;
+				
+	xTimerChangePeriod( xTimer, (time_us / 1000) / portTICK_PERIOD_MS, 10 );
 }
 
 /**
