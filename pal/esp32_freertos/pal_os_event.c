@@ -122,7 +122,7 @@ pal_status_t pal_os_event_init(void)
 {
 	pal_status_t status = PAL_STATUS_FAILURE;
 	BaseType_t xReturned;
-
+	
 	do {
 		/* Create a semaphore and take it now */
 		xSemaphore = xSemaphoreCreateMutex();
@@ -139,11 +139,11 @@ pal_status_t pal_os_event_init(void)
 								NULL,        /* Parameter passed into the task. */
 								5,           /* Priority at which the task is created. */
 								NULL );      /* Used to pass out the created task's handle. */
-		if( xReturned == NULL )
+		if( xReturned != pdPASS  )
 		{
 			break;
 		}
-								
+			
 		xTimer = xTimerCreate("otx_os_tmr",        /* Just a text name, not used by the kernel. */
 							  1 / portTICK_PERIOD_MS,    /* The timer period in ticks. */
 							  pdFALSE,         /* The timers will auto-reload themselves when they expire. */
@@ -184,7 +184,7 @@ void pal_os_event_register_callback_oneshot(register_callback callback,
 	
 	clb_ctx_0.func = callback;
 	clb_ctx_0.args = callback_args;
-				
+	
 	xTimerChangePeriod( xTimer, (time_us / 1000) / portTICK_PERIOD_MS, 10 );
 }
 

@@ -104,6 +104,7 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 	esp32_i2c_ctx_t* master_ctx;
 	i2c_config_t conf;
 	
+#ifdef CONFIG_PAL_I2C_INIT_ENABLE	
 	printf("Initialize pal_i2c_init  ");
 
 	if ((p_i2c_context == NULL) || (p_i2c_context->p_i2c_hw_config == NULL))
@@ -124,6 +125,7 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
                        PAL_I2C_MASTER_RX_BUF_DISABLE, 0);
 	
     printf("OK\r\n");
+#endif
 
     return PAL_STATUS_SUCCESS;
 }
@@ -153,13 +155,15 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 pal_status_t pal_i2c_deinit(const pal_i2c_t* p_i2c_context)
 {
 	esp32_i2c_ctx_t* master_ctx;
-	
+
+#ifdef CONFIG_PAL_I2C_INIT_ENABLE			
 	if ((p_i2c_context == NULL) || (p_i2c_context->p_i2c_hw_config == NULL))
 		return PAL_STATUS_FAILURE;
 	
 	master_ctx = (esp32_i2c_ctx_t*)p_i2c_context->p_i2c_hw_config;
 	
 	i2c_driver_delete(master_ctx->port);
+#endif
 	
     return PAL_STATUS_SUCCESS;
 }
