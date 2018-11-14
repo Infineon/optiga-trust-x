@@ -1,4 +1,5 @@
 /**
+* \copyright
 * MIT License
 *
 * Copyright (c) 2018 Infineon Technologies AG
@@ -21,42 +22,61 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE
 *
+* \endcopyright
 *
-* \file
+* \author Infineon Technologies AG
 *
-* \brief This file implements the platform abstraction layer APIs for i2c interface config.
+* \file pal.c
+*
+* \brief    This file implements the platform abstraction layer APIs.
 *
 * \ingroup  grPAL
 * @{
 */
 
-#include "optiga/pal/pal_gpio.h"
-#include "optiga/pal/pal_i2c.h"
-#include "optiga/ifx_i2c/ifx_i2c_config.h" // IFX_I2C_BASE_ADDR
+#include "optiga/pal/pal.h"
 
-
-pal_i2c_t optiga_pal_i2c_context_0 =
+/**
+ * @brief Initializes the PAL layer
+ *
+ * Initializes the PAL layer.
+ * <br>
+ *
+ *<b>API Details:</b>
+ * - Initializes the PAL layer<br>
+ *
+ *<b>User Input:</b><br>
+ * - None
+ *
+ * \retval  #PAL_STATUS_SUCCESS  Returns when the PAL init it successfull
+ * \retval  #PAL_STATUS_FAILURE  Returns when the PAL init fails.
+ */
+pal_status_t pal_init(void)
 {
-    // Pointer to I2C master platform specific context
-    NULL,
-    // Slave address
-    IFX_I2C_BASE_ADDR,
-    // Upper layer context
-    NULL,
-    // Callback event handler
-    NULL
-};
+    return PAL_STATUS_SUCCESS;
+}
 
-
-static uint32_t gpio_pin_vdd   = 2;
-static uint32_t gpio_pin_reset = 0;
-
-pal_gpio_t optiga_vdd_0 =
+/**
+ * @brief De-Initializes the PAL layer
+ *
+ * De-Initializes the PAL layer.
+ * <br>
+ *
+ *<b>API Details:</b>
+ * - De-Initializes the PAL layer<br>
+ *
+ *<b>User Input:</b><br>
+ * - None
+ *
+ * \retval  #PAL_STATUS_SUCCESS  Returns when the PAL de-init it successfull
+ * \retval  #PAL_STATUS_FAILURE  Returns when the PAL de-init fails.
+ */
+pal_status_t pal_deinit(void)
 {
-    (void*) &gpio_pin_vdd
-};
+    return PAL_STATUS_SUCCESS;
+}
 
-pal_gpio_t optiga_reset_0 =
-{
-    (void*) &gpio_pin_reset
-};
+/**
+* @}
+*/
+
