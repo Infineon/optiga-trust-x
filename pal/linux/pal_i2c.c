@@ -35,7 +35,6 @@
 */
 
 #include <linux/i2c-dev.h>
-#include <wiringPi.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -51,7 +50,7 @@
 #endif
 
 /// I2C device
-#define I2C_DEVICE "/dev/i2c-1"
+extern char * i2c_if;
 
 // Slave address not initialization
 #define IFXI2C_SLAVE_ADDRESS_INIT 0xFFFF
@@ -162,7 +161,7 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 	do
 	{
 		pal_linux = (pal_linux_t*) p_i2c_context->p_i2c_hw_config;
-		pal_linux->i2c_handle = open(I2C_DEVICE, O_RDWR);
+		pal_linux->i2c_handle = open(i2c_if, O_RDWR);
 		LOG_HAL("IFX OPTIGA TRUST X Logs \n");
 		
 		// Assign the slave address
