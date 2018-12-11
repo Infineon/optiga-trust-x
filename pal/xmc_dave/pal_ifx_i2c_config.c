@@ -68,8 +68,8 @@ pal_gpio_t optiga_vdd_0 =
 #if UC_FAMILY == XMC1
     (void*)NULL
 #elif UC_FAMILY == XMC4
-	(void*)&pin_3_4
-else
+    (void*)&pin_3_4
+#else
     #error Unknown XMC_FAMILY
 #endif
 };
@@ -85,7 +85,7 @@ pal_gpio_t optiga_reset_0 =
 	(void*)&pin0_15
 #elif UC_FAMILY == XMC4
 	(void*)&pin_3_3
-else
+#else
     #error Unknown XMC_FAMILY
 #endif
 };
