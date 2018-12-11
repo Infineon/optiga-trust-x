@@ -64,7 +64,14 @@ pal_i2c_t optiga_pal_i2c_context_0 =
 pal_gpio_t optiga_vdd_0 =
 {
     // Platform specific GPIO context for the pin used to toggle Vdd.
-    (void*)&pin_3_4
+
+#if UC_FAMILY == XMC1
+    (void*)NULL
+#elif UC_FAMILY == XMC4
+	(void*)&pin_3_4
+else
+    #error Unknown XMC_FAMILY
+#endif
 };
 
 /**
@@ -73,7 +80,14 @@ pal_gpio_t optiga_vdd_0 =
 pal_gpio_t optiga_reset_0 =
 {
     // Platform specific GPIO context for the pin used to toggle Reset.
-    (void*)&pin_3_3
+
+#if UC_FAMILY == XMC1
+	(void*)&pin0_15
+#elif UC_FAMILY == XMC4
+	(void*)&pin_3_3
+else
+    #error Unknown XMC_FAMILY
+#endif
 };
 
 
