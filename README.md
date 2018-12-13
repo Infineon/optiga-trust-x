@@ -7,7 +7,7 @@
 This repository contains a target-agnostic Application Notes Framework for the [OPTIGA™ Trust X](https://www.infineon.com/optiga-trust-x) security chip. It is a basis for other application notes.
 
 ## Summary
-The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_Datasheet_v2.5.pdf) is a security solution based on a secure micrcontroller. Each device is shipped with a unique elliptic-curve keypair and a corresponding X.509 certificate. OPTIGA™ Trust X enables easy integration into existing PKI infrastructure.
+The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_Datasheet_v2.5.pdf) is a security solution based on a secure microntroller. Each device is shipped with a unique elliptic-curve keypair and a corresponding X.509 certificate. OPTIGA™ Trust X enables easy integration into existing PKI infrastructure.
 
 ## Key Features and Benefits
 * High-end security controller
