@@ -1,4 +1,4 @@
-# Infineon's OPTIGA&trade; Trust X Application Notes Framework
+# Infineon's OPTIGA&trade; Trust X Application Note Framework
 
 ## Description
 
