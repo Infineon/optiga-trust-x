@@ -1,4 +1,4 @@
-# Infineon's OPTIGA&trade; Trust X Application Note Framework
+# Infineon OPTIGA&trade; Trust X Application Note Framework
 
 ## Description
 
@@ -25,6 +25,18 @@ The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIG
 * Common Criteria Certified EAL6+ (high) hardware
 * Cryptographic Tool Box based on ECC NIST P256, P384 and SHA256 (sign, verify, key generation, ECDH, session key derivation)   
 
+## Evaluation and developement kits
+* OPTIGA™ Trust X [evaluation and demonstration kit](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-trust-x-eval-kit/)
+* OPTIGA™ Trust X [Shield2Go](https://www.infineon.com/cms/en/product/evaluation-boards/s2go-security-optiga-x/)
+
+## Get Started
+1. [Get started guide](https://github.com/Infineon/getstarted-optiga-trust-x)
+2. [On-Chip DTLS example](https://github.com/Infineon/onchipdtls-optiga-trust-x)
+3. [Off-Chip TLS example (mbedTLS)](https://github.com/Infineon/mbedTLS-optiga-trust-x)
+4. [AWS FreeRTOS example](https://github.com/Infineon/amazon-freertos-optiga-trust-x)
+5. [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
+6. [Personalisation example](https://github.com/Infineon/personalize-optiga-trust-x)
+
 ## Overview
 
 ![hostcode architecture](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic.jpg)
@@ -36,15 +48,6 @@ In the same document you can find explanation of all Object IDs (OIDs) available
 4. Platform Abstraction Layer (PAL) overview and Porting Guide are presented in the [Wiki](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide)
 
 For more information please refer to the [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki) of this project
-
-## Evaluation and developement kits
-* [OPTIGA™ Trust X evaluation and demonstration kit](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-trust-x-eval-kit/)
-* OPTIGA™ Trust X Shield2Go (link pending)
-
-## Get Started
-1. [Get Started Guide](https://github.com/Infineon/getstarted-optiga-trust-x)
-2. [On-Chip DTLS Example](https://github.com/Infineon/onchipdtls-optiga-trust-x)
-3. [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
 
 ## Documentation
 For high level description and some important excerpts from the documentation please refer to [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki)
