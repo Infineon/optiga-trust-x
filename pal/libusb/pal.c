@@ -37,7 +37,6 @@
 /**********************************************************************************************************************
  * HEADER FILES
  *********************************************************************************************************************/
-//#include <DAVE.h>
 #include "optiga/pal/pal_i2c.h"
 #ifdef __WIN32__
 #include "libusb.h"
@@ -92,64 +91,7 @@ pal_status_t pal_init(void)
 	LOG_PAL("pal_init\n. ");
 
 	//libusb_set_debug(NULL, 4);
-/*	
-	number_of_connected_devices = libusb_get_device_list(NULL, &devs); //get the list of devices
-	
-	if (number_of_connected_devices < 0)
-	{
-	 LOG_PAL("No devices found\n.");
-	 return PAL_I2C_EVENT_ERROR;
-	}
-	
-	for(k=0;k<number_of_connected_devices;k++)
-	{
-	 int a = libusb_get_device_descriptor(devs[k], &dev_desc);
-	 if (a < 0)
-	 {
-		 LOG_PAL("Failed to get usb descriptor\n.");
-		 return PAL_I2C_EVENT_ERROR;
-	 }
-	 else
-	 {
-		 LOG_PAL("Found [%X:%X]\n.", dev_desc.idVendor, dev_desc.idProduct);
-	 }
-	
-	 if ( (dev_desc.idVendor == USB_VID) && (dev_desc.idProduct == USB_PID))
-	 {
-		 ftdi_dev_num++;
-		 ftdi_dev = k;
-		 break;
-	 }
-	}
 
-	if (ftdi_dev_num > 1)
-	{
-	 LOG_PAL("Error: more than one device connected! %d\n.", ftdi_dev_num);
-	 return PAL_I2C_EVENT_ERROR;
-	}
-
-	if (libusb_open(devs[ftdi_dev], &dev_handle) < 0)
-	{
-	 LOG_PAL("Error: cannot open device!\n.");
-	 return PAL_I2C_EVENT_ERROR;
-	}
-	
-	libusb_get_string_descriptor_ascii(dev_handle, dev_desc.iManufacturer, strDesc, 256);
-	LOG_PAL("Manufacturer: %s\n", strDesc);
-	libusb_get_string_descriptor_ascii(dev_handle, dev_desc.iSerialNumber, strDesc, 256);
-	LOG_PAL("SerialNumber: %s\n", strDesc);
-	libusb_get_string_descriptor_ascii(dev_handle, dev_desc.iProduct, strDesc, 256);
-	LOG_PAL("Product: %s\n", strDesc);
-	
-	if (libusb_claim_interface(dev_handle, 0) < 0)
-	{
-		libusb_close(dev_handle);
-		dev_handle=NULL;
-		return PAL_I2C_EVENT_ERROR;
-	}
-	
-	libusb_free_device_list(devs, number_of_connected_devices);
-*/
 	dev_handle = libusb_open_device_with_vid_pid(NULL, USB_VID, USB_PID);
 	
 	usb_events.handle = dev_handle;
@@ -163,6 +105,13 @@ pal_status_t pal_init(void)
 #ifndef __WIN32__ // LINUX
     libusb_detach_kernel_driver(usb_events.handle, USB_INTERFACE);
 #endif
+
+	if (libusb_claim_interface(usb_events.handle, 0) < 0)
+	{
+		libusb_close(dev_handle);
+		dev_handle=NULL;
+		return PAL_I2C_EVENT_ERROR;
+	}
 
 	if (libusb_get_active_config_descriptor(libusb_get_device(usb_events.handle), &config_desc))
 	{
