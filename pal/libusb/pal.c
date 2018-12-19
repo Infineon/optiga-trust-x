@@ -106,14 +106,14 @@ pal_status_t pal_init(void)
 			return 1;
 		}
 	}
-#endif
-
+#else
 	if (libusb_claim_interface(usb_events.handle, 0) < 0)
 	{
 		libusb_close(dev_handle);
 		dev_handle=NULL;
 		return PAL_I2C_EVENT_ERROR;
 	}
+#endif
 
 	if (libusb_get_active_config_descriptor(libusb_get_device(usb_events.handle), &config_desc))
 	{
