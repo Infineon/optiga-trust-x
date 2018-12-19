@@ -100,7 +100,7 @@ pal_status_t pal_init(void)
 	*/
 	if (libusb_kernel_driver_active(usb_events.handle, 0))
 	{
-		res = libusb_detach_kernel_driver(handle, 0);
+		res = libusb_detach_kernel_driver(usb_events.handle, 0);
 		if (res != 0)
 		{
 			fprintf(stderr, "Error detaching kernel driver.\n");
