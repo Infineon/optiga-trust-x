@@ -95,17 +95,7 @@ pal_status_t pal_init(void)
 	}
 
 #ifndef __WIN32__ // LINUX
-	/* Check whether a kernel driver is attached to interface #0. If so, we'll 
-	* need to detach it.
-	*/
-	if (libusb_kernel_driver_active(usb_events.handle, 0))
-	{
-		if (libusb_detach_kernel_driver(usb_events.handle, 0) != 0)
-		{
-			fprintf(stderr, "Error detaching kernel driver.\n");
-			return 1;
-		}
-	}
+	libusb_detach_kernel_driver(usb_events.handle, USB_INTERFACE);
 #else
 	if (libusb_claim_interface(usb_events.handle, 0) < 0)
 	{
