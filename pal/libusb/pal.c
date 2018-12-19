@@ -92,7 +92,7 @@ pal_status_t pal_init(void)
 	LOG_PAL("pal_init\n. ");
 
 	//libusb_set_debug(NULL, 4);
-	
+/*	
 	number_of_connected_devices = libusb_get_device_list(NULL, &devs); //get the list of devices
 	
 	if (number_of_connected_devices < 0)
@@ -149,6 +149,8 @@ pal_status_t pal_init(void)
 	}
 	
 	libusb_free_device_list(devs, number_of_connected_devices);
+*/
+	dev_handle = libusb_open_device_with_vid_pid(NULL, USB_VID, USB_PID);
 	
 	usb_events.handle = dev_handle;
 
@@ -158,7 +160,7 @@ pal_status_t pal_init(void)
 		return PAL_I2C_EVENT_ERROR;
 	}
 
-#ifndef WIN32 // LINUX
+#ifndef __WIN32__ // LINUX
     libusb_detach_kernel_driver(usb_events.handle, USB_INTERFACE);
 #endif
 
