@@ -73,15 +73,7 @@ static libusb_device_handle *dev_handle = NULL; //a device handle
 
 pal_status_t pal_init(void)
 {
-
-    struct libusb_device_descriptor dev_desc;
 	struct libusb_config_descriptor* config_desc = NULL;
-	ssize_t number_of_connected_devices; //holding number of devices in list
-	ssize_t k; //for iterating through the list
-	int ftdi_dev_num = 0;
-	int ftdi_dev;
-	libusb_device **devs; //pointer to pointer of device, used to retrieve a list of devices
-	unsigned char strDesc[256];
 	
 	if (libusb_init(NULL))
 	{
