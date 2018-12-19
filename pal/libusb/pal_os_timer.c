@@ -40,13 +40,15 @@
 
 #ifdef __WIN32__
 #include "windows.h"
+#include <sys\timeb.h>
 #else
+#include <time.h>
+#include <math.h>
 #include <unistd.h>
 #endif
 
 #include <stdio.h>
 #include <stdint.h>
-#include <sys\timeb.h>
 #include "optiga/common/Datatypes.h"
 
 /**********************************************************************************************************************
@@ -73,6 +75,7 @@
  *
  * \retval  uint32_t time in milliseconds 
  */
+#ifdef __WIN32__
 uint32_t pal_os_timer_get_time_in_milliseconds(void)
 {
     struct timeb time;
@@ -81,6 +84,19 @@ uint32_t pal_os_timer_get_time_in_milliseconds(void)
 
     return ((uint32_t) (1000 * time.time + time.millitm));
 }
+#else
+uint32_t pal_os_timer_get_time_in_milliseconds(void)
+{
+    long ms; // Milliseconds
+    struct timespec spec;
+ 
+    clock_gettime(CLOCK_REALTIME, &spec);
+ 
+    ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
+ 
+    return ms;
+}
+#endif
 
 /**
 * Funtion to wait or delay until the supplied milli seconds time
@@ -90,7 +106,7 @@ uint32_t pal_os_timer_get_time_in_milliseconds(void)
 */
 void pal_os_timer_delay_in_milliseconds(uint16_t milliseconds)
 {
-#ifdef WIN32
+#ifdef __WIN32__
     Sleep(milliseconds);
 #else // LINUX
     usleep(milliseconds * 1000);
