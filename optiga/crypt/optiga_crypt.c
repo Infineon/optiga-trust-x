@@ -96,7 +96,7 @@ optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
     //To read the maximum communication buffer size.
     uint16_t max_comms_buffer;
     //To hold the remaining communication buffer size to hold the data
-    uint16_t remaining_comm_buffer_size;
+    uint16_t remaining_comm_buffer_size = 0;
 
     //Hash the data
     //Available_Size = (wMaxCommsBuffer - #CALC_HASH_FIXED_OVERHEAD_SIZE)
@@ -114,7 +114,7 @@ optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
     //Available_Size = (wMaxCommsBuffer - CALC_HASH_FIXED_OVERHEAD_SIZE - CALC_HASH_IMPORT_OR_EXPORT_OVERHEAD_SIZE)
     uint16_t remaining_comm_bfr_sz_with_export;
 
-    uint32_t size_of_data_to_hash;
+    uint32_t size_of_data_to_hash = 0;
     uint8_t chaining = 0;
 
     hash_options.eHashAlg      = (eHashAlg_d)(hash_ctx->hash_algo);
@@ -265,8 +265,8 @@ optiga_lib_status_t optiga_crypt_ecc_generate_keypair(optiga_ecc_curve_t curve_i
 
 		public_key_out.sPublicKey.prgbStream = public_key;
 		public_key_out.sPublicKey.wLen       = *public_key_length;
-//		public_key_out.sPrivateKey.prgbStream = private_key;
-//		public_key_out.sPrivateKey.wLen 	 = private_key_length;
+        public_key_out.sPrivateKey.prgbStream = private_key;
+        public_key_out.sPrivateKey.wLen 	 = 0xffff;
     }
     else
     {

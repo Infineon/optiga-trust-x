@@ -21,7 +21,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE
 *
-* \file pal_os_event.h
+* \file
 *
 * \brief   This file implements the prototype declarations of pal os event
 *

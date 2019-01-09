@@ -824,7 +824,6 @@ optiga_lib_status_t optiga_util_write_metadata(uint16_t optiga_oid, uint8_t * p_
 
     //If access condition satisfied, set the data
     sd_params.wOID = optiga_oid;
-    // TODO(chr): clarify if we only support offset=0 or we need to add a parameter
     sd_params.wOffset = 0;
     sd_params.eDataOrMdata = eMETA_DATA;
     sd_params.eWriteOption = eWRITE;

@@ -276,7 +276,9 @@ static optiga_comms_t* p_optiga_comms;
 uint16_t wMaxCommsBuffer = INVALID_MAX_COMMS_BUFF_SIZE;
 
 //Finds minimum amongst the given 2 value
+#ifndef MIN
 #define MIN(a,b) ((a<b)?a:b)
+#endif
 
 ///Hash Output length for SHA256 Hash Algorithm 
 #define SHA256_HASH_LEN                 32
