@@ -59,11 +59,10 @@ void pal_gpio_init()
 {
     // Init power pins
     nrf_gpio_cfg_output((uint32_t)optiga_vdd_0.p_gpio_hw);
-    nrf_gpio_cfg_output(ARDUINO_9_PIN);                   // For OPTIGA on Trust X Shield2Go
 
     // Set power pins to enable power
-    nrf_gpio_pin_clear((uint32_t)optiga_vdd_0.p_gpio_hw); // Enable power for onboard OPTIGA
-    nrf_gpio_pin_set(ARDUINO_9_PIN);                      // Disable power for OPTIGA on Trust X Shield2Go
+    nrf_gpio_pin_set((uint32_t)optiga_vdd_0.p_gpio_hw); // Enable power for onboard OPTIGA
+
 
     // Init reset pin
     nrf_gpio_cfg_output((uint32_t)(optiga_reset_0.p_gpio_hw));

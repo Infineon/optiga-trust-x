@@ -31,39 +31,32 @@
 */
 
 #include "optiga/pal/pal_os_lock.h"
+#include "nrf_atomic.h"
+#include "nrf_pwr_mgmt.h"
 
 /**
  * @brief PAL OS lock structure. Might be extended if needed
  */
 typedef struct pal_os_lock
 {
-    uint8_t lock;
+    nrf_atomic_flag_t lock;
 } pal_os_lock_t;
 
-volatile static pal_os_lock_t pal_os_lock = {.lock = 0};
+static volatile pal_os_lock_t pal_os_lock = {.lock = 0};
 
 pal_status_t pal_os_lock_acquire(void)
 {
-    pal_status_t return_status = PAL_STATUS_FAILURE;
-
-    if(!(pal_os_lock.lock))
-    {
-    	pal_os_lock.lock++;
-        if(pal_os_lock.lock != 1)
-        {
-        	pal_os_lock.lock--;
-        }
-        return_status = PAL_STATUS_SUCCESS;
+    // wait until previous value was false, this indicates the lock was free and we own it now.
+    while(nrf_atomic_flag_set_fetch(&pal_os_lock.lock)) {
+        nrf_pwr_mgmt_run();
     }
-    return return_status;
+
+    return PAL_STATUS_SUCCESS;
 }
 
 void pal_os_lock_release(void)
 {
-    if(pal_os_lock.lock)
-    {
-    	pal_os_lock.lock--;
-    }
+    (void)nrf_atomic_flag_clear(&pal_os_lock.lock);
 }
 
 /**

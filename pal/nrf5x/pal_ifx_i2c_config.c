@@ -67,7 +67,7 @@ pal_i2c_t optiga_pal_i2c_context_0 =
 pal_gpio_t optiga_vdd_0 =
 {
     // Platform specific GPIO context for the pin used to toggle Vdd.
-    (void*)ARDUINO_8_PIN  // Power pin for the onboard OPTIGA
+    (void*)ARDUINO_9_PIN  // Power pin for the onboard OPTIGA
 };
 
 /**
