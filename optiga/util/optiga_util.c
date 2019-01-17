@@ -143,23 +143,23 @@ optiga_lib_status_t optiga_util_read_metadata(uint16_t optiga_oid, uint8_t * p_b
             break;
         }
 
-		//Get metadata of OID
-		cmd_params.wOID = optiga_oid;
-		cmd_params.wLength = LENGTH_METADATA;
-		cmd_params.wOffset = 0;
-		cmd_params.eDataOrMdata = eMETA_DATA;
+        //Get metadata of OID
+        cmd_params.wOID = optiga_oid;
+        cmd_params.wLength = LENGTH_METADATA;
+        cmd_params.wOffset = 0;
+        cmd_params.eDataOrMdata = eMETA_DATA;
 
-		cmd_resp.prgbBuffer = p_buffer;
-		cmd_resp.wBufferLength = buffer_limit;
-		cmd_resp.wRespLength = 0;
+        cmd_resp.prgbBuffer = p_buffer;
+        cmd_resp.wBufferLength = buffer_limit;
+        cmd_resp.wRespLength = 0;
 
-		status = CmdLib_GetDataObject(&cmd_params,&cmd_resp);
-		if(CMD_LIB_OK != status)
-		{
-			break;
-		}
-
-		status = OPTIGA_LIB_SUCCESS;
+        status = CmdLib_GetDataObject(&cmd_params,&cmd_resp);
+        if(CMD_LIB_OK != status)
+        {
+            break;
+        }
+        *buffer_size = cmd_resp.wRespLength;
+        status = OPTIGA_LIB_SUCCESS;
 
     }while(FALSE);
 
