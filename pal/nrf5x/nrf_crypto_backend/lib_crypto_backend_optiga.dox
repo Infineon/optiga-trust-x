@@ -24,17 +24,26 @@ See @ref lib_crypto_config for details on enabling this backend.
 
 See @ref lib_crypto for nrf_crypto APIs that can use this backend.
 
-@subsection lib_crypto_backend_optiga_readme Important information
+@section lib_crypto_backend_optiga_readme Important information
+
+@subsection lib_crypto_backend_optiga_readme_configuration Required
+configuration
 
 Due to EasyDMA restrications on nRF52832 devices, it is necessary to set a 
-projet-level defince `DL_MAX_FRAME_SIZE=250` to use the nrf5x Platform 
+projet-level define `DL_MAX_FRAME_SIZE=250` to use the nrf5x Platform 
 Abstraction Layer (PAL). This PAL is required by the Trust X host library, which
- is used by the OPTIGA backedn implementation.
+is used by the OPTIGA backend implementation.
 
 To use the PAL together with other I2C devices and be able to run it also on a 
 BLE Shield2Go, define `IFX_2GO_SUPPORT` on project-level.
 
 The OPTIGA library allocates memory on the heap. For proper operation, the heap
 should be larger than 8,192 Bytes.
+
+@subsection lib_crypto_backend_optiga_readme_hardware Hardware compatibility
+
+When using the Nordic PCA10040 board with the Trust X Shield the LEDs
+BSP_BOARD_LED_1 and BSP_BOARD_LED_2 must not be used. These pins are needed for
+the correct operation of the OPTIGA Trust X.
 
 */
