@@ -29,3 +29,9 @@ of each respective include block.
 
 The library allocates memory on the heap. To ensure correct operation the heap
 must be sufficiently large, e.g. 8,192 Bytes.
+
+# Pin Conflict with Nordic PCA10040 and Trust X Shield
+
+When using the Nordic PCA10040 board with the Trust X Shield the LEDs
+BSP_BOARD_LED_1 and BSP_BOARD_LED_2 must not be used. These pins are needed for
+the correct operation of the OPTIGA Trust X.
