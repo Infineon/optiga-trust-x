@@ -1,0 +1,49 @@
+/**
+@page lib_crypto_backend_optiga OPTIGA(TM) backend
+
+The OPTIGA backend for nrf_crypto provides selected features of the Infineon 
+OPTIGA(TM) Trust X via the nrf_crypto API.
+Infineon OPTIGA(TM) Trust X is a high-end security controller with a large set
+of features to secure devices.
+The select Trust X functions supported via the OPTIGA backend are:
+- Random number generation
+- ECDH to compute shared secrets
+- ECDSA siganture computation and verification for EC curve secp256r1
+- Conversion functions for keys to use them with Trust X
+
+The backend is based on the OPTIGA(TM) Trust X Application Notes Framework
+available with more documentation at: https://github.com/infineon/optiga-trust-x
+
+@note All APIs in this backend are intended to be internal to nrf_crypto.
+
+@section lib_crypto_backend_optiga_config Configuration
+
+See @ref lib_crypto_config for details on enabling this backend.
+
+@section lib_crypto_backend_optiga_home Available frontend API
+
+See @ref lib_crypto for nrf_crypto APIs that can use this backend.
+
+@section lib_crypto_backend_optiga_readme Important information
+
+@subsection lib_crypto_backend_optiga_readme_configuration Required
+configuration
+
+Due to EasyDMA restrications on nRF52832 devices, it is necessary to set a 
+projet-level define `DL_MAX_FRAME_SIZE=250` to use the nrf5x Platform 
+Abstraction Layer (PAL). This PAL is required by the Trust X host library, which
+is used by the OPTIGA backend implementation.
+
+To use the PAL together with other I2C devices and be able to run it also on a 
+BLE Shield2Go, define `IFX_2GO_SUPPORT` on project-level.
+
+The OPTIGA library allocates memory on the heap. For proper operation, the heap
+should be larger than 8,192 Bytes.
+
+@subsection lib_crypto_backend_optiga_readme_hardware Hardware compatibility
+
+When using the Nordic PCA10040 board with the Trust X Shield the LEDs
+BSP_BOARD_LED_1 and BSP_BOARD_LED_2 must not be used. These pins are needed for
+the correct operation of the OPTIGA Trust X.
+
+*/

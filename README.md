@@ -1,15 +1,29 @@
-# Infineon's OPTIGA&trade; Trust X1 hostcode
+# Infineon OPTIGA&trade; Trust X Software Framework
 
-## Description
+[tocstart]: # (toc start)
+
+* [Description](#description)
+* [Summary](#summary)
+* [Evaluation and developement kits](#key_features_and_benefits)
+* [Get Started](#get_started)
+* [Overview](#oveview)
+* [Documentation](#documentation)
+* [Porting Guide](#porting_guide)
+* [Contributing](#contributing)
+* [License](#license)
+
+[tocend]: # (toc end)
+
+## <a name="description"></a>Description
 
 <img src="https://github.com/Infineon/Assets/blob/master/Pictures/OPTIGA-Trust-X.png">
 
-This repository contains a C library for [OPTIGA™ Trust X1](www.infineon.com/optiga-trust-x) security chip.
+This repository contains a target-agnostic Application Notes Framework for the [OPTIGA™ Trust X](https://www.infineon.com/optiga-trust-x) security chip. It is a basis for other application notes.
 
-## Summary
-The [OPTIGA™ Trust X1](https://www.infineon.com/dgdl/Infineon-DPS310-DS-v01_00-EN.pdf) is a security solution based on a secure micrcontroller. Each device is shipped with a unique elliptic-curve keypair and a corresponding X.509 certificate. OPTIGA™ Trust X enables easy integration into existing PKI infrastructure.
+## <a name="summary"></a>Summary
+The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_Datasheet_v2.6.pdf) is a security solution based on a secure microntroller. Each device is shipped with a unique elliptic-curve keypair and a corresponding X.509 certificate. OPTIGA™ Trust X enables easy integration into existing PKI infrastructure.
 
-## Key Features and Benefits
+## <a name="key_features_and_benefits"></a>Key Features and Benefits
 * High-end security controller
 * Turnkey solution
 * One-way authentication using ECDSA
@@ -25,21 +39,52 @@ The [OPTIGA™ Trust X1](https://www.infineon.com/dgdl/Infineon-DPS310-DS-v01_00
 * Common Criteria Certified EAL6+ (high) hardware
 * Cryptographic Tool Box based on ECC NIST P256, P384 and SHA256 (sign, verify, key generation, ECDH, session key derivation)   
 
-## Hostcode strucuture
-Detailed modules description you can find on [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki) of this project
+## <a name="key_features_and_benefits"></a>Evaluation and developement kits
+* OPTIGA™ Trust X [evaluation and demonstration kit](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-trust-x-eval-kit/)
+* OPTIGA™ Trust X [Shield2Go](https://www.infineon.com/cms/en/product/evaluation-boards/s2go-security-optiga-x/)
 
-## Get started and Application Notes
-Get started guide is based on the OPTIGA™ Trust X evaluation kit hardware and DAVE™ 4 (Digital Application Virtual Engineer) IDE. The detailed description you can find in the respective GitHub [repository](https://github.com/Infineon/getstarted-optiga-trust-x).
+## <a name="get_started"></a>Get Started
+1. [Get started guide](https://github.com/Infineon/getstarted-optiga-trust-x)
+2. [On-Chip DTLS example](https://github.com/Infineon/onchipdtls-optiga-trust-x)
+3. [Off-Chip TLS example (mbedTLS)](https://github.com/Infineon/mbedTLS-optiga-trust-x)
+4. [AWS FreeRTOS example](https://github.com/Infineon/amazon-freertos-optiga-trust-x)
+5. [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
+6. [Personalisation example](https://github.com/Infineon/personalize-optiga-trust-x)
 
-Infineon's GitHub offers various application notes for OPTIGA™ Trust X security solutions, you can find get started guide mentioned above there as well. The up-to-date list of application notes is [here](https://github.com/Infineon/appnotes-optiga-trust-x)
+## <a name="oveview"></a>Overview
 
-## Evaluation and developement kits
-* [OPTIGA™ Trust X evaluation and demonstration kit](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-trust-x-eval-kit/)
-* OPTIGA™ Trust X Shield2Go (link pending)
+![hostcode architecture](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic.jpg)
 
-## Contributing
+1. See [OPTIGA Crypt API](https://github.com/Infineon/optiga-trust-x/wiki/OPTIGA-Crypt-API) and [OPTIGA Util API](https://github.com/Infineon/optiga-trust-x/wiki/OPTIGA-Util-API) to know more about optiga_crypt and optiga_util modules
+2. Information about the OPTIGA™ Trust X Command Library can be found in the [Solution Reference Manual v1.35](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_SolutionReferenceManual_v1.35.pdf)
+In the same document you can find explanation of all Object IDs (OIDs) available for users as well as detailed technical explanation for all features and envisioned use cases.
+3. Infineon I<sup>2</sup>C Protocol implementation details can be found [here](https://github.com/Infineon/Assets/raw/master/PDFs/IFXI2CProtocol_v1.65.pdf)
+4. Platform Abstraction Layer (PAL) overview and Porting Guide are presented in the [Wiki](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide)
+
+For more information please refer to the [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki) of this project
+
+## <a name="documentation"></a>Documentation
+For high level description and some important excerpts from the documentation please refer to [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki)
+
+Other downloadable PDF documents can be found below:
+1. [OPTIGA™ Trust X Datasheet v2.6](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_Datasheet_v2.6.pdf) (PDF)
+2. [OPTIGA™ Solution Reference Manual v1.35](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_SolutionReferenceManual_v1.35.pdf) (PDF)
+3. [OPTIGA™ Keys and Certificates v1.2](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_KeysAndCertificates_v1.2.pdf) (PDF)
+4. [Infineon I<sup>2</sup>C protocol specification v1.65](https://github.com/Infineon/Assets/raw/master/PDFs/IFXI2CProtocol_v1.65.pdf) (PDF)
+
+## <a name="porting_guide"></a>Porting Guide
+You might find a list of supported Platforms [here](https://github.com/Infineon/optiga-trust-x/tree/master/pal). These are:
+* Espressif ESP32 with Amazon freeRTOS
+* Espressif ESP32 with freeRTOS
+* Nordic NRF52
+* Raspberry Pi (Embedded Linux)
+* Infineon XMC microcontrollers
+
+For other platform please refer to our porting guide on [Wiki](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide) page
+
+## <a name="contributing"></a>Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## License
+## <a name="license"></a>License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

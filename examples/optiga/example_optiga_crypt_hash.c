@@ -81,7 +81,8 @@ optiga_lib_status_t example_optiga_crypt_hash(void)
         hash_data_host.length = sizeof(data_to_hash);
 
         return_status = optiga_crypt_hash_update(&hash_context,
-                                                 0, // 1 satsnds for OID
+        		                                 // OPTIGA_CRYPT_OID_DATA stands for OID
+        										 OPTIGA_CRYPT_HOST_DATA,
                                                  &hash_data_host);
         if(return_status != OPTIGA_LIB_SUCCESS)
         {

@@ -1,4 +1,5 @@
 /**
+* \copyright
 * MIT License
 *
 * Copyright (c) 2018 Infineon Technologies AG
@@ -21,77 +22,53 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE
 *
+* \endcopyright
+*
+* \author Infineon Technologies AG
+*
 *
 * \file
 *
-* \brief This file implements the platform abstraction layer APIs for random seed generation.
+* \brief This file implements the prototype declarations of pal i2c
 *
 * \ingroup  grPAL
 * @{
 */
 
+#ifndef _PAL_COMMON_H_
+#define _PAL_COMMON_H_
+
 /**********************************************************************************************************************
  * HEADER FILES
  *********************************************************************************************************************/
-#include <DAVE.h>
-#include "optiga/pal/pal_os_timer.h"
 
-/// @cond hidden
+#include "optiga/pal/pal.h"
+#include "optiga/pal/pal_i2c.h"
+#include "optiga/pal/pal_gpio.h"
+#include "optiga/common/Datatypes.h"
+#ifdef WIN32
+#include "libusb.h"
+#else // LINUX
+#include <libusb-1.0/libusb.h>
+#include <unistd.h>
+#endif
+#include "pal_usb.h"
 /**********************************************************************************************************************
  * MACROS
  *********************************************************************************************************************/
 
-/*********************************************************************************************************************
- * LOCAL DATA
- *********************************************************************************************************************/
-///Counter to record random count
-static uint32_t g_random_count;
 
 /**********************************************************************************************************************
- * LOCAL ROUTINES
+ * ENUMS
  *********************************************************************************************************************/
-/**
-* ISR handler for counting ticks for random count
-*
-*/
-void random_tick_timer_isr(void)
-{
-    //14 bit counter
-    g_random_count = ((g_random_count+1)%(0x4000));
-}
 
-/// @endcond
 /**********************************************************************************************************************
- * API IMPLEMENTATION
+ * DATA STRUCTURES
  *********************************************************************************************************************/
-/**
-* Get the random counter value.
-*
-*
-* \retval  uint32_t 32 bit random counter value
-*/
-uint32_t pal_os_random_get_counter(void)
-{
-    uint32_t millisec_start_count;
-    uint32_t millisec_current_count;
+uint16_t usb_set_gpio_reset_pin(uint8_t high,pal_gpio_t* pin);
+int usb_hid_get_feature(uint8_t report_id, uint8_t* report,pal_usb_t* usb_events);
+uint16_t ifx_i2c_usb_reset(pal_usb_t usb_events);
+int usb_hid_set_feature(uint8_t report_id, uint8_t* data, uint8_t length,pal_usb_t* usb_events);
+void print_status(uint8_t s);
 
-    millisec_start_count = pal_os_timer_get_time_in_milliseconds();
-    do
-    {
-        millisec_current_count = pal_os_timer_get_time_in_milliseconds();
-        if(millisec_current_count > millisec_start_count)
-        {
-            break;
-        }
-    } while(1);
-
-    //stop timer
-    (void)TIMER_Stop(&random_timer);
-
-    //Return the current random timer value
-    return g_random_count;
-}
-
-/**
-* @}
-*/
+#endif

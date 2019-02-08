@@ -169,13 +169,13 @@ host_lib_status_t ifx_i2c_pl_init(ifx_i2c_context_t *p_ctx,ifx_i2c_event_handler
 	
 	if(TRUE == p_ctx->do_pal_init)
     {
-		//ToDo i2c init should not be called from here. It should be initialized during "pal_init"
         // Initialize I2C driver
         if (PAL_STATUS_SUCCESS != pal_i2c_init(p_ctx->p_pal_i2c_ctx))
         {
             return IFX_I2C_STACK_ERROR;
         }
     }
+    
     // Set Physical Layer internal state
     if(p_ctx->pl.request_soft_reset == (uint8_t)TRUE)
     {
@@ -389,7 +389,6 @@ static void ifx_i2c_pl_negotiation_event_handler(void *p_input_ctx)
             // Set initial frequency to PL_DEFAULT_FREQUENCY to be able to negotiate with slave
             case PL_INIT_SET_FREQ_DEFAULT:
             {
-				//ToDo 
                 // Default frequency set to master
                 event = ifx_i2c_pl_set_bit_rate(p_input_ctx,PL_DEFAULT_FREQUENCY);
 	
@@ -468,7 +467,6 @@ static void ifx_i2c_pl_negotiation_event_handler(void *p_input_ctx)
             // Frequency negotiated, Set frequency at master
             case PL_INIT_AGREE_FREQ:
             {
-				//ToDo Why Set baud rate here again. Concurency...
                 // Frequency negotiation between master and slave is complete
                 event = ifx_i2c_pl_set_bit_rate(p_input_ctx, p_ctx->frequency);
                 if(IFX_I2C_STACK_SUCCESS == event)

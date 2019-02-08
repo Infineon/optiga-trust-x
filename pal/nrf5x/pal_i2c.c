@@ -66,7 +66,11 @@
 static pal_i2c_t * gp_pal_i2c_current_ctx;
 
 /** @brief Definition of TWI manager instance */
+#ifndef IFX_2GO_SUPPORT
 NRF_TWI_MNGR_DEF(m_app_twi, MAX_PENDING_TRANSACTIONS, TWI_INSTANCE_ID);
+#else
+nrf_twi_mngr_t m_app_twi;
+#endif
 
 /** @brief Definition of TWI manager transfer instance */
 static nrf_twi_mngr_transfer_t    m_transfer;
@@ -141,13 +145,24 @@ static void app_twi_callback(ret_code_t result, void * p_user_data)
  */
 pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 {
+#ifndef IFX_2GO_SUPPORT
     nrf_drv_twi_config_t const config = {
        .scl                = OPTIGA_PIN_I2C_SCL,
        .sda                = OPTIGA_PIN_I2C_SDA,
+       .frequency          = NRF_DRV_TWI_FREQ_400K,
+       .interrupt_priority = APP_IRQ_PRIORITY_LOWEST,
+       .clear_bus_init     = false
+    };
+#else
+    #include "ifx_2go_common.h"
+    nrf_drv_twi_config_t const config = {
+       .scl                = ifx_2go_pin_config()->scl,
+       .sda                = ifx_2go_pin_config()->sda,
        .frequency          = NRF_TWI_FREQ_400K,
        .interrupt_priority = APP_IRQ_PRIORITY_LOWEST,
        .clear_bus_init     = false
     };
+#endif
 
     if(initialized)
     {
@@ -337,6 +352,13 @@ pal_status_t pal_i2c_set_bitrate(const pal_i2c_t* p_i2c_context , uint16_t bitra
 	// Bitrate is fixed to the maximum frequency on this platform (400K)
 	return PAL_STATUS_SUCCESS;
 }
+
+#ifdef IFX_2GO_SUPPORT
+pal_status_t pal_i2c_set_instance(nrf_twi_mngr_t* twi_inst)
+{
+        m_app_twi = *twi_inst;
+}
+#endif/*IFX_2GO_SUPPORT*/
 
 /**
 * @}

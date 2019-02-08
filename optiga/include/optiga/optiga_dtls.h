@@ -22,7 +22,7 @@
 * SOFTWARE
 *
 *
-* \file OCP.h
+* \file
 *
 * \brief   This file defines APIs, types and data structures used in the
 *          OCP implementation.

@@ -34,37 +34,28 @@
  * HEADER FILES
  *********************************************************************************************************************/
 #include "optiga/pal/pal_os_timer.h"
-#include "nrf_delay.h"
-#include "nrf_rtc.h"
-#include "nrf_drv_rtc.h"
-
+#include "FreeRTOS.h"
+#include "task.h"
+#include "stdio.h"
 /**********************************************************************************************************************
  * MACROS
  *********************************************************************************************************************/
-// must be same as pal_os_event.c
-#define RTC_CLOCK_FREQUENCY 32768
-// Set the prescaler to approximately get 0.25 ms intervals
-// 32768Hz/8 = 4096 Hz -> 0.2441us
-// it's a 24bit counter, so it will overflow every ~68min
-#define RTC_PRESCALER 8
-#define RTC_TICK_FREQ (RTC_CLOCK_FREQUENCY/RTC_PRESCALER)
-
+ 
 /// @cond hidden 
 /*********************************************************************************************************************
  * LOCAL DATA
  *********************************************************************************************************************/
-// Defined in pal_os_event.c
-// needed to read the tick value
-extern const nrf_drv_rtc_t rtc2;
 
 /**********************************************************************************************************************
  * LOCAL ROUTINES
  *********************************************************************************************************************/
-/// @endcond
 
+
+/// @endcond
 /**********************************************************************************************************************
  * API IMPLEMENTATION
  *********************************************************************************************************************/
+
 /**
 * Get the current time in milliseconds<br>
 *
@@ -73,21 +64,21 @@ extern const nrf_drv_rtc_t rtc2;
 */
 uint32_t pal_os_timer_get_time_in_milliseconds(void)
 {
-    return nrf_drv_rtc_counter_get(&rtc2)*1000/RTC_TICK_FREQ;
+    return xTaskGetTickCount();
 }
 
 /**
-* Function to wait or delay until the given milliseconds time
+* Waits or delays until the given milliseconds time
 * 
 * \param[in] milliseconds Delay value in milliseconds
 *
 */
 void pal_os_timer_delay_in_milliseconds(uint16_t milliseconds)
 {
-    nrf_delay_ms(milliseconds);
+    const TickType_t xDelay = milliseconds / portTICK_PERIOD_MS;
+	vTaskDelay( xDelay );
 }
 
 /**
 * @}
 */
-

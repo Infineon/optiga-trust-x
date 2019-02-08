@@ -48,13 +48,10 @@ int mbedtls_ecdsa_sign( mbedtls_ecp_group *grp, mbedtls_mpi *r, mbedtls_mpi *s,
 	int ret;
 	uint8_t der_signature[110];
 	uint16_t dslen = sizeof(der_signature);
-	uint8_t rlen = 0;
-	uint8_t slen = 0;
-	uint8_t rslen = 32;
     unsigned char *p = der_signature;
     const unsigned char *end = der_signature + dslen;
 
-    if(optiga_crypt_ecdsa_sign((unsigned char *)buf, blen, OPTIGA_KEY_STORE_ID_E0F0, der_signature, &dslen) != OPTIGA_LIB_SUCCESS)
+    if(optiga_crypt_ecdsa_sign((unsigned char *)buf, blen, CONFIG_OPTIGA_TRUST_X_PRIVKEY_SLOT, der_signature, &dslen) != OPTIGA_LIB_SUCCESS)
     {
 		ret = MBEDTLS_ERR_PK_BAD_INPUT_DATA;
 		goto cleanup;
@@ -74,7 +71,6 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
                   const unsigned char *buf, size_t blen,
                   const mbedtls_ecp_point *Q, const mbedtls_mpi *r, const mbedtls_mpi *s)
 {
-	int ret;
 	optiga_lib_status_t status = OPTIGA_LIB_ERROR;
     public_key_from_host_t public_key;
     uint8_t public_key_out [100];
@@ -129,7 +125,7 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
 
     status = optiga_crypt_ecdsa_verify ( (uint8_t *) buf, blen,
                                          (uint8_t *) p, signature_len,
-                                        0, (void *)&public_key );
+										 OPTIGA_CRYPT_HOST_DATA, (void *)&public_key );
     if ( status != OPTIGA_LIB_SUCCESS )
     {
        return ( MBEDTLS_ERR_PK_BAD_INPUT_DATA );
@@ -141,40 +137,42 @@ int mbedtls_ecdsa_verify( mbedtls_ecp_group *grp,
 
 #if defined(MBEDTLS_ECDSA_GENKEY_ALT)
 int mbedtls_ecdsa_genkey( mbedtls_ecdsa_context *ctx, mbedtls_ecp_group_id gid,
-                  int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
+                        int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
 {
-	optiga_lib_status_t status;
+    optiga_lib_status_t status;
     uint8_t public_key [100];
     size_t public_key_len = sizeof( public_key );
     optiga_ecc_curve_t curve_id;
-	mbedtls_ecp_group *grp = &ctx->grp;
+    mbedtls_ecp_group *grp = &ctx->grp;
+    uint16_t privkey_oid = OPTIGA_KEY_STORE_ID_E0F3;
  
-	mbedtls_ecp_group_load( &ctx->grp, gid );
+    mbedtls_ecp_group_load( &ctx->grp, gid );
  
     //checking group against the supported curves of Optiga Trust X
     if ( ( grp->id != MBEDTLS_ECP_DP_SECP256R1 ) &&
-		 ( grp->id != MBEDTLS_ECP_DP_SECP384R1 ) )
-	{
-		return 1;
-	}
-	grp->id == MBEDTLS_ECP_DP_SECP256R1 ? ( curve_id = OPTIGA_ECC_NIST_P_256 )
-                                                : ( curve_id = OPTIGA_ECC_NIST_P_384 ); 
-    //invoke optiga command to generate a key pair.
-	status = optiga_crypt_ecc_generate_keypair( curve_id,
-                                                (optiga_key_usage_t)( OPTIGA_KEY_USAGE_KEY_AGREEMENT | OPTIGA_KEY_USAGE_AUTHENTICATION ),
-												OPTIGA_KEY_STORE_ID_E0F0,
-												public_key,
-												(uint16_t *)&public_key_len ) ;
-	if ( status != OPTIGA_LIB_SUCCESS )
+        ( grp->id != MBEDTLS_ECP_DP_SECP384R1 ) )
     {
-		status = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
+        return 1;
+    }
+    grp->id == MBEDTLS_ECP_DP_SECP256R1 ? ( curve_id = OPTIGA_ECC_NIST_P_256 )
+                                        : ( curve_id = OPTIGA_ECC_NIST_P_384 ); 
+    //invoke optiga command to generate a key pair.
+    status = optiga_crypt_ecc_generate_keypair( curve_id,
+                                                (optiga_key_usage_t)( OPTIGA_KEY_USAGE_KEY_AGREEMENT | OPTIGA_KEY_USAGE_AUTHENTICATION ),
+                                                FALSE,
+                                                &privkey_oid,
+                                                public_key,
+                                                (uint16_t *)&public_key_len ) ;
+    if ( status != OPTIGA_LIB_SUCCESS )
+    {
+        status = MBEDTLS_ERR_ECP_BAD_INPUT_DATA;
     }
 
     //store public key generated from optiga into mbedtls structure .
-	if ( mbedtls_ecp_point_read_binary( grp, &ctx->Q,(unsigned char *)&public_key[3],(size_t )public_key_len-3 ) != 0 )
-	{
-		return 1;
-	}
+    if ( mbedtls_ecp_point_read_binary( grp, &ctx->Q,(unsigned char *)&public_key[3],(size_t )public_key_len-3 ) != 0 )
+    {
+        return 1;
+    }
 
     return status;
 }					  
