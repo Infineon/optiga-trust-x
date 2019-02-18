@@ -40,51 +40,51 @@
 #define  DER_OVERHEAD ((2 + 1) * 2)
 
 optiga_lib_status_t ecdsa_rs_to_asn1(const uint8_t  *r, size_t r_len,
-									 const uint8_t  *s, size_t s_len,
-									  	   uint8_t  *asn_sig, size_t *asn_sig_len)
+                                     const uint8_t  *s, size_t s_len,
+                                     uint8_t  *asn_sig, size_t *asn_sig_len)
 {
     uint32_t index;
-	optiga_lib_status_t return_status = OPTIGA_LIB_ERROR;
+    optiga_lib_status_t return_status = OPTIGA_LIB_ERROR;
 
-	do {
-		if(*asn_sig_len < (r_len + s_len + DER_OVERHEAD)) {
-			// not enough space in output buffer
-			break;
-		}
+    do {
+        if(*asn_sig_len < (r_len + s_len + DER_OVERHEAD)) {
+            // not enough space in output buffer
+            break;
+        }
 
-		index = 0;
+        index = 0;
 
-		// R component
-		asn_sig[index + 0] = 0x02;
-		asn_sig[index + 1] = 0x20;
-		if (r[0] & 0x80)
-		{
-			asn_sig[index + 1] += 1;
-			asn_sig[index + 2] =  0;
-			index++;
-		}
-		memcpy(&asn_sig[index + 2], &r[0], r_len);
-		index += r_len + 2;
+        // R component
+        asn_sig[index + 0] = 0x02;
+        asn_sig[index + 1] = 0x20;
+        if (r[0] & 0x80)
+        {
+            asn_sig[index + 1] += 1;
+            asn_sig[index + 2] =  0;
+            index++;
+        }
+        memcpy(&asn_sig[index + 2], &r[0], r_len);
+        index += r_len + 2;
 
-		// S component
-		asn_sig[index + 0] = 0x02;
-		asn_sig[index + 1] = 0x20;
-		if (s[0] & 0x80)
-		{
-			asn_sig[index + 1] += 1;
-			asn_sig[index + 2] =  0;
-			index++;
-		}
-		memcpy(&asn_sig[index + 2], &s[0], s_len);
-		index += s_len + 2;
+        // S component
+        asn_sig[index + 0] = 0x02;
+        asn_sig[index + 1] = 0x20;
+        if (s[0] & 0x80)
+        {
+            asn_sig[index + 1] += 1;
+            asn_sig[index + 2] =  0;
+            index++;
+        }
+        memcpy(&asn_sig[index + 2], &s[0], s_len);
+        index += s_len + 2;
 
-		*asn_sig_len = index; // Return total length of ASN.1-encoded data structure
+        *asn_sig_len = index; // Return total length of ASN.1-encoded data structure
 		
-		return_status = OPTIGA_LIB_SUCCESS;
+        return_status = OPTIGA_LIB_SUCCESS;
 		
-	}while(FALSE);
+    }while(FALSE);
        
-	return return_status;
+    return return_status;
 }
 
 /**
