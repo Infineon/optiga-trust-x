@@ -1,4 +1,4 @@
-# Infineon OPTIGA&trade; Trust X Software Framework
+# OPTIGA&trade; Trust X Software Framework
 
 [tocstart]: # (toc start)
 
