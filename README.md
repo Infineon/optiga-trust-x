@@ -15,6 +15,7 @@
     * [Initialisation hints (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Initialisation-hints)
     * [Porting guide (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide)
     * [Crypto performance (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Crypto-Performance)
+    * [Error Codes (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Device-Error-Codes)
     * **User API**
         * [Crypt API (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API)
         * [Util API (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Util-API)
