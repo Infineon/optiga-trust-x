@@ -77,6 +77,7 @@ For more information please refer to the [Wiki page](https://github.com/Infineon
 4. [AWS FreeRTOS example](https://github.com/Infineon/amazon-freertos-optiga-trust-x)
 5. [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
 6. [Personalisation example](https://github.com/Infineon/personalize-optiga-trust-x)
+7. [I2C Utilities for OPTIGA™ Trust secure IC](https://github.com/Infineon/i2c-utils-optiga-trust)
 
 ### <a name="documentation"></a>Documentation
 For high level description and some important excerpts from the documentation please refer to [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki)
