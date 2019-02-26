@@ -59,7 +59,7 @@ The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIG
 
 ![hostcode architecture](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic.jpg)
 
-1. See [OPTIGA Crypt API](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API) and [OPTIGA Util API](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Util-API)  to know more about optiga_crypt and optiga_util modules
+1. See [Trust X Crypt API](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API) and [Trust X Util API](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Util-API)  to know more about optiga_crypt and optiga_util modules
 2. Information about the OPTIGA™ Trust X Command Library can be found in the [Solution Reference Manual v1.35](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_SolutionReferenceManual_v1.35.pdf)
 In the same document you can find explanation of all Object IDs (OIDs) available for users as well as detailed technical explanation for all features and envisioned use cases.
 3. Infineon I<sup>2</sup>C Protocol implementation details can be found [here](https://github.com/Infineon/Assets/raw/master/PDFs/IFXI2CProtocol_v1.65.pdf)
