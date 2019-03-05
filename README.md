@@ -16,6 +16,7 @@
     * [Porting guide (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide)
     * [Crypto performance (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Crypto-Performance)
     * [Error Codes (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Device-Error-Codes)
+    * [Metadata and Access Conditions (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Metadata-and-Access-Conditions)
     * [On‐chip vs off-chip DTLS Protocol](https://github.com/Infineon/optiga-trust-x/wiki/On‐chip-vs-off‐chip-(D)TLS-Protocol)
     * **User API**
         * [Crypt API (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API)
