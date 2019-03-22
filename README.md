@@ -77,9 +77,10 @@ For more information please refer to the [Wiki page](https://github.com/Infineon
 2. [On-Chip DTLS example](https://github.com/Infineon/onchipdtls-optiga-trust-x)
 3. [Off-Chip TLS example (mbedTLS)](https://github.com/Infineon/mbedTLS-optiga-trust-x)
 4. [AWS FreeRTOS example](https://github.com/Infineon/amazon-freertos-optiga-trust-x)
-5. [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
-6. [Personalisation example](https://github.com/Infineon/personalize-optiga-trust-x)
-7. [I2C Utilities](https://github.com/Infineon/i2c-utils-optiga-trust)
+5. [Secure Firwmare Update and Secure Boot](https://github.com/Infineon/fwupd-secboot-optiga-trust)
+6. [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
+7. [Personalisation example](https://github.com/Infineon/personalize-optiga-trust-x)
+8. [I2C Utilities](https://github.com/Infineon/i2c-utils-optiga-trust)
 
 ### <a name="documentation"></a>Documentation
 For high level description and some important excerpts from the documentation please refer to [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki)
