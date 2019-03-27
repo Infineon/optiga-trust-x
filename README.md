@@ -81,6 +81,7 @@ For more information please refer to the [Wiki page](https://github.com/Infineon
 6. [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
 7. [Personalisation example](https://github.com/Infineon/personalize-optiga-trust-x)
 8. [I2C Utilities](https://github.com/Infineon/i2c-utils-optiga-trust)
+9. [OPTIGA Trust X Technical Training](https://github.com/Infineon/technical-training-optiga-trust-x)
 
 ### <a name="documentation"></a>Documentation
 For high level description and some important excerpts from the documentation please refer to [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki)
