@@ -34,8 +34,8 @@
  * HEADER FILES
  *********************************************************************************************************************/
 #include "optiga/pal/pal_os_timer.h"
-#include "FreeRTOS.h"
-#include "task.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "stdio.h"
 /**********************************************************************************************************************
  * MACROS
@@ -75,9 +75,7 @@ uint32_t pal_os_timer_get_time_in_milliseconds(void)
 */
 void pal_os_timer_delay_in_milliseconds(uint16_t milliseconds)
 {
-	if (milliseconds < 10)
-		milliseconds = 10;
-    const TickType_t xDelay = pdMS_TO_TICKS(milliseconds);
+    const TickType_t xDelay = milliseconds / portTICK_PERIOD_MS;
 	vTaskDelay( xDelay );
 }
 

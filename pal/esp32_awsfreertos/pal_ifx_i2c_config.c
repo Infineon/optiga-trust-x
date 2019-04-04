@@ -40,10 +40,40 @@
 /*********************************************************************************************************************
  * pal ifx i2c instance
  *********************************************************************************************************************/
-#define PAL_I2C_MASTER_SCL_IO           22               /*!< gpio number for I2C master clock */
-#define PAL_I2C_MASTER_SDA_IO           21               /*!< gpio number for I2C master data  */
-#define PAL_I2C_MASTER_NUM              I2C_NUM_0       /*!< I2C port number for master dev */
-#define PAL_I2C_MASTER_FREQ_HZ          400000           /*!< I2C master clock frequency */
+/*!< gpio number for I2C master clock */
+ #ifndef CONFIG_PAL_I2C_MASTER_SCL_IO
+	#define PAL_I2C_MASTER_SCL_IO           22               
+#else
+	#define PAL_I2C_MASTER_SCL_IO			CONFIG_PAL_I2C_MASTER_SCL_IO
+#endif
+
+/*!< gpio number for I2C master data  */
+#ifndef CONFIG_PAL_I2C_MASTER_SDA_IO
+	#define PAL_I2C_MASTER_SDA_IO           21               
+#else
+	#define PAL_I2C_MASTER_SDA_IO			CONFIG_PAL_I2C_MASTER_SDA_IO
+#endif
+
+/*!< gpio number for software reset line  */
+#ifndef CONFIG_PAL_I2C_MASTER_RESET
+	#define PAL_I2C_MASTER_RESET            16//23
+#else
+	#define PAL_I2C_MASTER_RESET			CONFIG_PAL_I2C_MASTER_RESET
+#endif
+
+/*!< I2C port number for master dev */
+#ifndef CONFIG_PAL_I2C_MASTER_NUM
+	#define PAL_I2C_MASTER_NUM              I2C_NUM_0        
+#else
+	#define PAL_I2C_MASTER_NUM				CONFIG_PAL_I2C_MASTER_NUM
+#endif
+
+/*!< I2C master clock frequency */
+#ifndef CONFIG_PAL_I2C_MASTER_FREQ_HZ
+	#define PAL_I2C_MASTER_FREQ_HZ          400000           
+#else
+	#define PAL_I2C_MASTER_FREQ_HZ			CONFIG_PAL_I2C_MASTER_FREQ_HZ
+#endif
 
 typedef struct esp32_i2c_ctx {
 	uint8_t  port;
@@ -92,7 +122,7 @@ pal_gpio_t optiga_vdd_0 =
 pal_gpio_t optiga_reset_0 =
 {
     // Platform specific GPIO context for the pin used to toggle Reset.
-    (void*)18
+    (void*)PAL_I2C_MASTER_RESET
 };
 
 

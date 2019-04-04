@@ -42,6 +42,8 @@
 #define PAL_I2C_MASTER_TX_BUF_DISABLE   0                /*!< I2C master do not need buffer */
 #define PAL_I2C_MASTER_RX_BUF_DISABLE   0                /*!< I2C master do not need buffer */
 
+#define CONFIG_PAL_I2C_INIT_ENABLE 1
+
 #define WRITE_BIT                       I2C_MASTER_WRITE /*!< I2C master write */
 #define READ_BIT                        I2C_MASTER_READ  /*!< I2C master read */
 #define ACK_CHECK_EN                    0x1              /*!< I2C master will check ack from slave*/
@@ -65,8 +67,6 @@ static volatile uint32_t g_entry_count = 0;
 
 /* Pointer to the current pal i2c context*/
 static pal_i2c_t * gp_pal_i2c_current_ctx;
-
-extern SemaphoreHandle_t xI2CSemaphore;
 
 /**********************************************************************************************************************
  * LOCAL ROUTINES
@@ -106,29 +106,28 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 	esp32_i2c_ctx_t* master_ctx;
 	i2c_config_t conf;
 	
+#ifdef CONFIG_PAL_I2C_INIT_ENABLE	
 	printf("Initialize pal_i2c_init  ");
 
-//	if ((p_i2c_context == NULL) || (p_i2c_context->p_i2c_hw_config == NULL))
-//		return PAL_STATUS_FAILURE;
-//
-//	master_ctx = (esp32_i2c_ctx_t*)p_i2c_context->p_i2c_hw_config;
-//	master_port = master_ctx->port;
-//
-//    conf.mode = I2C_MODE_MASTER;
-//    conf.sda_io_num = master_ctx->sda_io;
-//    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
-//    conf.scl_io_num = master_ctx->scl_io;
-//    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
-//    conf.master.clk_speed = master_ctx->bitrate;
-//    i2c_param_config(master_port, &conf);
-//    i2c_driver_install(master_port, conf.mode,
-//                       PAL_I2C_MASTER_TX_BUF_DISABLE,
-//                       PAL_I2C_MASTER_RX_BUF_DISABLE, 0);
+	if ((p_i2c_context == NULL) || (p_i2c_context->p_i2c_hw_config == NULL))
+		return PAL_STATUS_FAILURE;
 	
-    xSemaphoreTake(xI2CSemaphore, portMAX_DELAY);
-    xSemaphoreGive(xI2CSemaphore);
-
+	master_ctx = (esp32_i2c_ctx_t*)p_i2c_context->p_i2c_hw_config;
+	master_port = master_ctx->port;
+	
+    conf.mode = I2C_MODE_MASTER;
+    conf.sda_io_num = master_ctx->sda_io;
+    conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
+    conf.scl_io_num = master_ctx->scl_io;
+    conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
+    conf.master.clk_speed = master_ctx->bitrate;
+    i2c_param_config(master_port, &conf);
+    i2c_driver_install(master_port, conf.mode,
+                       PAL_I2C_MASTER_TX_BUF_DISABLE,
+                       PAL_I2C_MASTER_RX_BUF_DISABLE, 0);
+	
     printf("OK\r\n");
+#endif
 
     return PAL_STATUS_SUCCESS;
 }
@@ -158,16 +157,16 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 pal_status_t pal_i2c_deinit(const pal_i2c_t* p_i2c_context)
 {
 	esp32_i2c_ctx_t* master_ctx;
-	
+
+#ifdef CONFIG_PAL_I2C_INIT_ENABLE			
 	if ((p_i2c_context == NULL) || (p_i2c_context->p_i2c_hw_config == NULL))
 		return PAL_STATUS_FAILURE;
 	
 	master_ctx = (esp32_i2c_ctx_t*)p_i2c_context->p_i2c_hw_config;
 	
 	i2c_driver_delete(master_ctx->port);
+#endif
 	
-	vSemaphoreDelete(xI2CSemaphore);
-
     return PAL_STATUS_SUCCESS;
 }
 
@@ -203,6 +202,7 @@ pal_status_t pal_i2c_deinit(const pal_i2c_t* p_i2c_context)
  * \retval  #PAL_STATUS_FAILURE  Returns when the I2C write fails.
  * \retval  #PAL_STATUS_I2C_BUSY Returns when the I2C bus is busy. 
  */
+ 
 pal_status_t pal_i2c_write(pal_i2c_t* p_i2c_context,uint8_t* p_data , uint16_t length)
 {
     pal_status_t status = PAL_STATUS_FAILURE;
@@ -218,8 +218,6 @@ pal_status_t pal_i2c_write(pal_i2c_t* p_i2c_context,uint8_t* p_data , uint16_t l
 	master_ctx = (esp32_i2c_ctx_t*)p_i2c_context->p_i2c_hw_config;
 	i2c_master_port = master_ctx->port;
 
-	xSemaphoreTake( xI2CSemaphore, portMAX_DELAY );
-
 	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
     i2c_master_start(cmd);
@@ -228,8 +226,6 @@ pal_status_t pal_i2c_write(pal_i2c_t* p_i2c_context,uint8_t* p_data , uint16_t l
     i2c_master_stop(cmd);
     esp_err_t ret = i2c_master_cmd_begin(i2c_master_port, cmd, 1000 / portTICK_RATE_MS);
     i2c_cmd_link_delete(cmd);
-
-    xSemaphoreGive( xI2CSemaphore );
 
 	upper_layer_handler = (app_event_handler_t)gp_pal_i2c_current_ctx->upper_layer_event_handler;
 
@@ -289,11 +285,11 @@ pal_status_t pal_i2c_read(pal_i2c_t* p_i2c_context , uint8_t* p_data , uint16_t 
 	if ((p_i2c_context == NULL) || (p_i2c_context->p_i2c_hw_config == NULL))
 		return status;
 	
+
+
 	master_ctx = (esp32_i2c_ctx_t*)p_i2c_context->p_i2c_hw_config;
 	i2c_master_port = master_ctx->port;
 	
-	xSemaphoreTake( xI2CSemaphore, portMAX_DELAY );
-
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, ( p_i2c_context->slave_address << 1 ) | READ_BIT, ACK_CHECK_EN);
@@ -304,8 +300,6 @@ pal_status_t pal_i2c_read(pal_i2c_t* p_i2c_context , uint8_t* p_data , uint16_t 
     i2c_master_stop(cmd);
     esp_err_t ret = i2c_master_cmd_begin(i2c_master_port, cmd, 1000 / portTICK_RATE_MS);
     i2c_cmd_link_delete(cmd);
-
-    xSemaphoreGive( xI2CSemaphore );
 	
     upper_layer_handler = (app_event_handler_t)gp_pal_i2c_current_ctx->upper_layer_event_handler;
 	
