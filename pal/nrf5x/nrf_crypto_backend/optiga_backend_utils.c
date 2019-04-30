@@ -101,7 +101,8 @@ ret_code_t asn1_to_ecdsa_rs(uint8_t const * p_asn1,
     p_cur++;
 
     // Check for stuffing bits
-    if (*p_cur == 0x00)
+    if ((r_len == (NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) + 1) &&
+	    (*p_cur == 0x00))
     {
         p_cur++;
         r_len--;
@@ -148,7 +149,9 @@ ret_code_t asn1_to_ecdsa_rs(uint8_t const * p_asn1,
     }
     p_cur++;
 
-    if (*p_cur == 0x00)
+	// Check for stuffing bits
+    if ((s_len == (NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) + 1) &&
+	    (*p_cur == 0x00))
     {
         p_cur++;
         s_len--;
@@ -174,7 +177,6 @@ ret_code_t asn1_to_ecdsa_rs(uint8_t const * p_asn1,
 
     return NRF_SUCCESS;
 }
-
 
 /**
  * @brief Encodes the ECDSA signature components (r, s) in ASN.1 format.
