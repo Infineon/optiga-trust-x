@@ -34,7 +34,7 @@
 #include "optiga/optiga_crypt.h"
 
 optiga_lib_status_t asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
-									 uint8_t * rs, size_t * rs_len)
+                                     uint8_t * rs, size_t * rs_len)
 {
 	optiga_lib_status_t return_status = OPTIGA_LIB_ERROR;
 	const uint8_t * cur = asn1;
@@ -64,11 +64,18 @@ optiga_lib_status_t asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
 		cur++;
 		uint8_t r_len = *cur;
 
+		if (r_len > 0x7F) 
+		{
+			// Unsupported length
+			break;
+		}
+		
 		// move to first data value
 		cur++;
 
 		// check for stuffing bits
-		if(*cur == 0x00) {
+		if ((r_len == (32 + 1)) && (*cur == 0x00))
+		{
 			cur++;
 			r_len--;
 		}
@@ -101,9 +108,14 @@ optiga_lib_status_t asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
 		}
 		cur++;
 		uint8_t s_len = *cur;
+		
+		if (s_len > 0x7f) {
+			// Unsupported length
+			break;
+		}
 		cur++;
 
-		if(*cur == 0x00) {
+		if((s_len == (32 + 1)) && (*cur == 0x00)) {
 			cur++;
 			s_len--;
 		}
