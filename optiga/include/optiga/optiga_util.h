@@ -36,6 +36,7 @@
 extern "C" {
 #endif
 
+#include "optiga/common/Datatypes.h"
 #include "optiga/cmd/CommandLib.h"
 #include "optiga/common/AuthLibSettings.h"
 
@@ -95,40 +96,40 @@ extern "C" {
  */
 typedef enum eOID_d
 {
-	/// Global Life Cycle State
-	eLCS_G = 0xE0C0,
-	/// Global Security Status
-	eSECURITY_STATUS_G = 0xE0C1,
-	/// Coprocessor UID
+    /// Global Life Cycle State
+    eLCS_G = 0xE0C0,
+    /// Global Security Status
+    eSECURITY_STATUS_G = 0xE0C1,
+    /// Coprocessor UID
     eCOPROCESSOR_UID = 0xE0C2,
-	/// Global Life Cycle State
-	eSLEEP_MODE_ACTIVATION_DELAY = 0xE0C3,
-	/// Current limitation
-	eCURRENT_LIMITATION = 0xE0C4,
-	/// Security Event Counter
-	eSECURITY_EVENT_COUNTER = 0xE0C5,
-	/// Device Public Key Certificate issued by IFX
-	eDEVICE_PUBKEY_CERT_IFX = 0xE0E0,
-	/// Project-Specific device Public Key Certificate
-	eDEVICE_PUBKEY_CERT_PRJSPC_1 = 0xE0E1,
-	/// Project-Specific device Public Key Certificate
-	eDEVICE_PUBKEY_CERT_PRJSPC_2 = 0xE0E2,
-	/// Project-Specific device Public Key Certificate
-	eDEVICE_PUBKEY_CERT_PRJSPC_3 = 0xE0E3,
-	/// First Device Private Key
-	eFIRST_DEVICE_PRIKEY_1 = 0xE0F0,
-	/// First Device Private Key
-	eFIRST_DEVICE_PRIKEY_2 = 0xE0F1,
-	/// First Device Private Key
-	eFIRST_DEVICE_PRIKEY_3 = 0xE0F2,
-	/// First Device Private Key
-	eFIRST_DEVICE_PRIKEY_4 = 0xE0F3,
-	/// Application Life Cycle Status
-	eLCS_A = 0xF1C0,
-	/// Application Security Status
-	eSECURITY_STATUS_A = 0xF1C1,
-	/// Error codes
-	eERROR_CODES = 0xF1C2
+    /// Global Life Cycle State
+    eSLEEP_MODE_ACTIVATION_DELAY = 0xE0C3,
+    /// Current limitation
+    eCURRENT_LIMITATION = 0xE0C4,
+    /// Security Event Counter
+    eSECURITY_EVENT_COUNTER = 0xE0C5,
+    /// Device Public Key Certificate issued by IFX
+    eDEVICE_PUBKEY_CERT_IFX = 0xE0E0,
+    /// Project-Specific device Public Key Certificate
+    eDEVICE_PUBKEY_CERT_PRJSPC_1 = 0xE0E1,
+    /// Project-Specific device Public Key Certificate
+    eDEVICE_PUBKEY_CERT_PRJSPC_2 = 0xE0E2,
+    /// Project-Specific device Public Key Certificate
+    eDEVICE_PUBKEY_CERT_PRJSPC_3 = 0xE0E3,
+    /// First Device Private Key
+    eFIRST_DEVICE_PRIKEY_1 = 0xE0F0,
+    /// First Device Private Key
+    eFIRST_DEVICE_PRIKEY_2 = 0xE0F1,
+    /// First Device Private Key
+    eFIRST_DEVICE_PRIKEY_3 = 0xE0F2,
+    /// First Device Private Key
+    eFIRST_DEVICE_PRIKEY_4 = 0xE0F3,
+    /// Application Life Cycle Status
+    eLCS_A = 0xF1C0,
+    /// Application Security Status
+    eSECURITY_STATUS_A = 0xF1C1,
+    /// Error codes
+    eERROR_CODES = 0xF1C2
 } eOID_d;
 
 /**
@@ -145,35 +146,35 @@ typedef enum eOID_d
  *<b>Notes:</b><br>
  * Initialisation flow example:
  *
- * 	optiga_comms_t optiga_comms = {(void*)&ifx_i2c_context_0, NULL, NULL, 0};
+ *     optiga_comms_t optiga_comms = {(void*)&ifx_i2c_context_0, NULL, NULL, 0};
  *
- * 	static int32_t optiga_init(void)
- *	{
- *		int32_t status = (int32_t) OPTIGA_LIB_ERROR;
+ *     static int32_t optiga_init(void)
+ *    {
+ *        int32_t status = (int32_t) OPTIGA_LIB_ERROR;
  *
- *		do
- *		{
- *			status = optiga_util_open_application(&optiga_comms);
- *			if(OPTIGA_LIB_SUCCESS != status)
- *			{
- *				// optiga_util_open_application() failed
- *				break;
- *			}
+ *        do
+ *        {
+ *            status = optiga_util_open_application(&optiga_comms);
+ *            if(OPTIGA_LIB_SUCCESS != status)
+ *            {
+ *                // optiga_util_open_application() failed
+ *                break;
+ *            }
  *
- *			status = OPTIGA_LIB_SUCCESS;
- *		} while(0);
+ *            status = OPTIGA_LIB_SUCCESS;
+ *        } while(0);
  *
- *		return status;
- *	}
+ *        return status;
+ *    }
  *
  * \param[in]      p_comms       Pointer to the communication parameters initialised before
  * - Error codes from lower layer will be returned as it is.<br>
  *
  * \retval  #OPTIGA_LIB_SUCCESS                                Successful invocation of optiga cmd module
- * \retval  #OPTIGA_LIB_ERROR								   Error during function execurition
+ * \retval  #OPTIGA_LIB_ERROR                                   Error during function execurition
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms);
 
 /**
  * @brief Reads data from optiga.
@@ -206,10 +207,10 @@ optiga_lib_status_t optiga_util_open_application(optiga_comms_t* p_comms);
  * \retval  #OPTIGA_UTIL_ERROR_INVALID_INPUT                   Wrong Input arguments provided
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_util_read_data(uint16_t optiga_oid,
-                                          uint16_t offset,
-                                          uint8_t * buffer,
-                                          uint16_t * bytes_to_read);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_util_read_data(uint16_t optiga_oid,
+                                                          uint16_t offset,
+                                                          uint8_t * buffer,
+                                                          uint16_t * bytes_to_read);
 
 /**
  * @brief Reads metadata of a data object from optiga.
@@ -239,9 +240,9 @@ optiga_lib_status_t optiga_util_read_data(uint16_t optiga_oid,
  * \retval  #OPTIGA_UTIL_ERROR_INSTANCE_IN_USE                 Same instance with ongoing request servicing used
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_util_read_metadata(uint16_t optiga_oid,
-                                              uint8_t * buffer,
-                                              uint16_t * bytes_to_read);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_util_read_metadata(uint16_t optiga_oid,
+                                                              uint8_t * buffer,
+                                                              uint16_t * bytes_to_read);
 
 /**
  * @brief Writes data to optiga.
@@ -274,11 +275,11 @@ optiga_lib_status_t optiga_util_read_metadata(uint16_t optiga_oid,
  * \retval  #OPTIGA_CMD_ERROR_MEMORY_INSUFFICIENT              Length of the buffer to copy the metadata is less than actual length of metadata
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_util_write_data(uint16_t optiga_oid,
-										   uint8_t write_type,
-                                           uint16_t offset,
-                                           uint8_t * buffer,
-                                           uint16_t bytes_to_write);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_util_write_data(uint16_t optiga_oid,
+                                                           uint8_t write_type,
+                                                           uint16_t offset,
+                                                           uint8_t * buffer,
+                                                           uint16_t bytes_to_write);
 
 /**
  * @brief Writes metadata for the user provided data object.
@@ -308,9 +309,9 @@ optiga_lib_status_t optiga_util_write_data(uint16_t optiga_oid,
  * \retval  #OPTIGA_UTIL_ERROR_INSTANCE_IN_USE                 Same instance with ongoing request servicing used
  * \retval  #OPTIGA_DEVICE_ERROR                               Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_util_write_metadata(uint16_t optiga_oid,
-                                               uint8_t * buffer,
-                                               uint8_t bytes_to_write);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_util_write_metadata(uint16_t optiga_oid,
+                                                               uint8_t * buffer,
+                                                               uint8_t bytes_to_write);
 #ifdef __cplusplus
 }
 #endif
