@@ -35,7 +35,7 @@
 extern "C" {
 #endif
 
-//#include "datatypes.h"
+#include "optiga/common/Datatypes.h"
 #include "optiga/cmd/CommandLib.h"
 
 /**
@@ -217,9 +217,9 @@ typedef struct key_from_opitga
  * \retval  #OPTIGA_CRYPT_ERROR_INSTANCE_IN_USE             Same instance with ongoing request servicing is used
  * \retval  #OPTIGA_DEVICE_ERROR                            Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_crypt_random(optiga_rng_types_t rng_type,
-                                        uint8_t * random_data,
-                                        uint16_t random_data_length);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_crypt_random(optiga_rng_types_t rng_type,
+                                                        uint8_t * random_data,
+                                                        uint16_t random_data_length);
 
 
 
@@ -250,7 +250,7 @@ optiga_lib_status_t optiga_crypt_random(optiga_rng_types_t rng_type,
  * \retval  #OPTIGA_CRYPT_ERROR_INSTANCE_IN_USE             Same instance with ongoing request servicing is used
  * \retval  #OPTIGA_DEVICE_ERROR                            Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_crypt_hash_start(optiga_hash_context_t * hash_ctx);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_crypt_hash_start(optiga_hash_context_t * hash_ctx);
 
 
  /**
@@ -285,9 +285,9 @@ optiga_lib_status_t optiga_crypt_hash_start(optiga_hash_context_t * hash_ctx);
  * \retval  #OPTIGA_CRYPT_ERROR_INSTANCE_IN_USE             Same instance with ongoing request servicing is used
  * \retval  #OPTIGA_DEVICE_ERROR                            Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
-                                             uint8_t source_of_data_to_hash,
-                                             void * data_to_hash);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
+                                                             uint8_t source_of_data_to_hash,
+                                                             void * data_to_hash);
 
  /**
  *
@@ -318,8 +318,8 @@ optiga_lib_status_t optiga_crypt_hash_update(optiga_hash_context_t * hash_ctx,
  * \retval  #OPTIGA_CRYPT_ERROR_INSTANCE_IN_USE     Same instance with ongoing request servicing is used
  * \retval  #OPTIGA_DEVICE_ERROR                            Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_crypt_hash_finalize(optiga_hash_context_t * hash_ctx,
-                                               uint8_t * hash_output);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_crypt_hash_finalize(optiga_hash_context_t * hash_ctx,
+                                                               uint8_t * hash_output);
 
 
 
@@ -361,12 +361,12 @@ optiga_lib_status_t optiga_crypt_hash_finalize(optiga_hash_context_t * hash_ctx,
  * \retval  #OPTIGA_CRYPT_ERROR_INSTANCE_IN_USE             Same instance with ongoing request servicing is used
  * \retval  #OPTIGA_DEVICE_ERROR                            Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_crypt_ecc_generate_keypair(optiga_ecc_curve_t curve_id,
-                                                      uint8_t key_usage,
-                                                      bool_t export_private_key,
-                                                      void * private_key,
-                                                      uint8_t * public_key,
-                                                      uint16_t * public_key_length);
+ LIBRARY_EXPORTS optiga_lib_status_t optiga_crypt_ecc_generate_keypair(optiga_ecc_curve_t curve_id,
+                                                                       uint8_t key_usage,
+                                                                       bool_t export_private_key,
+                                                                       void * private_key,
+                                                                       uint8_t * public_key,
+                                                                       uint16_t * public_key_length);
 
 
  /**
@@ -400,11 +400,11 @@ optiga_lib_status_t optiga_crypt_ecc_generate_keypair(optiga_ecc_curve_t curve_i
  * \retval  #OPTIGA_CRYPT_ERROR_INSTANCE_IN_USE             Same instance with ongoing request servicing is used
  * \retval  #OPTIGA_DEVICE_ERROR                            Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_crypt_ecdsa_sign(uint8_t * digest,
-                                            uint8_t digest_length,
-                                            optiga_key_id_t private_key,
-                                            uint8_t * signature,
-                                            uint16_t * signature_length);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_crypt_ecdsa_sign(uint8_t * digest,
+                                                            uint8_t digest_length,
+                                                            optiga_key_id_t private_key,
+                                                            uint8_t * signature,
+                                                            uint16_t * signature_length);
 
 /**
  *
@@ -437,12 +437,12 @@ optiga_lib_status_t optiga_crypt_ecdsa_sign(uint8_t * digest,
  * \retval  #OPTIGA_CRYPT_ERROR_INSTANCE_IN_USE             Same instance with ongoing request servicing is used
  * \retval  #OPTIGA_DEVICE_ERROR                            Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_crypt_ecdsa_verify(uint8_t * digest,
-                                              uint8_t digest_length,
-                                              uint8_t * signature,
-                                              uint16_t signature_length,
-                                              uint8_t public_key_source_type,
-                                              void * public_key);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_crypt_ecdsa_verify(uint8_t * digest,
+                                                              uint8_t digest_length,
+                                                              uint8_t * signature,
+                                                              uint16_t signature_length,
+                                                              uint8_t public_key_source_type,
+                                                              void * public_key);
 
  /**
  * @brief Calculates the shared secret using ECDH algorithm.
@@ -480,10 +480,10 @@ optiga_lib_status_t optiga_crypt_ecdsa_verify(uint8_t * digest,
  * \retval  #OPTIGA_CRYPT_ERROR_INSTANCE_IN_USE             Same instance with ongoing request servicing is used
  * \retval  #OPTIGA_DEVICE_ERROR                            Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_crypt_ecdh(optiga_key_id_t private_key,
-                                      public_key_from_host_t * public_key,
-                                      bool_t export_to_host,
-                                      uint8_t * shared_secret);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_crypt_ecdh(optiga_key_id_t private_key,
+                                                      public_key_from_host_t * public_key,
+                                                      bool_t export_to_host,
+                                                      uint8_t * shared_secret);
 
 /**
  * @brief Derives a key.
@@ -523,14 +523,14 @@ optiga_lib_status_t optiga_crypt_ecdh(optiga_key_id_t private_key,
  * \retval  #OPTIGA_CRYPT_ERROR_INSTANCE_IN_USE             Same instance with ongoing request servicing is used
  * \retval  #OPTIGA_DEVICE_ERROR                            Command execution failure in OPTIGA and the LSB indicates the error code.(Refer Solution Reference Manual)
  */
-optiga_lib_status_t optiga_crypt_tls_prf_sha256(uint16_t secret,
-                                                uint8_t * label,
-                                                uint16_t label_length,
-                                                uint8_t * seed,
-                                                uint16_t seed_length,
-                                                uint16_t derived_key_length,
-                                                bool_t export_to_host,
-                                                uint8_t * derived_key);
+LIBRARY_EXPORTS optiga_lib_status_t optiga_crypt_tls_prf_sha256(uint16_t secret,
+                                                                uint8_t * label,
+                                                                uint16_t label_length,
+                                                                uint8_t * seed,
+                                                                uint16_t seed_length,
+                                                                uint16_t derived_key_length,
+                                                                bool_t export_to_host,
+                                                                uint8_t * derived_key);
 
 
 #ifdef __cplusplus
