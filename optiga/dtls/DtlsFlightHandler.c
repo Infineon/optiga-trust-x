@@ -30,7 +30,7 @@
 * @{
 */
 
-#include "optiga/dtls/DtlsFlighthandler.h"
+#include "optiga/dtls/DtlsFlightHandler.h"
 #ifdef MODULE_ENABLE_DTLS_MUTUAL_AUTH
 
 /// @cond hidden
