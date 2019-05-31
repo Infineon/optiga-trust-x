@@ -38,6 +38,10 @@
 // TAG + LENGTH needs 2 bytes
 // if the highest bit of the integer is set we need an extra byte
 #define  DER_OVERHEAD ((2 + 1) * 2)
+#define RS()
+#define CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE 64
+#define DER_INTEGER_MAX_LEN 100
+#define DER_TAG_INTEGER 0x02
 
 optiga_lib_status_t ecdsa_rs_to_asn1(const uint8_t  *r, size_t r_len,
                                      const uint8_t  *s, size_t s_len,
@@ -90,7 +94,7 @@ optiga_lib_status_t ecdsa_rs_to_asn1(const uint8_t  *r, size_t r_len,
         p_cur++;
 
         // Check for stuffing bits
-        if ((r_len == (NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) + 1) &&
+        if ((r_len == (CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) + 1) &&
             (*p_cur == 0x00))
         {
             p_cur++;
@@ -99,7 +103,7 @@ optiga_lib_status_t ecdsa_rs_to_asn1(const uint8_t  *r, size_t r_len,
 
         // It might be that the r or s signature componenent is less than 32 bytes long (29, 30 or 31 bytes)
         // We need to prefix the output with leading zeroes
-        for (i = 0; i < (NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) - r_len; i++)
+        for (i = 0; i < (CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) - r_len; i++)
         {
             *p_rs=0x00;
         }
@@ -149,7 +153,7 @@ optiga_lib_status_t ecdsa_rs_to_asn1(const uint8_t  *r, size_t r_len,
         p_cur++;
 
         // Check for stuffing bits
-        if ((s_len == (NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) + 1) &&
+        if ((s_len == (CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) + 1) &&
             (*p_cur == 0x00))
         {
             p_cur++;
@@ -158,7 +162,7 @@ optiga_lib_status_t ecdsa_rs_to_asn1(const uint8_t  *r, size_t r_len,
 
         // It might be that the r or s signature componenent is less than 32 bytes long (29, 30 or 31 bytes)
         // We need to prefix the output with leading zeroes
-        for (i=0; i < (NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) - s_len; i++)
+        for (i=0; i < (CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) - s_len; i++)
         {
             *(p_rs + r_pad + r_len) = 0x00;
         }
