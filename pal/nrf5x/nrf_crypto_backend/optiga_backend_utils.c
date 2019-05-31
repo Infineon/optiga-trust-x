@@ -62,7 +62,9 @@ ret_code_t asn1_to_ecdsa_rs(uint8_t const * p_asn1,
     
     uint8_t const * p_cur = p_asn1;
     uint8_t const * p_end = p_asn1 + asn1_len; // Points to first invalid mem-location
+    uint8_t         r_pad = 0;
     uint8_t         r_len;
+    uint8_t         s_pad = 0;
     uint8_t         s_len;
     
     if (p_asn1 == NULL || p_rs == NULL || p_rs_len == NULL) 
@@ -108,15 +110,24 @@ ret_code_t asn1_to_ecdsa_rs(uint8_t const * p_asn1,
         r_len--;
     }
 
+    // It might be that the r or s signature componenent is less than 32 bytes long (29, 30 or 31 bytes)
+    // We need to prefix the output with leading zeroes
+    for (i = 0; i < (NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) - r_len; i++)
+    {
+        *p_rs=0x00;
+    }
+    p_rs+=i;
+    r_pad = i;
+
     // Check for out-of-bounds read
-    if ((p_cur + r_len) >= p_end)
+    if ((p_cur + r_pad + r_len) >= p_end)
     {
         // prevented out-of-bounds read
         return NRF_ERROR_CRYPTO_INTERNAL;
     }
     
     // Check for out-of-bounds write
-    if ((p_rs + r_len) > (p_rs + *p_rs_len))
+    if ((p_rs + r_pad + r_len) > (p_rs + *p_rs_len))
     {
         // prevented out-of-bounds write
         return NRF_ERROR_CRYPTO_INTERNAL;
@@ -151,21 +162,30 @@ ret_code_t asn1_to_ecdsa_rs(uint8_t const * p_asn1,
 
 	// Check for stuffing bits
     if ((s_len == (NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) + 1) &&
-	    (*p_cur == 0x00))
+	(*p_cur == 0x00))
     {
         p_cur++;
         s_len--;
     }
+	
+    // It might be that the r or s signature componenent is less than 32 bytes long (29, 30 or 31 bytes)
+    // We need to prefix the output with leading zeroes
+    for (i=0; i < (NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) - s_len; i++)
+    {
+        *(p_rs + r_pad + r_len) = 0x00;
+    }
+    p_rs+=i;
+    s_pad = i;
 
     // Check for out-of-bounds read
-    if ((p_cur + s_len) > p_end)
+    if ((p_cur + s_pad + s_len) > p_end)
     {
         // prevented out-of-bounds read
         return NRF_ERROR_CRYPTO_INTERNAL;
     }
     
     // Check for out-of-bounds write
-    if ((p_rs + r_len + s_len) > (p_rs + *p_rs_len))
+    if ((p_rs + + r_pad + r_len + s_pad + s_len) > (p_rs + *p_rs_len))
     {
         // Prevented out-of-bounds write
         return NRF_ERROR_CRYPTO_INTERNAL;
@@ -173,7 +193,7 @@ ret_code_t asn1_to_ecdsa_rs(uint8_t const * p_asn1,
 
     memcpy(p_rs + r_len, p_cur, s_len);
 
-    *p_rs_len = r_len + s_len;
+    *p_rs_len = r_pad + r_len + s_pad + s_len;
 
     return NRF_SUCCESS;
 }
@@ -199,9 +219,15 @@ bool ecdsa_rs_to_asn1(uint8_t const * p_r,
                       uint8_t       * p_asn_sig,
                       size_t        * p_asn_sig_len)
 {
-    size_t index = 0;
-    // NULL checks
-    if (p_r == NULL || p_s == NULL || p_asn_sig_len == NULL)
+    uint32_t index = 0;
+    optiga_lib_status_t return_status = OPTIGA_LIB_ERROR;
+    uint8_t r_pad = 0;
+    uint8_t s_pad = 0;
+    uint8_t* _p_r = (uint8_t  *)p_r;
+    uint8_t* _p_s = (uint8_t  *)p_s;
+    int i = 0;
+
+    if (_p_r == NULL || _p_s == NULL || p_asn_sig_len == NULL)
     {
         return false;
     }
@@ -210,58 +236,55 @@ bool ecdsa_rs_to_asn1(uint8_t const * p_r,
     {
         return false;
     }
-
-    if (*p_asn_sig_len < (r_len + s_len + DER_OVERHEAD)) 
-    {
-    	// Not enough space in output buffer
-    	return false;
+	
+    if(*p_asn_sig_len < (r_len + s_len + DER_OVERHEAD)) {
+        // not enough space in output buffer
+        return false;
     }
-    
+
     // R component
-    // DER TAG INTEGER
-    p_asn_sig[index] = DER_TAG_INTEGER;
-    index++;
-    
-    // Set length
-    p_asn_sig[index] = r_len;
-
-    // check if extra byte needed
-    if (p_r[0] & 0x80)
+    p_asn_sig[0] = 0x02;
+    i = 0;
+    while(*(_p_r + r_pad) == 0x00)
     {
-        // Update length value
-        p_asn_sig[index] += 1; 
-        index++;
-        // Insert zero byte for padding
-        p_asn_sig[index] =  0;
+        r_pad++;
     }
+    p_asn_sig[1] = 0x20 - r_pad;
 
-    index++;
+    if (_p_r[r_pad] & 0x80)
+    {
+        p_asn_sig[1] += 1;
+        p_asn_sig[2] =  0;
+        index++;
+    }
+    _p_r += r_pad;
+    r_len -= r_pad;
+    memcpy(p_asn_sig + 2, _p_r, r_len);
 
-    memcpy(&p_asn_sig[index], p_r, r_len);
-    index += r_len;
-
+    index += r_len + 2;
     // S component
-    // DER TAG INTEGER
-    p_asn_sig[index] = DER_TAG_INTEGER;
-    index++;
-    // Set length
-    p_asn_sig[index] = s_len;
+    p_asn_sig[index + 0] = 0x02;
+    p_asn_sig[index + 1] = 0x20;
 
-    if (p_s[0] & 0x80)
+    while(*(p_s+s_pad) == 0x00)
     {
-        // Update length value
-        p_asn_sig[index] += 1; 
-        index++;
-        // Insert zero byte for padding
-        p_asn_sig[index] =  0;
+        s_pad++;
     }
-    
-    index++;
+    p_asn_sig[index + 1] = 0x20 - s_pad;
 
-    memcpy(&p_asn_sig[index], p_s, s_len);
-    index += s_len;
+    if (p_s[s_pad] & 0x80)
+    {
+        p_asn_sig[index + 1] += 1;
+        p_asn_sig[index + 2] =  0;
+        index++;
+    }
+    _p_s += s_pad;
+    s_len -= s_pad;
 
-    // Return total length of ASN.1-encoded data structure
-    *p_asn_sig_len = index;
+    memcpy(p_asn_sig + index + 2, _p_s, s_len);
+    index += s_len + 2;
+
+    *p_asn_sig_len = index; // Return total length of ASN.1-encoded data structure
+
     return true;
 }
