@@ -66,6 +66,7 @@ ret_code_t asn1_to_ecdsa_rs(uint8_t const * p_asn1,
     uint8_t         r_len;
     uint8_t         s_pad = 0;
     uint8_t         s_len;
+    int i;
     
     if (p_asn1 == NULL || p_rs == NULL || p_rs_len == NULL) 
     {
@@ -259,7 +260,7 @@ bool ecdsa_rs_to_asn1(uint8_t const * p_r,
     }
     _p_r += r_pad;
     r_len -= r_pad;
-    memcpy(p_asn_sig + 2, _p_r, r_len);
+    memcpy(p_asn_sig + index + 2, _p_r, r_len);
 
     index += r_len + 2;
     // S component
