@@ -43,154 +43,81 @@
 #define DER_INTEGER_MAX_LEN 100
 #define DER_TAG_INTEGER 0x02
 
-optiga_lib_status_t ecdsa_rs_to_asn1(const uint8_t  *r, size_t r_len,
-                                     const uint8_t  *s, size_t s_len,
-                                     uint8_t  *asn_sig, size_t *asn_sig_len)
+optiga_lib_status_t ecdsa_rs_to_asn1(uint8_t const * p_r,
+                      size_t          r_len,
+                      uint8_t const * p_s,
+                      size_t          s_len,
+                      uint8_t       * p_asn_sig,
+                      size_t        * p_asn_sig_len)
 {
+    uint32_t index = 0;
     optiga_lib_status_t return_status = OPTIGA_LIB_ERROR;
-    uint8_t const * p_cur = p_asn1;
-    uint8_t const * p_end = p_asn1 + asn1_len; // Points to first invalid mem-location
-    uint8_t         r_len;
-    uint8_t         r_pad = 0;
-    uint8_t         s_len;
-    uint8_t         s_pad = 0;
-    int             i=0;
-    
+    uint8_t r_pad = 0;
+    uint8_t s_pad = 0;
+    uint8_t* _p_r = (uint8_t  *)p_r;
+    uint8_t* _p_s = (uint8_t  *)p_s;
+    int i = 0;
+
     do {
+		if (_p_r == NULL || _p_s == NULL || p_asn_sig_len == NULL)
+		{
+			break;
+		}
 
-        if (p_asn1 == NULL || p_rs == NULL || p_rs_len == NULL)
-        {
-            break;
-        }
+		if (r_len == 0 || r_len > DER_INTEGER_MAX_LEN || s_len == 0 || s_len > DER_INTEGER_MAX_LEN)
+		{
+			break;
+		}
 
-        if (asn1_len == 0 || *p_rs_len == 0)
-        {
-            break;
-        }
+		if(*p_asn_sig_len < (r_len + s_len + DER_OVERHEAD)) {
+			// not enough space in output buffer
+			break;
+		}
 
-        if (*p_cur != DER_TAG_INTEGER)
-        {
-            // Wrong tag type
-            break;
-        }
+		// R component
+		p_asn_sig[0] = 0x02;
+		i = 0;
+		while(*(_p_r + r_pad) == 0x00)
+		{
+			r_pad++;
+		}
+		p_asn_sig[1] = 0x20 - r_pad;
 
-        if ((p_cur + 2) >= p_end)
-        {
-            // Prevented out-of-bounds read
-            break;
-        }
+		if (_p_r[r_pad] & 0x80)
+		{
+			p_asn_sig[1] += 1;
+			p_asn_sig[2] =  0;
+			index++;
+		}
+		_p_r += r_pad;
+		r_len -= r_pad;
+		memcpy(p_asn_sig + index + 2, _p_r, r_len);
 
-        // Move to length value
-        p_cur++;
-        r_len = *p_cur;
-        RS();
-        if (r_len > DER_INTEGER_MAX_LEN)
-        {
-            // Unsupported length
-            break;
-        }
+		index += r_len + 2;
+		// S component
+		p_asn_sig[index + 0] = 0x02;
+		p_asn_sig[index + 1] = 0x20;
 
-        // Move to first data value
-        p_cur++;
+		while(*(p_s+s_pad) == 0x00)
+		{
+			s_pad++;
+		}
+		p_asn_sig[index + 1] = 0x20 - s_pad;
 
-        // Check for stuffing bits
-        if ((r_len == (CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) + 1) &&
-            (*p_cur == 0x00))
-        {
-            p_cur++;
-            r_len--;
-        }
+		if (p_s[s_pad] & 0x80)
+		{
+			p_asn_sig[index + 1] += 1;
+			p_asn_sig[index + 2] =  0;
+			index++;
+		}
+		_p_s += s_pad;
+		s_len -= s_pad;
 
-        // It might be that the r or s signature componenent is less than 32 bytes long (29, 30 or 31 bytes)
-        // We need to prefix the output with leading zeroes
-        for (i = 0; i < (CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) - r_len; i++)
-        {
-            *p_rs=0x00;
-        }
-        p_rs+=i;
-        r_pad = i;
-        
-        RS();
-        // Check for out-of-bounds read
-        if ((p_cur + r_pad + r_len) >= p_end)
-        {
-            // prevented out-of-bounds read
-            break;
-        }
+		memcpy(p_asn_sig + index + 2, _p_s, s_len);
+		index += s_len + 2;
 
-        // Check for out-of-bounds write
-        if ((p_rs + r_pad + r_len) > (p_rs + *p_rs_len))
-        {
-            // prevented out-of-bounds write
-            break;
-        }
-        RS();
-        // Copy R component to output
-        memcpy(p_rs, p_cur, r_len);
-
-        // Move to next tag
-        p_cur += r_len;
-        RS();
-        if (*p_cur != DER_TAG_INTEGER)
-        {
-            // Wrong tag type
-            break;
-        }
-
-        if ((p_cur + 2) >= p_end)
-        {
-            // Prevented out-of-bounds read
-            break;
-        }
-        p_cur++;
-        s_len = *p_cur;
-        RS();
-        if (s_len > DER_INTEGER_MAX_LEN)
-        {
-            // Unsupported length
-            break;
-        }
-        p_cur++;
-
-        // Check for stuffing bits
-        if ((s_len == (CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) + 1) &&
-            (*p_cur == 0x00))
-        {
-            p_cur++;
-            s_len--;
-        }
-
-        // It might be that the r or s signature componenent is less than 32 bytes long (29, 30 or 31 bytes)
-        // We need to prefix the output with leading zeroes
-        for (i=0; i < (CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2) - s_len; i++)
-        {
-            *(p_rs + r_pad + r_len) = 0x00;
-        }
-        p_rs+=i;
-        s_pad = i;
-
-        RS();
-        // Check for out-of-bounds read
-        if ((p_cur + s_pad + s_len) > p_end)
-        {
-            // prevented out-of-bounds read
-            break;
-        }
-
-        // Check for out-of-bounds write
-        if ((p_rs + + r_pad + r_len + s_pad + s_len) > (p_rs + *p_rs_len))
-        {
-            // Prevented out-of-bounds write
-            break;
-        }
-        RS();
-        memcpy(p_rs + r_len, p_cur, s_len);
-
-        *p_rs_len = r_pad + r_len + s_pad + s_len;
-        
-        return_status = OPTIGA_LIB_SUCCESS;
-        
-    }while(FALSE);
+		*p_asn_sig_len = index; // Return total length of ASN.1-encoded data structure
+    } while(0);
 
     return return_status;
 }
