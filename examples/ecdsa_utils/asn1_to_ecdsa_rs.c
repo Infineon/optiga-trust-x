@@ -32,111 +32,156 @@
 */
 
 #include "optiga/optiga_crypt.h"
+#define  DER_OVERHEAD ((2 + 1) * 2)
+#define RS()
+#define CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE 64
+#define DER_INTEGER_MAX_LEN 100
+#define DER_TAG_INTEGER 0x02
 
-optiga_lib_status_t asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
-                                     uint8_t * rs, size_t * rs_len)
+optiga_lib_status_t asn1_to_ecdsa_rs(uint8_t const * p_asn1,
+									size_t          asn1_len,
+									uint8_t       * p_rs,
+									size_t        * p_rs_len)
 {
-	optiga_lib_status_t return_status = OPTIGA_LIB_ERROR;
-	const uint8_t * cur = asn1;
-	// points to first invalid mem-location
-	const uint8_t * end = asn1 + asn1_len;
+
+    uint8_t const * p_cur = p_asn1;
+    uint8_t const * p_end = p_asn1 + asn1_len; // Points to first invalid mem-location
+    uint8_t         r_pad = 0;
+    uint8_t         r_len;
+    uint8_t         s_pad = 0;
+    uint8_t         s_len;
+    optiga_lib_status_t return_status = OPTIGA_LIB_ERROR;
+    int i = 0;
+
+    do {
+		if (p_asn1 == NULL || p_rs == NULL || p_rs_len == NULL)
+		{
+			break;
+		}
 	
-	do {
-		if(asn1 == NULL || rs == NULL || rs_len == NULL) {
+		if (asn1_len == 0 || *p_rs_len == 0)
+		{
 			break;
 		}
 
-		if(asn1_len == 0 || *rs_len == 0) {
+		if (*p_cur != DER_TAG_INTEGER)
+		{
+			// Wrong tag type
 			break;
 		}
 
-		if(*cur != 0x02) {
-			// wrong tag type
-			break;
-		}
-
-		if((cur + 2) >= end) {
-			// prevented out-of-bounds read
+		if ((p_cur + 2) >= p_end)
+		{
+			// Prevented out-of-bounds read
 			break;
 		}
 		
-		// move to length value
-		cur++;
-		uint8_t r_len = *cur;
+		// Move to length value
+		p_cur++;
+		r_len = *p_cur;
 
-		if (r_len > 0x7F) 
+		if (r_len > DER_INTEGER_MAX_LEN)
 		{
 			// Unsupported length
 			break;
 		}
-		
-		// move to first data value
-		cur++;
 
-		// check for stuffing bits
-		if ((r_len == (32 + 1)) && (*cur == 0x00))
+		// Move to first data value
+		p_cur++;
+
+		// Check for stuffing bits
+		if ((r_len == 33) &&
+			(*p_cur == 0x00))
 		{
-			cur++;
+			p_cur++;
 			r_len--;
 		}
 
-		// check for out-of-bounds read
-		if((cur + r_len) >= end) {
+		// It might be that the r or s signature componenent is less than 32 bytes long (29, 30 or 31 bytes)
+		// We need to prefix the output with leading zeroes
+		for (i = 0; i < (32 - r_len); i++)
+		{
+			*p_rs=0x00;
+		}
+		p_rs+=i;
+		r_pad = i;
+
+		// Check for out-of-bounds read
+		if ((p_cur + r_pad + r_len) >= p_end)
+		{
 			// prevented out-of-bounds read
 			break;
 		}
-		// check for out-of-bounds write
-		if((rs + r_len) > (rs + *rs_len)) {
+
+		// Check for out-of-bounds write
+		if ((p_rs + r_pad + r_len) > (p_rs + *p_rs_len))
+		{
 			// prevented out-of-bounds write
 			break;
 		}
 		
-		// copy R component to output
-		memcpy(rs, cur, r_len);
+		// Copy R component to output
+		memcpy(p_rs, p_cur, r_len);
 
-		// move to next tag
-		cur += r_len;
+		// Move to next tag
+		p_cur += r_len;
 
-		if(*cur != 0x02) {
-			// wrong tag type
+		if (*p_cur != DER_TAG_INTEGER)
+		{
+			// Wrong tag type
 			break;
 		}
 
-		if((cur + 2) >= end) {
-			// prevented out-of-bounds read
+		if ((p_cur + 2) >= p_end)
+		{
+			// Prevented out-of-bounds read
 			break;
 		}
-		cur++;
-		uint8_t s_len = *cur;
-		
-		if (s_len > 0x7f) {
+		p_cur++;
+		s_len = *p_cur;
+
+		if (s_len > DER_INTEGER_MAX_LEN)
+		{
 			// Unsupported length
 			break;
 		}
-		cur++;
+		p_cur++;
 
-		if((s_len == (32 + 1)) && (*cur == 0x00)) {
-			cur++;
+		// Check for stuffing bits
+		if ((s_len == (32 + 1)) &&
+		(*p_cur == 0x00))
+		{
+			p_cur++;
 			s_len--;
 		}
 
-		// check for out-of-bounds read
-		if((cur + s_len) > end) {
+		// It might be that the r or s signature componenent is less than 32 bytes long (29, 30 or 31 bytes)
+		// We need to prefix the output with leading zeroes
+		for (i=0; i < (32 - s_len); i++)
+		{
+			*(p_rs + r_pad + r_len) = 0x00;
+		}
+		p_rs+=i;
+		s_pad = i;
+
+		// Check for out-of-bounds read
+		if ((p_cur + s_pad + s_len) > p_end)
+		{
 			// prevented out-of-bounds read
 			break;
 		}
-		// check for out-of-bounds write
-		if((rs + r_len + s_len) > (rs + *rs_len)) {
-			// prevented out-of-bounds write
+
+		// Check for out-of-bounds write
+		if ((p_rs + + r_pad + r_len + s_pad + s_len) > (p_rs + *p_rs_len))
+		{
+			// Prevented out-of-bounds write
 			break;
 		}
 
-		memcpy(rs + r_len, cur, s_len);
-		
-		return_status = OPTIGA_LIB_SUCCESS;
-		
-	}while(FALSE);
+		memcpy(p_rs + r_len, p_cur, s_len);
 
+		*p_rs_len = r_pad + r_len + s_pad + s_len;
+    }while(0);
 
     return return_status;
 }
