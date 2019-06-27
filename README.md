@@ -1,5 +1,11 @@
 # OPTIGA&trade; Trust X Software Framework
 
+<a href="https://github.com/Infineon/optiga-trust-x#description"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_1.jpg"></a> <a href="https://github.com/Infineon/optiga-trust-x#examples"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_2.jpg"></a>  <a href="https://github.com/Infineon/optiga-trust-x#get-started"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_3.jpg"></a>
+
+<a href="https://github.com/Infineon/optiga-trust-x#documentation"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_4.jpg"></a> <a href="https://github.com/Infineon/optiga-trust-x#license"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_5.jpg"></a>  <a href="https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_6.jpg"></a>
+
+***
+
 [tocstart]: # (toc start)
 
 1. **Security Chip**
