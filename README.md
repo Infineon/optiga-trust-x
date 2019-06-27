@@ -9,7 +9,7 @@
 2. **Get Started**
     * [Software Framework overview](#software_framework_oveview)
     * [Evaluation and developement kits](#evaluation_development_kits)
-    * [Application Notes](#application_notes)
+    * [Examples](#examples)
     * [Documentation](#documentation)
 3. **Working with the Software Framework**
     * [Initialisation hints (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Initialisation-hints)
@@ -72,7 +72,7 @@ For more information please refer to the [Wiki page](https://github.com/Infineon
 * OPTIGA™ Trust X [evaluation and demonstration kit](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-trust-x-eval-kit/)
 * OPTIGA™ Trust X [Shield2Go](https://www.infineon.com/cms/en/product/evaluation-boards/s2go-security-optiga-x/)
 
-### <a name="application_notes"></a>Application Notes
+### <a name="examples"></a>Examples
 1. [Get started guide](https://github.com/Infineon/getstarted-optiga-trust-x)
 2. [On-Chip DTLS example](https://github.com/Infineon/onchipdtls-optiga-trust-x)
 3. [Off-Chip TLS example (mbedTLS)](https://github.com/Infineon/mbedTLS-optiga-trust-x)
