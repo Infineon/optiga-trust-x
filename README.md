@@ -2,40 +2,16 @@
 
 <a href="https://github.com/Infineon/optiga-trust-x#description"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_1.jpg" width="256" height="192"></a> <a href="https://github.com/Infineon/optiga-trust-x#examples"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_2.jpg" width="256" height="192"></a>  <a href="https://github.com/Infineon/optiga-trust-x#get-started"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_3.jpg" width="256" height="192"></a>
 
-<a href="https://github.com/Infineon/optiga-trust-x#documentation"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_4.jpg" width="256" height="192"></a> <a href="https://github.com/Infineon/optiga-trust-x#license"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_5.jpg" width="256" height="192"></a>  <a href="https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_6.jpg" width="256" height="192"></a>
+<a href="https://github.com/Infineon/optiga-trust-x#documentation"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_4.jpg" width="256" height="192"></a> <a href="https://github.com/Infineon/optiga-trust-x/wiki/Crypto-Performance"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_5.jpg" width="256" height="192"></a>  <a href="https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API"><img src="https://github.com/Infineon/Assets/blob/master/Pictures/optiga_trust_x_gitrepo_tile_6.jpg" width="256" height="192"></a>
 
 ***
-
-[tocstart]: # (toc start)
-
-1. **Security Chip**
-    * [Description](#description)
-    * [Summary](#summary)
-    * [Key Features and Benefits](#key_features_and_benefits)
-2. **Get Started**
-    * [Software Framework overview](#software_framework_oveview)
-    * [Evaluation and developement kits](#evaluation_development_kits)
-    * [Examples](#examples)
-    * [Documentation](#documentation)
-3. **Working with the Software Framework**
-    * [Initialisation hints (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Initialisation-hints)
-    * [Porting guide (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide)
-    * [Crypto performance (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Crypto-Performance)
-    * [Error Codes (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Device-Error-Codes)
-    * [Metadata and Access Conditions (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Metadata-and-Access-Conditions)
-    * [On‐chip vs off-chip DTLS Protocol](https://github.com/Infineon/optiga-trust-x/wiki/On‐chip-vs-off‐chip-(D)TLS-Protocol)
-    * **User API**
-        * [Crypt API (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API)
-        * [Util API (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Util-API)
-4. **General**
-    * [Contributing](#contributing)
-    * [License](#license)
-
-[tocend]: # (toc end)
 
 ## Security Chip
 
 ### <a name="description"></a>Description
+
+  * [Summary](#summary)
+  * [Key Features and Benefits](#key_features_and_benefits)
 
 <img src="https://github.com/Infineon/Assets/blob/master/Pictures/OPTIGA-Trust-X.png">
 
@@ -62,6 +38,11 @@ The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIG
 
 ## Get Started
 
+  * [Software Framework overview](#software_framework_oveview)
+  * [Evaluation and developement kits](#evaluation_development_kits)
+  * [Examples](#examples)
+  * [Documentation](#documentation)
+
 ### <a name="software_framework_oveview"></a>Software Framework overview
 
 ![hostcode architecture](https://raw.githubusercontent.com/Infineon/Assets/master/Pictures/optiga_trust_x_stack_generic.jpg)
@@ -78,7 +59,8 @@ For more information please refer to the [Wiki page](https://github.com/Infineon
 * OPTIGA™ Trust X [evaluation and demonstration kit](https://www.infineon.com/cms/en/product/evaluation-boards/optiga-trust-x-eval-kit/)
 * OPTIGA™ Trust X [Shield2Go](https://www.infineon.com/cms/en/product/evaluation-boards/s2go-security-optiga-x/)
 
-### <a name="examples"></a>Examples
+## <a name="examples"></a>Examples
+
 1. [Get started guide](https://github.com/Infineon/getstarted-optiga-trust-x)
 2. [On-Chip DTLS example](https://github.com/Infineon/onchipdtls-optiga-trust-x)
 3. [Off-Chip TLS example (mbedTLS)](https://github.com/Infineon/mbedTLS-optiga-trust-x)
@@ -91,7 +73,22 @@ For more information please refer to the [Wiki page](https://github.com/Infineon
 10. [I2C Utilities](https://github.com/Infineon/i2c-utils-optiga-trust)
 11. [OPTIGA Trust X Technical Training](https://github.com/Infineon/technical-training-optiga-trust-x)
 
-### <a name="documentation"></a>Documentation
+## <a name="documentation"></a>Documentation
+
+### Usefull articles
+
+  * [Initialisation hints (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Initialisation-hints)
+  * [Porting guide (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Porting-Guide)
+  * [Crypto performance (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Crypto-Performance)
+  * [Error Codes (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Device-Error-Codes)
+  * [Metadata and Access Conditions (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Metadata-and-Access-Conditions)
+  * [On‐chip vs off-chip DTLS Protocol (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/On‐chip-vs-off‐chip-(D)TLS-Protocol)
+  * **User API**
+      * [Crypt API (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API)
+      * [Util API (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Util-API)
+
+### Datasheet and Co.
+
 For high level description and some important excerpts from the documentation please refer to [Wiki page](https://github.com/Infineon/optiga-trust-x/wiki)
 
 Other downloadable PDF documents can be found below:
@@ -100,11 +97,10 @@ Other downloadable PDF documents can be found below:
 3. [OPTIGA™ Keys and Certificates v1.2](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_KeysAndCertificates_v1.2.pdf) (PDF)
 4. [Infineon I2C protocol specification v1.65](https://github.com/Infineon/Assets/raw/master/PDFs/IFXI2CProtocol_v1.65.pdf) (PDF)
 
-## General
 
-### <a name="contributing"></a>Contributing
+## <a name="contributing"></a>Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-### <a name="license"></a>License
+## <a name="license"></a>License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
