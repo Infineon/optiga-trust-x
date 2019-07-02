@@ -83,6 +83,8 @@ For more information please refer to the [Wiki page](https://github.com/Infineon
   * **User API**
       * [Crypt API (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Crypt-API)
       * [Util API (Wiki)](https://github.com/Infineon/optiga-trust-x/wiki/Trust-X-Util-API)
+      
+  * [Hardware-Security: "Einfach (und) Sicher" (in German)](https://vimeo.com/279839814) ([Slides in English](https://github.com/Infineon/Assets/blob/master/PDFs/2018-06-04_Building-IoT_HW-Sec_Lesjak_vFinal.pdf))
 
 ### Datasheet and Co.
 
