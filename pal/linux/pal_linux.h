@@ -44,7 +44,7 @@
 
 #define HIGH 1
 #define LOW 0
-typedef uint8_t gpio_pin_t;
+typedef uint16_t gpio_pin_t;
 
 /** @brief PAL I2C context structure */
 typedef struct pal_linux

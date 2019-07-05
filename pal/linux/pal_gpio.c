@@ -54,7 +54,7 @@
 static int
 GPIOExport(int pin)
 {
-#define BUFFER_MAX 3
+#define BUFFER_MAX 4
 	char buffer[BUFFER_MAX];
 	ssize_t bytes_written;
 	int fd;
@@ -95,7 +95,7 @@ GPIODirection(int pin, int dir)
 {
 	static const char s_directions_str[]  = "in\0out";
 
-#define DIRECTION_MAX 35
+#define DIRECTION_MAX 34
 	char path[DIRECTION_MAX];
 	int fd;
 
