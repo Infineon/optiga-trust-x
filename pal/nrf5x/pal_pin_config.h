@@ -52,9 +52,9 @@ extern "C" {
  */
 
 // OPTIGA as 2Go board on the TrustX shield, e.g. TrustX2Go and TrustM2Go
-#define OPTIGA_2GO 0
+#define OPTIGA_PIN_CONFIG_2GO 0
 // OPTIGA soldered on the TrustX shield
-#define OPTIGA_TRUSTX_SHIELD 1
+#define OPTIGA_PIN_CONFIG_TRUSTX_SHIELD 1
 
 /** @brief set a pin to this value to mark it as unused and it will not be initialised */
 #define OPTIGA_PIN_UNUSED               UINT32_C(0xFFFFFFFF)
@@ -70,10 +70,10 @@ extern "C" {
 
 #define OPTIGA_PIN_ALL_MASKS            (OPTIGA_PIN_INITIAL_VAL_MASK | OPTIGA_PIN_ONE_TIME_INIT_MASK)
 
-#if OPTIGA_2GO == 1
+#if OPTIGA_PIN_CONFIG_2GO == 1
 #define OPTIGA_PIN_VDD      (ARDUINO_9_PIN | OPTIGA_PIN_INITIAL_VAL_LOW | OPTIGA_PIN_ONE_TIME_INIT)
 #define OPTIGA_PIN_RST      (ARDUINO_7_PIN | OPTIGA_PIN_INITIAL_VAL_LOW)
-#elif  OPTIGA_TRUSTX_SHIELD == 1
+#elif  OPTIGA_PIN_CONFIG_TRUSTX_SHIELD == 1
 #define OPTIGA_PIN_VDD      (ARDUINO_9_PIN | OPTIGA_PIN_INITIAL_VAL_HIGH)
 #define OPTIGA_PIN_RST      (ARDUINO_7_PIN | OPTIGA_PIN_INITIAL_VAL_LOW)
 #else
