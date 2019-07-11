@@ -37,6 +37,16 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
+
+// Encode two integers in DER format
+// TAG + LENGTH needs 2 bytes
+// if the highest bit of the integer is set we need an extra byte
+/** @brief Maximum overhead of the ASN.1 encoding for the R and S components of an ECDSA signature */
+#define ECDSA_RS_MAX_ASN1_OVERHEAD ((2 + 1) * 2)
+
 /**
  * @brief decodes two ASN.1 integers to the R and S components of a ECC signature
  * @param[in] asn1 buffer containing the ASN.1 encoded R and S values
@@ -45,23 +55,22 @@ extern "C" {
  * @param[in,out] rs_len length of the rs buffer, contains the bytes written afterwards
  * @returns OPTIGA_LIB_SUCCESS on success, OPTIGA_LIB_ERROR else
  */
-optiga_lib_status_t asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
-									 uint8_t * rs, size_t * rs_len);
+bool asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
+                                     uint8_t * rs, size_t * rs_len);
 
 /**
  * @brief Encodes the ECDSA signature components (r, s) in ASN.1 format.
  *
  * @param[in]   r            Component r of the ECDSA signature
- * @param[in]   r_len        Length of the r component of the ECDSA signature
  * @param[in]   s            Component s of the ECDSA signature
- * @param[in]   s_len        Length of the s component of the ECDSA signature
+ * @param[in]   rs_len       Length of the buffers for the R and S components of the ECDSA signature, must be smaller than 127
  * @param[out]  asn_sig      Buffer where the resulting ASN.1-encoded ECDSA signature will be copied into
  * @param[out]  asn_sig_len  Length of the actual data that was copied into the output buffer
- * @returns     OPTIGA_LIB_SUCCESS on success, OPTIGA_LIB_ERROR on error
+ * @returns     True on success, False on error
+ * @note        The output buffer must be at least 2*rs_len + ECDSA_RS_MAX_ASN1_OVERHEAD to fit the result in all cases
  */
-optiga_lib_status_t ecdsa_rs_to_asn1(const uint8_t  *r, size_t r_len,
-									 const uint8_t  *s, size_t s_len,
-									  	   uint8_t  *asn_sig, size_t *asn_sig_len);
+bool ecdsa_rs_to_asn1(const uint8_t  *r, const uint8_t  *s, size_t rs_len,
+                      uint8_t  *asn_sig, size_t *asn_sig_len);
 
 #ifdef __cplusplus
 }
