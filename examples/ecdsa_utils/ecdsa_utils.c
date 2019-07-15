@@ -58,7 +58,7 @@ static size_t encode_der_integer(const uint8_t *data, size_t data_len,
                                  uint8_t *out_buf, size_t out_buf_len)
 {
     // all write access must be smaller or equal to this pointer
-    const uint8_t const* out_end = out_buf + out_buf_len;
+    const uint8_t const* out_end = out_buf + out_buf_len - 1;
 
     // fixed position fields
     uint8_t* const tag_field = &out_buf[ASN1_DER_TAG_OFFSET];
@@ -92,7 +92,7 @@ static size_t encode_der_integer(const uint8_t *data, size_t data_len,
     // calculate number of bytes left in data
     const size_t write_length = data_end - cur_data;
     // check if it fits in the output buffer
-    if ((integer_field_cur + write_length) > out_end) {
+    if ((integer_field_cur + write_length - 1) > out_end) {
         // Prevented out-of-bounds write
         return 0;
     }
@@ -144,4 +144,118 @@ bool ecdsa_rs_to_asn1(const uint8_t  *r, const uint8_t  *s, size_t rs_len,
     *asn_sig_len = out_len_r + out_len_s;
 
     return true;
+}
+
+
+static size_t decode_asn1_uint(const uint8_t* asn1, size_t asn1_len,
+                               uint8_t* out_int, size_t* out_int_len)
+{
+    if (asn1_len < (ASN1_DER_VAL_OFFSET + 1)) {
+        // Not enough data to decode anything
+        return 0;
+    }
+
+    // all read access must be before this pointer
+    const uint8_t const* asn1_end = asn1 + asn1_len;
+
+    // fixed position fields
+    const uint8_t* const tag_field = &asn1[ASN1_DER_TAG_OFFSET];
+    const uint8_t* const length_field = &asn1[ASN1_DER_LEN_OFFSET];
+    const uint8_t* const integer_field_start = &asn1[ASN1_DER_VAL_OFFSET];
+
+    if (*tag_field != DER_TAG_INTEGER) {
+        // Not an DER INTEGER
+        return 0;
+    }
+
+    if (*length_field == 0 || *length_field > DER_INTEGER_MAX_LEN) {
+        // Invalid length value
+        return  0;
+    }
+
+    uint8_t integer_length = *length_field;
+    const uint8_t* integer_field_cur = &asn1[ASN1_DER_VAL_OFFSET];
+
+    if ((integer_field_cur + integer_length - 1) > (asn1_end - 1)) {
+        // prevented out-of-bounds read
+        return 0;
+    }
+
+    // one byte can never be a stuffing byte
+    if (integer_length > 1) {
+        if (*integer_field_cur == 0x00) {
+            // remove stuffing byte
+            integer_length--;
+            integer_field_cur++;
+        }
+
+        if (*integer_field_cur == 0x00) {
+            // second zero byte is an encoding error
+            return 0;
+        }
+    }
+
+    if (integer_length > *out_int_len) {
+        // prevented out-of-bounds write
+        return 0;
+    }
+
+    // insert padding zeros to ensure position of least significant byte matches
+    size_t padding = *out_int_len - integer_length;
+    memset(out_int, 0, padding);
+
+    memcpy(out_int + padding, integer_field_cur, integer_length);
+    *out_int_len = integer_length;
+
+    // return number of consumed ASN.1 bytes
+    return integer_field_cur + integer_length - tag_field;
+}
+
+bool asn1_to_ecdsa_rs_sep(const uint8_t *asn1, size_t asn1_len,
+                      uint8_t * r, size_t * r_len,
+                      uint8_t * s, size_t * s_len)
+{
+    if (asn1 == NULL || r == NULL || r_len == NULL || s == NULL || s_len == NULL) {
+        // No NULL paramters allowed
+        return false;
+    }
+
+    // decode R component
+    size_t consumed_r = decode_asn1_uint(asn1, asn1_len, r, r_len);
+    if (consumed_r == 0) {
+        // error while decoding R component
+        return false;
+    }
+
+    const uint8_t* asn1_s = asn1 + consumed_r;
+    size_t asn1_s_len = asn1_len - consumed_r;
+
+    // decode S component
+    size_t consumed_s = decode_asn1_uint(asn1_s, asn1_s_len, s, s_len);
+    if (consumed_s == 0) {
+        // error while decoding R component
+        return false;
+    }
+
+    return true;
+}
+
+bool asn1_to_ecdsa_rs(const uint8_t *asn1, size_t asn1_len,
+                      uint8_t * rs, size_t rs_len)
+{
+    if (asn1 == NULL || rs == NULL || rs_len == NULL) {
+        // No NULL paramters allowed
+        return false;
+    }
+
+    if ((rs_len % 2) != 0) {
+        // length of the output buffer must be 2 times the component size and even
+        return false;
+    }
+
+    const size_t component_length = rs_len / 2;
+    size_t r_len = component_length;
+    size_t s_len = component_length;
+
+    return asn1_to_ecdsa_rs_sep(asn1, asn1_len, rs, &r_len, rs + component_length, &s_len);
 }

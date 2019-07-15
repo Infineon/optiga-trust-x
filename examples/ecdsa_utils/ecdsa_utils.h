@@ -49,14 +49,35 @@ extern "C" {
 
 /**
  * @brief decodes two ASN.1 integers to the R and S components of a ECC signature
- * @param[in] asn1 buffer containing the ASN.1 encoded R and S values
- * @param[in] asn1_len length of the asn1 buffer
- * @param[out] rs buffer where to write the R and S values
- * @param[in,out] rs_len length of the rs buffer, contains the bytes written afterwards
- * @returns OPTIGA_LIB_SUCCESS on success, OPTIGA_LIB_ERROR else
+ * @param[in] asn1        Buffer containing the ASN.1 encoded R and S values as two concatenated DER INTEGERs
+ * @param[in] asn1_len    Length of the asn1 buffer
+ * @param[out] rs         Output buffer for the concatenated R and S values
+ * @param[in] rs_len      Length of the rs buffer
+ * @returns true on success, false else
+ * @note The R and S components will be padded with zeros in the output buffer and each component will take rs_len/2 bytes.
+ *       e.g.: [ (0x00) R | S ] where '|' denotes the border for half the rs buffer,
+ *       'R' and 'S' the bytes of the R and S components and '(0x00)' a padding byte needed to completely fill the buffer.
+ *       If you need to know the exact length of R and S use asn1_to_ecdsa_rs_sep(...)
+ * @note If the function returns false, all output values are invalid.
  */
 bool asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
-                                     uint8_t * rs, size_t * rs_len);
+                      uint8_t * rs, size_t rs_len);
+
+/**
+ * @brief decodes two ASN.1 integers to the R and S components of a ECC signature with separate buffers for R and S
+ * @param[in] asn1        Buffer containing the ASN.1 encoded R and S values as two concatenated DER INTEGERs
+ * @param[in] asn1_len    Length of the asn1 buffer
+ * @param[out] r          Output buffer for the R value
+ * @param[in,out] r_len   Length of the r buffer, contains the number of non padding bytes afterwards
+ * @param[out] s          Output buffer for the S value
+ * @param[in,out] s_len   Length of the s buffer, contains the number of non padding bytes afterwards
+ * @returns true on success, false else
+ * @note The r and s buffers will be padded at the least significant byte with zeros to the length of the buffer.
+ * @note If the function returns false, all output values are invalid.
+ */
+bool asn1_to_ecdsa_rs_sep(const uint8_t *asn1, size_t asn1_len,
+                          uint8_t * r, size_t * r_len,
+                          uint8_t * s, size_t * s_len);
 
 /**
  * @brief Encodes the ECDSA signature components (r, s) in ASN.1 format.
@@ -66,8 +87,9 @@ bool asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
  * @param[in]   rs_len       Length of the buffers for the R and S components of the ECDSA signature, must be smaller than 127
  * @param[out]  asn_sig      Buffer where the resulting ASN.1-encoded ECDSA signature will be copied into
  * @param[out]  asn_sig_len  Length of the actual data that was copied into the output buffer
- * @returns     True on success, False on error
+ * @returns     true on success, false on error
  * @note        The output buffer must be at least 2*rs_len + ECDSA_RS_MAX_ASN1_OVERHEAD to fit the result in all cases
+ * @note If the function returns false, all output values are invalid.
  */
 bool ecdsa_rs_to_asn1(const uint8_t  *r, const uint8_t  *s, size_t rs_len,
                       uint8_t  *asn_sig, size_t *asn_sig_len);
