@@ -39,7 +39,7 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
+#include <stddef.h>
 
 // Encode two integers in DER format
 // TAG + LENGTH needs 2 bytes

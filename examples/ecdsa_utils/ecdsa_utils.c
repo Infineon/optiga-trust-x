@@ -54,6 +54,16 @@
 
 #define DER_UINT_MASK 0x80
 
+/**
+ * @brief Encodes a byte buffer as unsigned ASN.1 DER INTEGER
+ *
+ * @param  data[in]            Buffer containing the bytes to be encoded
+ * @param  data_len[in]        Length of the data buffer
+ * @param  out_buf[out]        Output buffer for the encoded ASN.1 bytes
+ * @param  out_buf_len[in]     Size of the out_buf buffer
+ * @return The number of bytes of the ASN.1 encoded stream on success, 0 on error
+ * @note   The parameters to this function must not be NULL.
+ */
 static size_t encode_der_integer(const uint8_t *data, size_t data_len,
                                  uint8_t *out_buf, size_t out_buf_len)
 {
@@ -146,7 +156,16 @@ bool ecdsa_rs_to_asn1(const uint8_t  *r, const uint8_t  *s, size_t rs_len,
     return true;
 }
 
-
+/**
+ * @brief Decodes an ASN.1 encoded integer to a byte buffer
+ *
+ * @param  asn1[in]            Buffer containing the ASN.1 encoded data
+ * @param  asn1_len[in]        Length of the asn1 buffer
+ * @param  out_int[out]        Output buffer for the decoded integer bytes
+ * @param  out_int_len[in,out] Size of the out_int buffer, contains the number of written bytes afterwards
+ * @return The number of bytes advanced in the ASN.1 stream on success, 0 on failure
+ * @note   The parameters to this function must not be NULL.
+ */
 static size_t decode_asn1_uint(const uint8_t* asn1, size_t asn1_len,
                                uint8_t* out_int, size_t* out_int_len)
 {
