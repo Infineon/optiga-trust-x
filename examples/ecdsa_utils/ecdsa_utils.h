@@ -60,8 +60,8 @@ extern "C" {
  *       If you need to know the exact length of R and S use asn1_to_ecdsa_rs_sep(...)
  * @note If the function returns false, all output values are invalid.
  */
-bool asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
-                      uint8_t * rs, size_t rs_len);
+bool asn1_to_ecdsa_rs(const uint8_t* asn1, size_t asn1_len,
+                      uint8_t* rs, size_t rs_len);
 
 /**
  * @brief decodes two ASN.1 integers to the R and S components of a ECC signature with separate buffers for R and S
@@ -75,9 +75,9 @@ bool asn1_to_ecdsa_rs(const uint8_t * asn1, size_t asn1_len,
  * @note The r and s buffers will be padded at the least significant byte with zeros to the length of the buffer.
  * @note If the function returns false, all output values are invalid.
  */
-bool asn1_to_ecdsa_rs_sep(const uint8_t *asn1, size_t asn1_len,
-                          uint8_t * r, size_t * r_len,
-                          uint8_t * s, size_t * s_len);
+bool asn1_to_ecdsa_rs_sep(const uint8_t* asn1, size_t asn1_len,
+                          uint8_t* r, size_t* r_len,
+                          uint8_t* s, size_t* s_len);
 
 /**
  * @brief Encodes the ECDSA signature components (r, s) in ASN.1 format.
@@ -91,8 +91,8 @@ bool asn1_to_ecdsa_rs_sep(const uint8_t *asn1, size_t asn1_len,
  * @note        The output buffer must be at least 2*rs_len + ECDSA_RS_MAX_ASN1_OVERHEAD to fit the result in all cases
  * @note If the function returns false, all output values are invalid.
  */
-bool ecdsa_rs_to_asn1(const uint8_t  *r, const uint8_t  *s, size_t rs_len,
-                      uint8_t  *asn_sig, size_t *asn_sig_len);
+bool ecdsa_rs_to_asn1(const uint8_t* r, const uint8_t* s, size_t rs_len,
+                      uint8_t* asn_sig, size_t* asn_sig_len);
 
 #ifdef __cplusplus
 }

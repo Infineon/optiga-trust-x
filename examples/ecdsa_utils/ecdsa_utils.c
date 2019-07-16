@@ -64,11 +64,11 @@
  * @return The number of bytes of the ASN.1 encoded stream on success, 0 on error
  * @note   The parameters to this function must not be NULL.
  */
-static size_t encode_der_integer(const uint8_t *data, size_t data_len,
-                                 uint8_t *out_buf, size_t out_buf_len)
+static size_t encode_der_integer(const uint8_t* data, size_t data_len,
+                                 uint8_t* out_buf, size_t out_buf_len)
 {
     // all write access must be smaller or equal to this pointer
-    const uint8_t const* out_end = out_buf + out_buf_len - 1;
+    const uint8_t* const out_end = out_buf + out_buf_len - 1;
 
     // fixed position fields
     uint8_t* const tag_field = &out_buf[ASN1_DER_TAG_OFFSET];
@@ -79,8 +79,8 @@ static size_t encode_der_integer(const uint8_t *data, size_t data_len,
     uint8_t* integer_field_cur = integer_field_start;
 
     // search for beginning of integer
-    const uint8_t *cur_data = data;
-    const uint8_t const* data_end = data + data_len;
+    const uint8_t* cur_data = data;
+    const uint8_t* const data_end = data + data_len;
 
     // check if something to encode, else next loop condition can overflow
     if (data_len == 0) {
@@ -126,8 +126,8 @@ static size_t encode_der_integer(const uint8_t *data, size_t data_len,
     return integer_len + ASN1_DER_VAL_OFFSET;
 }
 
-bool ecdsa_rs_to_asn1(const uint8_t  *r, const uint8_t  *s, size_t rs_len,
-                      uint8_t  *asn_sig, size_t *asn_sig_len)
+bool ecdsa_rs_to_asn1(const uint8_t* r, const uint8_t* s, size_t rs_len,
+                      uint8_t* asn_sig, size_t* asn_sig_len)
 {
     if (r == NULL || s == NULL || asn_sig == NULL || asn_sig_len == NULL) {
         // No NULL paramters allowed
@@ -135,17 +135,17 @@ bool ecdsa_rs_to_asn1(const uint8_t  *r, const uint8_t  *s, size_t rs_len,
     }
 
     // encode R component
-    size_t out_len_r = encode_der_integer(r, rs_len, asn_sig, *asn_sig_len);
+    const size_t out_len_r = encode_der_integer(r, rs_len, asn_sig, *asn_sig_len);
     if (out_len_r == 0) {
         // error while encoding R as DER INTEGER
         return false;
     }
 
-    uint8_t * const s_start = asn_sig + out_len_r;
+    uint8_t* const s_start = asn_sig + out_len_r;
     const size_t s_len = *asn_sig_len - out_len_r;
 
     // encode S component
-    size_t out_len_s = encode_der_integer(s, rs_len, s_start, s_len);
+    const size_t out_len_s = encode_der_integer(s, rs_len, s_start, s_len);
     if (out_len_s == 0) {
         // error while encoding S as DER INTEGER
         return false;
@@ -175,7 +175,7 @@ static size_t decode_asn1_uint(const uint8_t* asn1, size_t asn1_len,
     }
 
     // all read access must be before this pointer
-    const uint8_t const* asn1_end = asn1 + asn1_len;
+    const uint8_t* const asn1_end = asn1 + asn1_len;
 
     // fixed position fields
     const uint8_t* const tag_field = &asn1[ASN1_DER_TAG_OFFSET];
@@ -220,7 +220,7 @@ static size_t decode_asn1_uint(const uint8_t* asn1, size_t asn1_len,
     }
 
     // insert padding zeros to ensure position of least significant byte matches
-    size_t padding = *out_int_len - integer_length;
+    const size_t padding = *out_int_len - integer_length;
     memset(out_int, 0, padding);
 
     memcpy(out_int + padding, integer_field_cur, integer_length);
@@ -230,9 +230,9 @@ static size_t decode_asn1_uint(const uint8_t* asn1, size_t asn1_len,
     return integer_field_cur + integer_length - tag_field;
 }
 
-bool asn1_to_ecdsa_rs_sep(const uint8_t *asn1, size_t asn1_len,
-                      uint8_t * r, size_t * r_len,
-                      uint8_t * s, size_t * s_len)
+bool asn1_to_ecdsa_rs_sep(const uint8_t* asn1, size_t asn1_len,
+                      uint8_t* r, size_t* r_len,
+                      uint8_t* s, size_t* s_len)
 {
     if (asn1 == NULL || r == NULL || r_len == NULL || s == NULL || s_len == NULL) {
         // No NULL paramters allowed
@@ -240,17 +240,17 @@ bool asn1_to_ecdsa_rs_sep(const uint8_t *asn1, size_t asn1_len,
     }
 
     // decode R component
-    size_t consumed_r = decode_asn1_uint(asn1, asn1_len, r, r_len);
+    const size_t consumed_r = decode_asn1_uint(asn1, asn1_len, r, r_len);
     if (consumed_r == 0) {
         // error while decoding R component
         return false;
     }
 
-    const uint8_t* asn1_s = asn1 + consumed_r;
-    size_t asn1_s_len = asn1_len - consumed_r;
+    const uint8_t* const asn1_s = asn1 + consumed_r;
+    const size_t asn1_s_len = asn1_len - consumed_r;
 
     // decode S component
-    size_t consumed_s = decode_asn1_uint(asn1_s, asn1_s_len, s, s_len);
+    const size_t consumed_s = decode_asn1_uint(asn1_s, asn1_s_len, s, s_len);
     if (consumed_s == 0) {
         // error while decoding R component
         return false;
@@ -259,8 +259,8 @@ bool asn1_to_ecdsa_rs_sep(const uint8_t *asn1, size_t asn1_len,
     return true;
 }
 
-bool asn1_to_ecdsa_rs(const uint8_t *asn1, size_t asn1_len,
-                      uint8_t * rs, size_t rs_len)
+bool asn1_to_ecdsa_rs(const uint8_t* asn1, size_t asn1_len,
+                      uint8_t* rs, size_t rs_len)
 {
     if (asn1 == NULL || rs == NULL || rs_len == NULL) {
         // No NULL paramters allowed
