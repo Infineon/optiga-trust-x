@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Nordic Semiconductor ASA
+ * Copyright (c) 2018 - 2019, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -52,6 +52,7 @@
 
 /*lint -save -e????*/
 #include "optiga/optiga_crypt.h"
+#include "ecdsa_utils.h"
 /*lint -restore*/
 
 ret_code_t nrf_crypto_backend_optiga_sign(
@@ -67,16 +68,22 @@ ret_code_t nrf_crypto_backend_optiga_sign(
 
     optiga_key_id_t oid = p_prv->oid;
 
-    uint16_t der_sig_len = NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE + DER_OVERHEAD;
-    uint8_t der_sig[NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE + DER_OVERHEAD] = {0};
+    uint16_t der_sig_len = NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE + ECDSA_RS_MAX_ASN1_OVERHEAD;
+    uint8_t der_sig[NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE + ECDSA_RS_MAX_ASN1_OVERHEAD] = {0};
 
     res = optiga_crypt_ecdsa_sign((uint8_t *)p_data, data_size, oid, der_sig, &der_sig_len);
     if(res != OPTIGA_LIB_SUCCESS) {
         return NRF_ERROR_CRYPTO_INTERNAL;
     }
 
-    size_t sig_len = NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE;
-    return asn1_to_ecdsa_rs(der_sig, der_sig_len, p_signature, &sig_len);
+    // convert signature to format suitable for nrf_crypto
+    if (!asn1_to_ecdsa_rs(der_sig, der_sig_len,
+                          p_signature, NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE))
+    {
+        return NRF_ERROR_CRYPTO_INTERNAL;
+    }
+
+    return NRF_SUCCESS;
 }
 
 ret_code_t nrf_crypto_backend_optiga_verify(
@@ -91,16 +98,15 @@ ret_code_t nrf_crypto_backend_optiga_verify(
 
     optiga_key_id_t oid = p_pub->oid;
 
-    size_t der_sig_len = NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE + DER_OVERHEAD;
-    uint8_t der_sig[NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE + DER_OVERHEAD] = {0};
+    size_t der_sig_len = NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE + ECDSA_RS_MAX_ASN1_OVERHEAD;
+    uint8_t der_sig[NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE + ECDSA_RS_MAX_ASN1_OVERHEAD] = {0};
 
     const size_t rs_size = NRF_CRYPTO_ECDSA_SECP256R1_SIGNATURE_SIZE/2;
-    
+
     optiga_lib_status_t res = OPTIGA_LIB_ERROR;
-    
+
     // Convert signature to DER format needed by OPTIGA
     if (!ecdsa_rs_to_asn1(p_signature,
-                          rs_size,
                           p_signature + rs_size,
                           rs_size,
                           der_sig,
@@ -109,23 +115,23 @@ ret_code_t nrf_crypto_backend_optiga_verify(
         return  NRF_ERROR_CRYPTO_INTERNAL;
     }
 
-    if (oid == NRF_CRYPTO_INFINEON_PUBKEY_HOST_OID) 
+    if (oid == NRF_CRYPTO_INFINEON_PUBKEY_HOST_OID)
     {
         // Create magic OID for pubkey from host
         public_key_from_host_t pub_key = {
             .public_key = p_pub->raw_pubkey,
-            .length = 64+4,   // public key + DER BITSTRING header
+            .length = NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE + 4,   // public key + DER BITSTRING header
             .curve = OPTIGA_ECC_NIST_P_256
         };
-        
+
         res = optiga_crypt_ecdsa_verify((uint8_t *)p_data,
                                         data_size,
                                         der_sig,
                                         der_sig_len,
                                         OPTIGA_CRYPT_HOST_DATA,
                                         &pub_key);
-    } 
-    else 
+    }
+    else
     {
         // Public key is in OPTIGA, referenced by OID
         res = optiga_crypt_ecdsa_verify((uint8_t *)p_data,
@@ -141,7 +147,7 @@ ret_code_t nrf_crypto_backend_optiga_verify(
     {
         return NRF_ERROR_CRYPTO_ECDSA_INVALID_SIGNATURE;
     }
-   
+
     return NRF_SUCCESS;
 }
 

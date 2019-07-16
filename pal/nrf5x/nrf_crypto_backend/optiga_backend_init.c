@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Nordic Semiconductor ASA
+ * Copyright (c) 2018 - 2019, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -65,7 +65,7 @@ void pal_os_event_init(void);
 static int32_t optiga_init(void)
 {
     int32_t status = (int32_t) OPTIGA_LIB_ERROR;
-  
+
     // Initialize PAL
     pal_gpio_init();
     pal_os_event_init();
