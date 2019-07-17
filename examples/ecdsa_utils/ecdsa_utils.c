@@ -126,8 +126,8 @@ static size_t encode_der_integer(const uint8_t* data, size_t data_len,
     return integer_len + ASN1_DER_VAL_OFFSET;
 }
 
-bool ecdsa_rs_to_asn1(const uint8_t* r, const uint8_t* s, size_t rs_len,
-                      uint8_t* asn_sig, size_t* asn_sig_len)
+bool ecdsa_rs_to_asn1_integers(const uint8_t* r, const uint8_t* s, size_t rs_len,
+                               uint8_t* asn_sig, size_t* asn_sig_len)
 {
     if (r == NULL || s == NULL || asn_sig == NULL || asn_sig_len == NULL) {
         // No NULL paramters allowed

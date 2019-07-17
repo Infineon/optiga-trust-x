@@ -48,6 +48,21 @@ extern "C" {
 #define ECDSA_RS_MAX_ASN1_OVERHEAD ((2 + 1) * 2)
 
 /**
+ * @brief Encodes the ECDSA signature components (r, s) in as two ASN.1 INTEGERs concatenated. This is the format
+ *        the OPTIGA hostcode expects.
+ *
+ * @param[in]   r            Component r of the ECDSA signature
+ * @param[in]   s            Component s of the ECDSA signature
+ * @param[in]   rs_len       Length of the buffers for the R and S components of the ECDSA signature, must be smaller than 127
+ * @param[out]  asn_sig      Buffer where the resulting ASN.1-encoded ECDSA signature will be copied into
+ * @param[out]  asn_sig_len  Length of the actual data that was copied into the output buffer
+ * @returns     true on success, false on error
+ * @note        The output buffer must be at least 2*rs_len + ECDSA_RS_MAX_ASN1_OVERHEAD to fit the result in all cases
+ * @note If the function returns false, all output values are invalid.
+ */
+bool ecdsa_rs_to_asn1_integers(const uint8_t* r, const uint8_t* s, size_t rs_len,
+                               uint8_t* asn_sig, size_t* asn_sig_len);
+/**
  * @brief decodes two ASN.1 integers to the R and S components of a ECC signature
  * @param[in] asn1        Buffer containing the ASN.1 encoded R and S values as two concatenated DER INTEGERs
  * @param[in] asn1_len    Length of the asn1 buffer
@@ -78,21 +93,6 @@ bool asn1_to_ecdsa_rs(const uint8_t* asn1, size_t asn1_len,
 bool asn1_to_ecdsa_rs_sep(const uint8_t* asn1, size_t asn1_len,
                           uint8_t* r, size_t* r_len,
                           uint8_t* s, size_t* s_len);
-
-/**
- * @brief Encodes the ECDSA signature components (r, s) in ASN.1 format.
- *
- * @param[in]   r            Component r of the ECDSA signature
- * @param[in]   s            Component s of the ECDSA signature
- * @param[in]   rs_len       Length of the buffers for the R and S components of the ECDSA signature, must be smaller than 127
- * @param[out]  asn_sig      Buffer where the resulting ASN.1-encoded ECDSA signature will be copied into
- * @param[out]  asn_sig_len  Length of the actual data that was copied into the output buffer
- * @returns     true on success, false on error
- * @note        The output buffer must be at least 2*rs_len + ECDSA_RS_MAX_ASN1_OVERHEAD to fit the result in all cases
- * @note If the function returns false, all output values are invalid.
- */
-bool ecdsa_rs_to_asn1(const uint8_t* r, const uint8_t* s, size_t rs_len,
-                      uint8_t* asn_sig, size_t* asn_sig_len);
 
 #ifdef __cplusplus
 }
