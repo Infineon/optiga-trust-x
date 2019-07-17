@@ -39,6 +39,10 @@
 // This is a limit of this implementation
 #define DER_INTEGER_MAX_LEN 0x7F
 
+// If highest bit set, we need a different encoding -> 0x7F is maximum
+// This is a limit of this implementation
+#define DER_SEQUENCE_MAX_LEN 0x7F
+
 // ASN.1 DER Tag field offset
 #define ASN1_DER_TAG_OFFSET 0
 
@@ -51,6 +55,9 @@
 
 // ASN.1 DER Tag for INTEGER
 #define DER_TAG_INTEGER 0x02
+
+// ASN.1 DER Tag for SEQUENCE
+#define DER_TAG_SEQUENCE 0x30
 
 #define DER_UINT_MASK 0x80
 
@@ -152,6 +159,45 @@ bool ecdsa_rs_to_asn1_integers(const uint8_t* r, const uint8_t* s, size_t rs_len
     }
 
     *asn_sig_len = out_len_r + out_len_s;
+
+    return true;
+}
+
+bool ecdsa_rs_to_asn1_signature(const uint8_t* r, const uint8_t* s, size_t rs_len,
+                                uint8_t* asn_sig, size_t* asn_sig_len)
+{
+    if (r == NULL || s == NULL || asn_sig == NULL || asn_sig_len == NULL) {
+        // No NULL paramters allowed
+        return false;
+    }
+
+    if (*asn_sig_len < ASN1_DER_VAL_OFFSET) {
+        // Not enough space, can't encode anything
+        return false;
+    }
+
+     // fixed position fields
+    uint8_t* const tag_field = &asn_sig[ASN1_DER_TAG_OFFSET];
+    uint8_t* const length_field = &asn_sig[ASN1_DER_LEN_OFFSET];
+    uint8_t* const value_field_start = &asn_sig[ASN1_DER_VAL_OFFSET];
+
+    // compute size left after SEQUENCE header
+    size_t integers_len = *asn_sig_len - ASN1_DER_VAL_OFFSET;
+
+    if (!ecdsa_rs_to_asn1_integers(r, s, rs_len, value_field_start, &integers_len)) {
+        // Failed to encode R and S as INTEGERs
+        return false;
+    }
+
+    if (integers_len > DER_SEQUENCE_MAX_LEN) {
+        // Encoding multi byte lengths is not supported
+        return false;
+    }
+
+    // write SEQUENCE header
+    *tag_field = DER_TAG_SEQUENCE;
+    *length_field = integers_len;
+    *asn_sig_len = integers_len + ASN1_DER_VAL_OFFSET;
 
     return true;
 }
