@@ -118,7 +118,7 @@ static size_t encode_der_integer(const uint8_t* data, size_t data_len,
     memcpy(integer_field_cur, cur_data, write_length);
     *tag_field = DER_TAG_INTEGER;
     *length_field = integer_len;
-    // check if we have a stuffing byte
+    // check if we have a stuffing byte, and explicitly zero it
     if (integer_field_cur != integer_field_start) {
         *integer_field_start = 0x00;
     }

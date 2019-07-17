@@ -106,11 +106,11 @@ ret_code_t nrf_crypto_backend_optiga_verify(
     optiga_lib_status_t res = OPTIGA_LIB_ERROR;
 
     // Convert signature to DER format needed by OPTIGA
-    if (!ecdsa_rs_to_asn1(p_signature,
-                          p_signature + rs_size,
-                          rs_size,
-                          der_sig,
-                          &der_sig_len))
+    if (!ecdsa_rs_to_asn1_integers(p_signature,
+                                   p_signature + rs_size,
+                                   rs_size,
+                                   der_sig,
+                                   &der_sig_len))
     {
         return  NRF_ERROR_CRYPTO_INTERNAL;
     }
