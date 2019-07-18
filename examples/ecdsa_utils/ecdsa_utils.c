@@ -35,23 +35,23 @@
 
 #include <string.h>
 
-// This implementation only supports a single byte length field. The maximum
+// This implementation only supports a single byte LENGTH field. The maximum
 // possible value than can be encoded within a single byte is 0x7F (127 dec).
 // For higher values, the length must be coded in a multi-byte field.
 #define DER_INTEGER_MAX_LEN 0x7F
 
-// This implementation only supports a single byte length field. The maximum
+// This implementation only supports a single byte LENGTH field. The maximum
 // possible value than can be encoded within a single byte is 0x7F (127 dec).
 // For higher values, the length must be coded in a multi-byte field.
 #define DER_SEQUENCE_MAX_LEN 0x7F
 
-// ASN.1 DER Tag field offset
+// ASN.1 DER TAG field offset
 #define ASN1_DER_TAG_OFFSET 0
 
-// ASN.1 DER Length field offset
+// ASN.1 DER LENGTH field offset
 #define ASN1_DER_LEN_OFFSET 1
 
-// ASN.1 DER Value field offset
+// ASN.1 DER VALUE field offset
 // Only for this implementation!
 #define ASN1_DER_VAL_OFFSET 2
 
@@ -91,7 +91,7 @@ static size_t encode_der_integer(const uint8_t* data, size_t data_len,
     const uint8_t* cur_data = data;
     const uint8_t* const data_end = data + data_len;
 
-    // check if something to encode, else next loop condition can overflow
+    // check if something to encode, else next loop condition overflows
     if (data_len == 0) {
         return 0;
     }
@@ -119,7 +119,7 @@ static size_t encode_der_integer(const uint8_t* data, size_t data_len,
     // ensure we can encode the length
     const size_t integer_len = (integer_field_cur + write_length) - integer_field_start;
     if (integer_len > DER_INTEGER_MAX_LEN) {
-        // We don't support encoding DER INTEGER with multi-byte length
+        // This implementation support single-byte LENGTH fields only
         return 0;
     }
 
@@ -183,7 +183,7 @@ bool ecdsa_rs_to_asn1_signature(const uint8_t* r, const uint8_t* s, size_t rs_le
     uint8_t* const length_field = &asn_sig[ASN1_DER_LEN_OFFSET];
     uint8_t* const value_field_start = &asn_sig[ASN1_DER_VAL_OFFSET];
 
-    // compute size left after SEQUENCE header
+    // compute size left after SEQUENCE header TAG and LENGTH fields
     size_t integers_len = *asn_sig_len - ASN1_DER_VAL_OFFSET;
 
     if (!ecdsa_rs_to_asn1_integers(r, s, rs_len, value_field_start, &integers_len)) {
@@ -192,7 +192,7 @@ bool ecdsa_rs_to_asn1_signature(const uint8_t* r, const uint8_t* s, size_t rs_le
     }
 
     if (integers_len > DER_SEQUENCE_MAX_LEN) {
-        // Encoding multi-byte lengths is not supported
+        // This implementation support single-byte LENGTH fields only
         return false;
     }
 
