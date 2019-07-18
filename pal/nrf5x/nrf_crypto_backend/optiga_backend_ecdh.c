@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Nordic Semiconductor ASA
+ * Copyright (c) 2018 - 2019, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -96,7 +96,7 @@ ret_code_t nrf_crypto_backend_optiga_ecdh_compute(
         p_shared_secret    // resulting shared secret
     );
 
-    if (res != OPTIGA_CRYPT_SUCCESS)
+    if (res != OPTIGA_LIB_SUCCESS)
     {
         // error in the optiga library
         return NRF_ERROR_CRYPTO_INTERNAL;

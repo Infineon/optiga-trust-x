@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Nordic Semiconductor ASA
+ * Copyright (c) 2018 - 2019, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -43,10 +43,10 @@
 
 #include "sdk_config.h"
 #include "nordic_common.h"
-#include "optiga_backend_utils.h"
 
 #if NRF_MODULE_ENABLED(NRF_CRYPTO) && NRF_MODULE_ENABLED(NRF_CRYPTO_BACKEND_OPTIGA)
 
+#include <stdint.h>
 #include "nrf_crypto_ecc_shared.h"
 #include "nrf_crypto_ecdsa_shared.h"
 
@@ -54,6 +54,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#if NRF_MODULE_ENABLED(NRF_CRYPTO_BACKEND_OPTIGA_ECC_SECP256R1)
 
 
 /** @internal See @ref nrf_crypto_backend_ecdsa_sign_fn_t.
@@ -75,7 +77,7 @@ ret_code_t nrf_crypto_backend_optiga_verify(
     size_t           data_size,
     uint8_t  const * p_signature);
 
-#if NRF_MODULE_ENABLED(NRF_CRYPTO_BACKEND_OPTIGA_ECC_SECP256R1)
+
 // Context is not used by OPTIGA, so its size is 0
 #define NRF_CRYPTO_BACKEND_SECP256R1_SIGN_CONTEXT_SIZE   0
 #define NRF_CRYPTO_BACKEND_SECP256R1_VERIFY_CONTEXT_SIZE 0

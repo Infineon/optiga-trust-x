@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Nordic Semiconductor ASA
+ * Copyright (c) 2018 - 2019, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -125,31 +125,31 @@ ret_code_t nrf_crypto_backend_optiga_key_pair_generate(
     {
         //lint -save -e611 -e545 (Suspicious cast, Suspicious use of &)
         priv_key = (void*) &p_priv->oid;
-        
+
         memset(p_priv->raw_privkey, 0, OPTIGA_SECP256R1_PRIV_KEY_LEN);
         //lint -restore
     }
 
     // Set all flags because the nrf_crypto API does not allow to specify key use
-    const optiga_key_usage_t key_usage = (optiga_key_usage_t)(OPTIGA_KEY_USAGE_AUTHENTICATION | 
-                                                              OPTIGA_KEY_USAGE_SIGN | 
+    const optiga_key_usage_t key_usage = (optiga_key_usage_t)(OPTIGA_KEY_USAGE_AUTHENTICATION |
+                                                              OPTIGA_KEY_USAGE_SIGN |
                                                               OPTIGA_KEY_USAGE_KEY_AGREEMENT);
 
     uint16_t publ_key_len = OPTIGA_SECP256R1_PUBL_KEY_LEN;
-    res = optiga_crypt_ecc_generate_keypair(OPTIGA_ECC_NIST_P_256, 
-                                            key_usage, 
-                                            export_private_key, 
-                                            priv_key, 
-                                            p_pub->raw_pubkey, 
+    res = optiga_crypt_ecc_generate_keypair(OPTIGA_ECC_NIST_P_256,
+                                            key_usage,
+                                            export_private_key,
+                                            priv_key,
+                                            p_pub->raw_pubkey,
                                             &publ_key_len);
 
-    if(res != OPTIGA_CRYPT_SUCCESS)
+    if(res != OPTIGA_LIB_SUCCESS)
     {
         // error in the optiga library
         return NRF_ERROR_CRYPTO_INTERNAL;
     }
 
-    if(publ_key_len != OPTIGA_SECP256R1_PUBL_KEY_LEN) 
+    if(publ_key_len != OPTIGA_SECP256R1_PUBL_KEY_LEN)
     {
         // unexpected length
         return NRF_ERROR_CRYPTO_INTERNAL;
@@ -188,14 +188,14 @@ ret_code_t nrf_crypto_backend_optiga_private_key_to_raw(
 
     nrf_crypto_ecc_curve_info_t const * p_info = p_priv->header.p_info;
 
-    if(p_priv->oid != NRF_CRYPTO_INFINEON_PRIVKEY_HOST_OID) 
+    if(p_priv->oid != NRF_CRYPTO_INFINEON_PRIVKEY_HOST_OID)
     {
         // must use magic OID for private key exported to host
         return NRF_ERROR_CRYPTO_INTERNAL;
     }
 
     uint8_t* p_key = p_priv->raw_privkey;
-    if(*p_key != DER_TAG_OCTET_STRING) 
+    if(*p_key != DER_TAG_OCTET_STRING)
     {
         // private key must be encoded as DER OCTET STRING
         return NRF_ERROR_CRYPTO_INTERNAL;
@@ -203,9 +203,9 @@ ret_code_t nrf_crypto_backend_optiga_private_key_to_raw(
 
     p_key++;
 
-    if(p_info == &g_nrf_crypto_ecc_secp256r1_curve_info) 
+    if(p_info == &g_nrf_crypto_ecc_secp256r1_curve_info)
     {
-        if(*p_key != NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE) 
+        if(*p_key != NRF_CRYPTO_ECC_SECP256R1_RAW_PRIVATE_KEY_SIZE)
         {
             // wrong length
             return NRF_ERROR_CRYPTO_INTERNAL;
@@ -229,7 +229,7 @@ ret_code_t nrf_crypto_backend_optiga_public_key_from_raw(
 
     nrf_crypto_ecc_curve_info_t const * p_info = p_pub->header.p_info;
 
-    if (p_info == &g_nrf_crypto_ecc_secp256r1_curve_info) 
+    if (p_info == &g_nrf_crypto_ecc_secp256r1_curve_info)
     {
         // copy header
         memcpy(p_pub->raw_pubkey, der_pub_key_header, DER_PUB_KEY_HEADER_LEN);
@@ -254,20 +254,20 @@ ret_code_t nrf_crypto_backend_optiga_public_key_to_raw(
 
     nrf_crypto_ecc_curve_info_t const * p_info = p_pub->header.p_info;
 
-    if(p_pub->oid != NRF_CRYPTO_INFINEON_PUBKEY_HOST_OID) 
+    if(p_pub->oid != NRF_CRYPTO_INFINEON_PUBKEY_HOST_OID)
     {
         // must use magic OID for host supplied public key
         return NRF_ERROR_CRYPTO_INTERNAL;
     }
 
-    if (p_info == &g_nrf_crypto_ecc_secp256r1_curve_info) 
+    if (p_info == &g_nrf_crypto_ecc_secp256r1_curve_info)
     {
         if(memcmp(p_pub->raw_pubkey, der_pub_key_header, DER_PUB_KEY_HEADER_LEN) != 0) {
             // public key not correctly encoded
             return NRF_ERROR_CRYPTO_INTERNAL;
         }
 
-        memcpy(p_raw_data, 
+        memcpy(p_raw_data,
                p_pub->raw_pubkey + DER_PUB_KEY_HEADER_LEN,
                NRF_CRYPTO_ECC_SECP256R1_RAW_PUBLIC_KEY_SIZE);
 

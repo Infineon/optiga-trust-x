@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Nordic Semiconductor ASA
+ * Copyright (c) 2018 - 2019, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -43,11 +43,11 @@
 
 /** @file
  *
- * @defgroup nrf_crypto_nrf_hw_backend_rng nrf_crypto HW RNG backend
+ * @defgroup nrf_crypto_optiga_backend_rng nrf_crypto OPTIGA RNG backend
  * @{
  * @ingroup nrf_crypto_backends
  *
- * @brief RNG functionality provided by the nrf_crypto nRF HW RNG backend.
+ * @brief RNG functionality provided by the nrf_crypto OPTIGA RNG backend.
  */
 
 #include "sdk_common.h"
