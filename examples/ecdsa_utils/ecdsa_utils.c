@@ -35,12 +35,14 @@
 
 #include <string.h>
 
-// If highest bit set, we need a different encoding -> 0x7F is maximum
-// This is a limit of this implementation
+// This implementation only supports a single byte length field. The maximum
+// possible value than can be encoded within a single byte is 0x7F (127 dec).
+// For higher values, the length must be coded in a multi-byte field.
 #define DER_INTEGER_MAX_LEN 0x7F
 
-// If highest bit set, we need a different encoding -> 0x7F is maximum
-// This is a limit of this implementation
+// This implementation only supports a single byte length field. The maximum
+// possible value than can be encoded within a single byte is 0x7F (127 dec).
+// For higher values, the length must be coded in a multi-byte field.
 #define DER_SEQUENCE_MAX_LEN 0x7F
 
 // ASN.1 DER Tag field offset
@@ -117,7 +119,7 @@ static size_t encode_der_integer(const uint8_t* data, size_t data_len,
     // ensure we can encode the length
     const size_t integer_len = (integer_field_cur + write_length) - integer_field_start;
     if (integer_len > DER_INTEGER_MAX_LEN) {
-        // We don't support encoding DER INTEGER with multi byte length
+        // We don't support encoding DER INTEGER with multi-byte length
         return 0;
     }
 
@@ -190,7 +192,7 @@ bool ecdsa_rs_to_asn1_signature(const uint8_t* r, const uint8_t* s, size_t rs_le
     }
 
     if (integers_len > DER_SEQUENCE_MAX_LEN) {
-        // Encoding multi byte lengths is not supported
+        // Encoding multi-byte lengths is not supported
         return false;
     }
 
