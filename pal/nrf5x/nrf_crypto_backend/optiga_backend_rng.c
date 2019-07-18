@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018, Nordic Semiconductor ASA
+ * Copyright (c) 2018 - 2019, Nordic Semiconductor ASA
  *
  * All rights reserved.
  *
@@ -59,13 +59,13 @@
 /** @brief Maximum size output of random data in OPTIGA Trust X
  *
  * @details See Solution Reference Manual v1.35, section 4.4.3.4
- */ 
+ */
 #define OPTIGA_RNG_MAX_SIZE         (0x100)
 
 
 ret_code_t nrf_crypto_rng_backend_init(void * const p_context,
                                        void * const p_temp_buffer)
-{    
+{
     UNUSED_PARAMETER(p_context);
     UNUSED_PARAMETER(p_temp_buffer);
 
@@ -88,7 +88,7 @@ ret_code_t nrf_crypto_rng_backend_vector_generate(void      * const p_context,
 {
     UNUSED_PARAMETER(use_mutex);
     UNUSED_PARAMETER(p_context);
-    
+
     uint8_t backup[OPTIGA_RNG_MIN_SIZE] = {0};
     optiga_lib_status_t err;
 
@@ -96,15 +96,15 @@ ret_code_t nrf_crypto_rng_backend_vector_generate(void      * const p_context,
 
     size_t size_left = size;
     size_t cur_len = size_left;
-	
+
     do
     {
-        cur_len = size_left > OPTIGA_RNG_MAX_SIZE ? OPTIGA_RNG_MAX_SIZE : size_left;		
+        cur_len = size_left > OPTIGA_RNG_MAX_SIZE ? OPTIGA_RNG_MAX_SIZE : size_left;
 
         if (cur_len < OPTIGA_RNG_MIN_SIZE)
         {
             err = optiga_crypt_random(OPTIGA_RNG_TYPE_TRNG, backup, OPTIGA_RNG_MIN_SIZE);
-            if(err != OPTIGA_LIB_SUCCESS) 
+            if(err != OPTIGA_LIB_SUCCESS)
             {
                 return NRF_ERROR_CRYPTO_INTERNAL;
             }
@@ -114,7 +114,7 @@ ret_code_t nrf_crypto_rng_backend_vector_generate(void      * const p_context,
         else
         {
             err = optiga_crypt_random(OPTIGA_RNG_TYPE_TRNG, out_cur, cur_len);
-            if (err != OPTIGA_LIB_SUCCESS) 
+            if (err != OPTIGA_LIB_SUCCESS)
             {
                 return NRF_ERROR_CRYPTO_INTERNAL;
             }
@@ -138,7 +138,7 @@ ret_code_t nrf_crypto_rng_backend_reseed(void   * const p_context,
     UNUSED_PARAMETER(p_temp_buffer);
     UNUSED_PARAMETER(p_input_data);
     UNUSED_PARAMETER(size);
-    
+
     return NRF_ERROR_CRYPTO_FEATURE_UNAVAILABLE;
 }
 

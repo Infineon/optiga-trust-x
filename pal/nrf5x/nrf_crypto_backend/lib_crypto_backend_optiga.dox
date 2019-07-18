@@ -29,6 +29,9 @@ See @ref lib_crypto for nrf_crypto APIs that can use this backend.
 @subsection lib_crypto_backend_optiga_readme_configuration Required
 configuration
 
+To adapt the OPTIGA library for different hardware configurations edit the file
+`pal_pin_config.h`.
+
 Due to EasyDMA restrications on nRF52832 devices, it is necessary to set a 
 projet-level define `DL_MAX_FRAME_SIZE=250` to use the nrf5x Platform 
 Abstraction Layer (PAL). This PAL is required by the Trust X host library, which
