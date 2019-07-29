@@ -310,7 +310,7 @@ bool asn1_to_ecdsa_rs_sep(const uint8_t* asn1, size_t asn1_len,
 bool asn1_to_ecdsa_rs(const uint8_t* asn1, size_t asn1_len,
                       uint8_t* rs, size_t rs_len)
 {
-    if (asn1 == NULL || rs == NULL || rs_len == NULL) {
+    if (asn1 == NULL || rs == NULL) {
         // No NULL paramters allowed
         return false;
     }
