@@ -1367,7 +1367,7 @@ int32_t CmdLib_GetRandom(const sRngOptions_d *PpsRng, sCmdResponse_d *PpsRespons
         sApduData.bParam = (uint8_t)PpsRng->eRngType;        
         sApduData.wPayloadLength = LEN_PL_OID;
 
-        INIT_HEAP_APDUBUFFER(sApduData.prgbAPDUBuffer, (LEN_APDUHEADER + PpsRng->wRandomDataLen));
+        INIT_HEAP_APDUBUFFER(sApduData.prgbAPDUBuffer, (LEN_APDUHEADER + 2));
 
         sApduData.prgbAPDUBuffer[OFFSET_PAYLOAD] = (uint8_t)(PpsRng->wRandomDataLen >> BITS_PER_BYTE);
         sApduData.prgbAPDUBuffer[OFFSET_PAYLOAD + 1] = (uint8_t)PpsRng->wRandomDataLen;
