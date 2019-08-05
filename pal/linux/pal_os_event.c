@@ -118,8 +118,8 @@ void pal_os_event_register_callback_oneshot(register_callback callback,
 	freq_nanosecs = time_us * 1000;
 	its.it_value.tv_sec = freq_nanosecs / 1000000000;
 	its.it_value.tv_nsec = freq_nanosecs % 1000000000;
-	its.it_interval.tv_sec = its.it_value.tv_sec;
-	its.it_interval.tv_nsec = its.it_value.tv_nsec;
+	its.it_interval.tv_sec = 0;
+	its.it_interval.tv_nsec = 0;
 	
 	if (timer_settime(timerid, 0, &its, NULL) == -1)
 	{
