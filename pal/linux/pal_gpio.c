@@ -116,36 +116,30 @@ GPIODirection(int pin, int dir)
 }
 
 static int
-GPIOWrite(int pin, int value)
+GPIOWrite(pal_linux_gpio_t* pin, int value)
 {
-	static const char s_values_str[] = "01";
-#define VALUE_MAX 30
-	char path[VALUE_MAX];
-	int fd;
-
-	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
-	fd = open(path, O_WRONLY);
-	if (-1 == fd) {
-		fprintf(stderr, "Failed to open gpio value for writing!\n");
+    if (1 != write(pin->fd, value == LOW ? "0" : "1", 1)) {
+        // can't use printf, because it may execute in signal handler
+        const char err_msg[] = "Failed to write value!\n";
+        write(STDERR_FILENO, err_msg, sizeof(err_msg));
 		return(-1);
 	}
 
-	if (1 != write(fd, &s_values_str[LOW == value ? 0 : 1], 1)) {
-		fprintf(stderr, "Failed to write value!\n");
-		return(-1);
-	}
-
-	close(fd);
 	return(0);
 }
 
+#define GPIO_VALUE_FMT_STR "/sys/class/gpio/gpio%d/value"
 
 //lint --e{714,715} suppress "This function is used for to support multiple platforms "
 pal_status_t pal_gpio_init(const pal_gpio_t * p_gpio_context)
 {
+#define VALUE_MAX 30
+    char path[VALUE_MAX] = {0};
+
 	if (optiga_reset_0.p_gpio_hw != NULL)
 	{
-		int res_pin = *((gpio_pin_t*)(optiga_reset_0.p_gpio_hw));
+        pal_linux_gpio_t* gpio_reset = optiga_reset_0.p_gpio_hw;
+        int res_pin = gpio_reset->pin_nr;
 			/*
 		 * Enable GPIO pins
 		 */
@@ -156,12 +150,23 @@ pal_status_t pal_gpio_init(const pal_gpio_t * p_gpio_context)
 		 * Set GPIO directions
 		 */
 		if (-1 == GPIODirection(res_pin, OUT))
-			return(2);
+            return(2);
+
+        snprintf(path, VALUE_MAX, GPIO_VALUE_FMT_STR, res_pin);
+        int fd = open(path, O_WRONLY);
+        if (fd < 0) {
+            fprintf(stderr, "Failed to open gpio value for writing!\n");
+            return(2);
+        }
+
+        // store fd
+        gpio_reset->fd = fd;
 	}
 	
-	if (optiga_vdd_0.p_gpio_hw != NULL)
+    if (optiga_vdd_0.p_gpio_hw != NULL)
 	{
-		int vdd_pin = *((gpio_pin_t*)(optiga_vdd_0.p_gpio_hw));
+        pal_linux_gpio_t* gpio_vdd = optiga_vdd_0.p_gpio_hw;
+        int vdd_pin = gpio_vdd->pin_nr;
 			/*
 		 * Enable GPIO pins
 		 */
@@ -172,7 +177,17 @@ pal_status_t pal_gpio_init(const pal_gpio_t * p_gpio_context)
 		 * Set GPIO directions
 		 */
 		if (-1 == GPIODirection(vdd_pin, OUT))
-			return(2);
+            return(2);
+
+        snprintf(path, VALUE_MAX, GPIO_VALUE_FMT_STR, vdd_pin);
+        int fd = open(path, O_WRONLY);
+        if (fd < 0) {
+            fprintf(stderr, "Failed to open gpio value for writing!\n");
+            return(2);
+        }
+
+        // store fd
+        gpio_vdd->fd = fd;
 	}
 
     return PAL_STATUS_SUCCESS;
@@ -183,23 +198,26 @@ pal_status_t pal_gpio_deinit(const pal_gpio_t * p_gpio_context)
 {
 	if (optiga_reset_0.p_gpio_hw != NULL)
 	{
-		int res_pin = *((gpio_pin_t*)(optiga_reset_0.p_gpio_hw));
+        pal_linux_gpio_t* gpio = (pal_linux_gpio_t*)(optiga_reset_0.p_gpio_hw);
 		/*
 		 * Disable GPIO pins
 		 */
-		if (-1 == GPIOUnexport(res_pin))
+        if (-1 == GPIOUnexport(gpio->pin_nr))
 			return(1);
 
+        close(gpio->fd);
 	}
 	
 	if (optiga_vdd_0.p_gpio_hw != NULL)
 	{
-		int vdd_pin = *((gpio_pin_t*)(optiga_vdd_0.p_gpio_hw));
-		/*
-		 * Disable GPIO pins
-		 */
-		if (-1 == GPIOUnexport(vdd_pin))
-			return(1);
+        pal_linux_gpio_t* gpio = (pal_linux_gpio_t*)(optiga_vdd_0.p_gpio_hw);
+        /*
+         * Disable GPIO pins
+         */
+        if (-1 == GPIOUnexport(gpio->pin_nr))
+            return(1);
+
+        close(gpio->fd);
 	}
     	
 	return PAL_STATUS_SUCCESS;
@@ -208,12 +226,11 @@ pal_status_t pal_gpio_deinit(const pal_gpio_t * p_gpio_context)
 void pal_gpio_set_high(const pal_gpio_t * p_gpio_context)
 {
 	if ((p_gpio_context != NULL) && (p_gpio_context->p_gpio_hw != NULL))
-	{
-		int pin = *((gpio_pin_t*)(p_gpio_context->p_gpio_hw));
+    {
 		/*
 		* Write GPIO value
 		*/
-		GPIOWrite(pin, HIGH );
+        GPIOWrite((pal_linux_gpio_t*)(p_gpio_context->p_gpio_hw), HIGH );
 	}
 }
 
@@ -221,15 +238,13 @@ void pal_gpio_set_low(const pal_gpio_t* p_gpio_context)
 {
 	if ((p_gpio_context != NULL) && (p_gpio_context->p_gpio_hw != NULL))
 	{
-		int pin = *((gpio_pin_t*)(p_gpio_context->p_gpio_hw));
-		/*
-		 * Write GPIO value
-		 */
-		GPIOWrite(pin, LOW );
+        /*
+        * Write GPIO value
+        */
+        GPIOWrite((pal_linux_gpio_t*)(p_gpio_context->p_gpio_hw), LOW);
 	}
 }
 
 /**
 * @}
 */
-

@@ -34,9 +34,11 @@
 * @{
 */
 
+#include <errno.h>
 #include <sys/time.h> 
 #include <stdio.h>
 #include "stdint.h"
+#include <time.h>
 #include <unistd.h>
 #include "optiga/pal/pal_os_timer.h"
 
@@ -72,9 +74,20 @@ uint32_t pal_os_timer_get_time_in_milliseconds()
 
 void pal_os_timer_delay_in_milliseconds(uint16_t milliseconds)
 {
-    //LOG(LOG_PREFIX "pal_os_timer_delay_in_milliseconds() >\n");
-    usleep(milliseconds * 1000);
-    //LOG(LOG_PREFIX "pal_os_timer_delay_in_milliseconds() <\n");
+    struct timespec deadline;
+
+    clock_gettime(CLOCK_MONOTONIC, &deadline);
+
+    deadline.tv_sec += milliseconds / 1000;
+    deadline.tv_nsec += (milliseconds % 1000) * 1000*1000;
+
+    /* Sleep until deadline */
+    while (clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &deadline, NULL) != 0) {
+        if (errno != EINTR) {
+            /* error handling here */
+            break;
+        }
+    }
 }
 
 /**
