@@ -44,7 +44,7 @@
 pal_linux_t linux_events = {0};
 
 #define GPIO_PIN_VDD 27
-#define GPIO_PIN_RESET 4
+#define GPIO_PIN_RESET 17
 
 /**
  * \brief PAL I2C configuration for OPTIGA. 
