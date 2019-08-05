@@ -55,4 +55,9 @@ typedef struct pal_linux
     void * upper_layer_event_handler;
 } pal_linux_t;
 
+typedef struct pal_linux_gpio {
+    gpio_pin_t pin_nr;
+    int fd;
+} pal_linux_gpio_t;
+
 #endif
