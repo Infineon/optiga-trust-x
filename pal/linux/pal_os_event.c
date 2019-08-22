@@ -103,6 +103,15 @@ pal_status_t pal_os_event_init(void)
 	return PAL_STATUS_SUCCESS;
 }
 
+pal_status_t pal_os_event_stop(void)
+{
+	if (timerid != 0)
+	{
+		timer_delete(timerid);
+	}
+	return PAL_STATUS_SUCCESS;
+}
+
 
 void pal_os_event_register_callback_oneshot(register_callback callback, 
                                             void*             callback_args,

@@ -68,6 +68,7 @@ GPIOExport(int pin)
 	bytes_written = snprintf(buffer, BUFFER_MAX, "%d", pin);
 	write(fd, buffer, bytes_written);
 	close(fd);
+	usleep(100000);
 	return(0);
 }
 
@@ -87,6 +88,7 @@ GPIOUnexport(int pin)
 	bytes_written = snprintf(buffer, BUFFER_MAX, "%d", pin);
 	write(fd, buffer, bytes_written);
 	close(fd);
+	usleep(100000);
 	return(0);
 }
 
@@ -112,6 +114,7 @@ GPIODirection(int pin, int dir)
 	}
 
 	close(fd);
+	usleep(100000);
 	return(0);
 }
 
@@ -140,16 +143,16 @@ pal_status_t pal_gpio_init(const pal_gpio_t * p_gpio_context)
 	{
         pal_linux_gpio_t* gpio_reset = optiga_reset_0.p_gpio_hw;
         int res_pin = gpio_reset->pin_nr;
-			/*
-		 * Enable GPIO pins
-		 */
-		if (-1 == GPIOExport(res_pin))
-			return(1);
+	/*
+	 * Enable GPIO pins
+	 */
+	if (-1 == GPIOExport(res_pin))
+		return(1);
 
-		/*
-		 * Set GPIO directions
-		 */
-		if (-1 == GPIODirection(res_pin, OUT))
+	/*
+	 * Set GPIO directions
+	 */
+	if (-1 == GPIODirection(res_pin, OUT))
             return(2);
 
         snprintf(path, VALUE_MAX, GPIO_VALUE_FMT_STR, res_pin);
@@ -167,16 +170,16 @@ pal_status_t pal_gpio_init(const pal_gpio_t * p_gpio_context)
 	{
         pal_linux_gpio_t* gpio_vdd = optiga_vdd_0.p_gpio_hw;
         int vdd_pin = gpio_vdd->pin_nr;
-			/*
-		 * Enable GPIO pins
-		 */
-		if (-1 == GPIOExport(vdd_pin))
-			return(1);
+	/*
+	 * Enable GPIO pins
+	 */
+	if (-1 == GPIOExport(vdd_pin))
+		return(1);
 
-		/*
-		 * Set GPIO directions
-		 */
-		if (-1 == GPIODirection(vdd_pin, OUT))
+	/*
+	 * Set GPIO directions
+	 */
+	if (-1 == GPIODirection(vdd_pin, OUT))
             return(2);
 
         snprintf(path, VALUE_MAX, GPIO_VALUE_FMT_STR, vdd_pin);
