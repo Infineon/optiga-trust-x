@@ -97,6 +97,12 @@ Other downloadable PDF documents can be found below:
 3. [OPTIGA™ Keys and Certificates v1.2](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIGA_Trust_X_KeysAndCertificates_v1.2.pdf) (PDF)
 4. [Infineon I2C protocol specification v1.65](https://github.com/Infineon/Assets/raw/master/PDFs/IFXI2CProtocol_v1.65.pdf) (PDF)
 
+### Board assembly recommendations
+
+If you are planning to integrate OPTIGA™ Trust X in your PCB design have a look at the recommendations found [here](https://www.infineon.com/dgdl/Infineon-Board+Assembly+Recommendations-Discrete+Leadless-Package-v06_00-EN.pdf?fileId=5546d4626cb27db2016cbda27a9c544d).
+
+
+
 
 ## <a name="contributing"></a>Contributing
 
