@@ -33,6 +33,7 @@ The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIG
 * Full system integration support
 * Common Criteria Certified EAL6+ (high) hardware
 * Cryptographic Tool Box based on ECC NIST P256, P384 and SHA256 (sign, verify, key generation, ECDH, session key derivation)   
+* Lifetime for Industrial Automation and Infrastructure is 20 years and 15 years for other Application Profiles
 
 ## Get Started
 
