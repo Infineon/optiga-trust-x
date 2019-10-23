@@ -83,7 +83,6 @@ pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context);
  */
 pal_status_t pal_i2c_set_bitrate(const pal_i2c_t* p_i2c_context, uint16_t bitrate);
 
-//Dileep:  "write on I2C bus" --> "write to I2C bus"
 /**
  * @brief Writes on I2C bus.
  */
