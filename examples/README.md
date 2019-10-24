@@ -11,7 +11,7 @@ The list of available Application Notes and Examples is following:
 * [Secure Firmware Update and Secure Boot](https://github.com/Infineon/fwupd-secboot-optiga-trust)
 * [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
 * [Personalisation example](https://github.com/Infineon/personalize-optiga-trust-x)
-* [OpenSSL Engine and Command Line Interface](https://github.com/Infineon/cli-optiga-trust-x)
+* [OpenSSL Engine and Command Line Interface (for RPi3)](https://github.com/Infineon/cli-optiga-trust-x)
 * [Python package](https://github.com/Infineon/python-optiga-trust)
 * [I2C Utilities](https://github.com/Infineon/i2c-utils-optiga-trust)
 * [OPTIGA Trust X Technical Training](https://github.com/Infineon/technical-training-optiga-trust-x)
