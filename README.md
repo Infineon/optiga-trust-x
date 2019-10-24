@@ -67,7 +67,7 @@ For more information please refer to the [Wiki page](https://github.com/Infineon
 5. [Secure Firmware Update and Secure Boot](https://github.com/Infineon/fwupd-secboot-optiga-trust)
 6. [Arduino library](https://github.com/Infineon/arduino-optiga-trust-x)
 7. [Personalize OPTIGA™ Trust](https://github.com/Infineon/personalize-optiga-trust)
-8. [OpenSSL Engine and Command Line Interface](https://github.com/Infineon/cli-optiga-trust-x)
+8. [OpenSSL Engine and Command Line Interface (for RPi3)](https://github.com/Infineon/cli-optiga-trust-x)
 9. [Python package](https://github.com/Infineon/python-optiga-trust)
 10. [I2C Utilities](https://github.com/Infineon/i2c-utils-optiga-trust)
 11. [OPTIGA Trust X Technical Training](https://github.com/Infineon/technical-training-optiga-trust-x)
