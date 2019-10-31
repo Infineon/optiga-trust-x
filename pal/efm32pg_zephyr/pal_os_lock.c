@@ -1,7 +1,7 @@
 /**
 * MIT License
 *
-* Copyright (c) 2018 Infineon Technologies AG
+* Copyright (c) 2019 Arrow Electronics
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -32,20 +32,24 @@
 /**********************************************************************************************************************
  * HEADER FILES
  *********************************************************************************************************************/
+/* Optiga based includes */
 #include <optiga/pal/pal_os_lock.h>
+
+/* Zephyr based includes */
+#include <zephyr.h>
+
+/**********************************************************************************************************************
+ * MACROS
+ *********************************************************************************************************************/
+#define SEM_INIT_VALUE      1
+#define SEM_MAX_VALUE       1
+#define SEM_TAKE_SUCCESS    0
 
 /*********************************************************************************************************************
  * LOCAL DATA
  *********************************************************************************************************************/
-/**
- * @brief PAL OS lock structure. Might be extended if needed
- */
-typedef struct pal_os_lock
-{
-    uint8_t lock;
-} pal_os_lock_t;
-
-volatile static pal_os_lock_t pal_os_lock = {.lock = 0};
+/* binary semaphore for managing concurrent crypto calls */
+K_SEM_DEFINE(pal_lock, SEM_INIT_VALUE, SEM_MAX_VALUE);
 
 /**********************************************************************************************************************
  * API IMPLEMENTATION
@@ -54,24 +58,16 @@ pal_status_t pal_os_lock_acquire(void)
 {
     pal_status_t return_status = PAL_STATUS_FAILURE;
 
-    if(!(pal_os_lock.lock))
-    {
-        pal_os_lock.lock++;
-        if(pal_os_lock.lock != 1)
-        {
-            pal_os_lock.lock--;
-        }
+    if (k_sem_take(&pal_lock, K_FOREVER) == SEM_TAKE_SUCCESS) {
         return_status = PAL_STATUS_SUCCESS;
     }
+
     return return_status;
 }
 
 void pal_os_lock_release(void)
 {
-    if(pal_os_lock.lock)
-    {
-        pal_os_lock.lock--;
-    }
+    k_sem_give(&pal_lock);
 }
 
 /**

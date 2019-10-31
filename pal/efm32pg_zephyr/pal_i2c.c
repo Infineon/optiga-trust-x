@@ -1,7 +1,7 @@
 /**
 * MIT License
 *
-* Copyright (c) 2018 Infineon Technologies AG
+* Copyright (c) 2019 Arrow Electronics
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -47,38 +47,18 @@
  * MACROS
  *********************************************************************************************************************/
 #define I2C_DEVICE_NAME     DT_ALIAS_I2C_0_LABEL
+#define SEM_INIT_VALUE      1
+#define SEM_MAX_VALUE       1
+#define SEM_TAKE_SUCCESS    0
 
 /*********************************************************************************************************************
  * LOCAL DATA
  *********************************************************************************************************************/
-/* Variable to indicate the re-entrant count of the i2c bus acquire function*/
-static volatile uint32_t g_entry_count = 0;
-
 /* Structure for holding I2C device context */
-struct device *i2c_dev;
+struct device *p_i2c_dev;
 
-/**********************************************************************************************************************
- * LOCAL ROUTINES
- *********************************************************************************************************************/
-static pal_status_t pal_i2c_acquire(const void* p_i2c_context);
-static void pal_i2c_release(const void* p_i2c_context);
-
-static pal_status_t pal_i2c_acquire(const void* p_i2c_context)
-{
-    if (g_entry_count == 0) {
-        g_entry_count++;
-        if (g_entry_count == 1) {
-            return PAL_STATUS_SUCCESS;
-        }
-    }
-
-    return PAL_STATUS_FAILURE;
-}
-
-static void pal_i2c_release(const void* p_i2c_context)
-{
-    g_entry_count = 0;
-}
+/* binary semaphore for mutual exclusion for i2c bus */
+K_SEM_DEFINE(i2c_bus_lock, SEM_INIT_VALUE, SEM_MAX_VALUE);
 
 /**********************************************************************************************************************
  * API IMPLEMENTATION
@@ -108,9 +88,9 @@ static void pal_i2c_release(const void* p_i2c_context)
  */
 pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 {
-    i2c_dev = device_get_binding(I2C_DEVICE_NAME);
+    p_i2c_dev = device_get_binding(I2C_DEVICE_NAME);
 
-    if (i2c_dev == 0) {
+    if (p_i2c_dev == 0) {
         return PAL_STATUS_FAILURE;
     }
 
@@ -179,17 +159,21 @@ pal_status_t pal_i2c_deinit(const pal_i2c_t* p_i2c_context)
 pal_status_t pal_i2c_write(pal_i2c_t *p_i2c_context, uint8_t *p_data,
                            uint16_t length)
 {
+    int lock_result;
     pal_status_t status;
     app_event_handler_t upper_layer_handler =
             (app_event_handler_t)p_i2c_context->upper_layer_event_handler;
 
-    if (pal_i2c_acquire((void*)p_i2c_context) == PAL_STATUS_SUCCESS) {
-        int result;
 
-        result = i2c_write(i2c_dev, p_data, (u32_t)length,
+    lock_result = k_sem_take(&i2c_bus_lock, K_NO_WAIT);
+
+    if (lock_result == SEM_TAKE_SUCCESS) {
+        int i2c_result;
+
+        i2c_result = i2c_write(p_i2c_dev, p_data, (u32_t)length,
                            p_i2c_context->slave_address);
 
-        if (result == 0) {
+        if (i2c_result == 0) {
             upper_layer_handler(p_i2c_context->upper_layer_ctx,
                                 PAL_I2C_EVENT_SUCCESS);
             status = PAL_STATUS_SUCCESS;
@@ -199,7 +183,7 @@ pal_status_t pal_i2c_write(pal_i2c_t *p_i2c_context, uint8_t *p_data,
             status = PAL_STATUS_FAILURE;
         }
 
-        pal_i2c_release((void *)p_i2c_context);
+        k_sem_give(&i2c_bus_lock);
     } else {
         status = PAL_STATUS_I2C_BUSY;
         upper_layer_handler(p_i2c_context->upper_layer_ctx,
@@ -243,14 +227,17 @@ pal_status_t pal_i2c_write(pal_i2c_t *p_i2c_context, uint8_t *p_data,
 pal_status_t pal_i2c_read(pal_i2c_t* p_i2c_context, uint8_t* p_data,
                           uint16_t length)
 {
+    int lock_result;
     pal_status_t status;
     app_event_handler_t upper_layer_handler =
             (app_event_handler_t)p_i2c_context->upper_layer_event_handler;
 
-    if (pal_i2c_acquire(p_i2c_context) == PAL_STATUS_SUCCESS) {
+    lock_result = k_sem_take(&i2c_bus_lock, K_NO_WAIT);
+
+    if (lock_result == SEM_TAKE_SUCCESS) {
         int result;
 
-        result = i2c_read(i2c_dev, p_data, (u32_t)length,
+        result = i2c_read(p_i2c_dev, p_data, (u32_t)length,
                           (u16_t)(p_i2c_context->slave_address));
 
         if (result == 0) {
@@ -263,7 +250,7 @@ pal_status_t pal_i2c_read(pal_i2c_t* p_i2c_context, uint8_t* p_data,
             status = PAL_STATUS_FAILURE;
         }
 
-        pal_i2c_release((void *)p_i2c_context);
+        k_sem_give(&i2c_bus_lock);
     } else {
         status = PAL_STATUS_I2C_BUSY;
         upper_layer_handler(p_i2c_context->upper_layer_ctx,

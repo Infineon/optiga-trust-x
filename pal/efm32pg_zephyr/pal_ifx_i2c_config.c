@@ -1,7 +1,7 @@
 /**
 * MIT License
 *
-* Copyright (c) 2018 Infineon Technologies AG
+* Copyright (c) 2019 Arrow Electronics
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,8 @@
 #define I2C_PORT    2   /* Port C */
 #define I2C_FREQ_HZ DT_INST_0_SILABS_GECKO_I2C_CLOCK_FREQUENCY /* 100 000 Hz */
 
+#define I2C_OPTIGA_ADDRESS 0x30
+
 /* GPIO on stk3402a EXP header */
 #define VDD_PORT_NAME   DT_GPIO_GECKO_PORTB_NAME
 #define RST_PORT_NAME   DT_GPIO_GECKO_PORTA_NAME
@@ -63,18 +65,18 @@
  *********************************************************************************************************************/
 /* context for i2c devices */
 typedef struct {
-    uint8_t  port;
-    uint8_t  scl_io;
-    uint8_t  sda_io;
-    uint32_t bitrate;
+    uint8_t  p_port;
+    uint8_t  p_scl_io;
+    uint8_t  p_sda_io;
+    uint32_t p_bitrate;
 } i2c_ctx_t;
 
 /* context for gpio devices */
 typedef struct {
     uint8_t         p_pin;
     struct device  *p_device;
-    uint8_t        *port_name;
-    uint8_t         init_flag;
+    uint8_t        *p_port_name;
+    uint8_t         p_init_flag;
 } gpio_ctx_t;
 
 /* inicialize context for stk3402a I2C and GPIO on EXP header */
@@ -107,7 +109,7 @@ gpio_ctx_t rst_stk3402a_gpio_ctx = {
  */
 pal_i2c_t optiga_pal_i2c_context_0 = {
     (void*)&stk3402a_i2c_ctx,   /* context */
-    0x30,                       /* address */
+    I2C_OPTIGA_ADDRESS,         /* address */
     NULL,                       /* upper layer context */
     NULL                        /* callback event handler */
 };
@@ -116,7 +118,7 @@ pal_i2c_t optiga_pal_i2c_context_0 = {
  * PAL GPIO configurations defined for Pearl Gecko (efm32pg_stk3402a)
  *********************************************************************************************************************/
 /**
-* \brief PAL vdd pin configuration for OPTIGA.
+ * \brief PAL vdd pin configuration for OPTIGA.
  */
 pal_gpio_t optiga_vdd_0 = {
     /* platform specific GPIO context for the pin used to toggle Vdd */

@@ -1,7 +1,7 @@
 /**
 * MIT License
 *
-* Copyright (c) 2018 Infineon Technologies AG
+* Copyright (c) 2019 Arrow Electronics
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -46,12 +46,15 @@
 #define TIMER_CALLBACK_STACK_SIZE    1000
 #define CALLBACK_HANDLER_THRD_PRIO   1
 
+#define SEM_INIT_VALUE      0
+#define SEM_MAX_VALUE       1
+
 /*********************************************************************************************************************
  * LOCAL DATA
  *********************************************************************************************************************/
 typedef struct callbacks {
     volatile register_callback func; /* Callback function when timer elapses */
-    void * args;            /* Pointer to store upper layer callback context */
+    void *args;            /* Pointer to store upper layer callback context */
 } pal_os_event_clbs_t;
 
 static void timer_callback_func();
@@ -60,7 +63,7 @@ static void callback_handler_thrd(void *unused1, void *unused2, void *unused3);
 static pal_os_event_clbs_t clb_ctx_0;
 
 /* on boot kernel objects defines */
-K_SEM_DEFINE(timer_lock, 0, 1);     /* create semaphore for timer callback */
+K_SEM_DEFINE(timer_lock, SEM_INIT_VALUE, SEM_MAX_VALUE);
 K_TIMER_DEFINE(timer_callback_ctx, timer_callback_func, NULL); /* timer */
 K_THREAD_STACK_DEFINE(callback_stack_area, TIMER_CALLBACK_STACK_SIZE);
 K_THREAD_DEFINE(clb_tid, TIMER_CALLBACK_STACK_SIZE,
