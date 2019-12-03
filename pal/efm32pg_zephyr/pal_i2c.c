@@ -46,7 +46,6 @@
 /**********************************************************************************************************************
  * MACROS
  *********************************************************************************************************************/
-#define I2C_DEVICE_NAME     DT_ALIAS_I2C_0_LABEL
 #define SEM_INIT_VALUE      1
 #define SEM_MAX_VALUE       1
 #define SEM_TAKE_SUCCESS    0
@@ -54,6 +53,15 @@
 /*********************************************************************************************************************
  * LOCAL DATA
  *********************************************************************************************************************/
+/* context for i2c devices */
+typedef struct {
+    uint8_t  p_scl_io;
+    uint8_t  p_sda_io;
+    uint8_t  p_port;
+    uint8_t *p_port_name;
+    uint32_t p_bitrate;
+} i2c_ctx_t;
+
 /* Structure for holding I2C device context */
 struct device *p_i2c_dev;
 
@@ -88,7 +96,8 @@ K_SEM_DEFINE(i2c_bus_lock, SEM_INIT_VALUE, SEM_MAX_VALUE);
  */
 pal_status_t pal_i2c_init(const pal_i2c_t* p_i2c_context)
 {
-    p_i2c_dev = device_get_binding(I2C_DEVICE_NAME);
+    i2c_ctx_t *current_ctx = p_i2c_context->p_i2c_hw_config;
+    p_i2c_dev = device_get_binding(current_ctx->p_port_name);
 
     if (p_i2c_dev == 0) {
         return PAL_STATUS_FAILURE;
@@ -163,7 +172,6 @@ pal_status_t pal_i2c_write(pal_i2c_t *p_i2c_context, uint8_t *p_data,
     pal_status_t status;
     app_event_handler_t upper_layer_handler =
             (app_event_handler_t)p_i2c_context->upper_layer_event_handler;
-
 
     lock_result = k_sem_take(&i2c_bus_lock, K_NO_WAIT);
 

@@ -40,71 +40,35 @@
 /* Zephyr based includes */
 #include <kernel.h>
 
-/**********************************************************************************************************************
- * MACROS
- *********************************************************************************************************************/
-#define TIMER_CALLBACK_STACK_SIZE    1000
-#define CALLBACK_HANDLER_THRD_PRIO   1
-
-#define SEM_INIT_VALUE      0
-#define SEM_MAX_VALUE       1
-
 /*********************************************************************************************************************
  * LOCAL DATA
  *********************************************************************************************************************/
 typedef struct callbacks {
     volatile register_callback func; /* Callback function when timer elapses */
-    void *args;            /* Pointer to store upper layer callback context */
+    void *args;             /* Pointer to store upper layer callback context */
 } pal_os_event_clbs_t;
-
-static void timer_callback_func();
-static void callback_handler_thrd(void *unused1, void *unused2, void *unused3);
 
 static pal_os_event_clbs_t clb_ctx_0;
 
+static void timer_callback_func();
+
 /* on boot kernel objects defines */
-K_SEM_DEFINE(timer_lock, SEM_INIT_VALUE, SEM_MAX_VALUE);
 K_TIMER_DEFINE(timer_callback_ctx, timer_callback_func, NULL); /* timer */
-K_THREAD_STACK_DEFINE(callback_stack_area, TIMER_CALLBACK_STACK_SIZE);
-K_THREAD_DEFINE(clb_tid, TIMER_CALLBACK_STACK_SIZE,
-        callback_handler_thrd, NULL, NULL, NULL,
-        CALLBACK_HANDLER_THRD_PRIO, 0, K_NO_WAIT);
 
 /**********************************************************************************************************************
  * LOCAL ROUTINES
  *********************************************************************************************************************/
-/**
-*  Timer callback handler.
-*
-*  This get called from the TIMER elapse event.<br>
-*  Once the timer expires, the registered callback funtion gets called from the timer event handler, if
-*  the call back is not NULL.<br>
-*
-*\param[in] unused arguments
-*/
-static void callback_handler_thrd(void *unused1, void *unused2, void *unused3)
-{
-    ARG_UNUSED(unused1);
-    ARG_UNUSED(unused2);
-    ARG_UNUSED(unused3);
-
-    register_callback func = NULL;
-    void *func_args = NULL;
-
-    while (1) {
-        k_sem_take(&timer_lock, K_FOREVER);
-
-        if(clb_ctx_0.func) {
-            func = clb_ctx_0.func;
-            func_args = clb_ctx_0.args;
-            func((void*)func_args);
-        }
-    }
-}
-
+/* timer callback function done after timer expiration tigger */
 static void timer_callback_func()
 {
-    k_sem_give(&timer_lock);
+	register_callback func = NULL;
+	void *func_args = NULL;
+
+    if(clb_ctx_0.func) {
+        func = clb_ctx_0.func;
+        func_args = clb_ctx_0.args;
+        func((void*)func_args);
+    }
 }
 
 /**********************************************************************************************************************
@@ -123,8 +87,8 @@ static void timer_callback_func()
 * \param[in] callback_args         Callback arguments
 * \param[in] time_us               time in micro seconds to trigger the call back
 */
-void pal_os_event_register_callback_oneshot(register_callback callback, 
-                                            void* callback_args, 
+void pal_os_event_register_callback_oneshot(register_callback callback,
+                                            void* callback_args,
                                             uint32_t time_us)
 {
     if (time_us < 1000) {
