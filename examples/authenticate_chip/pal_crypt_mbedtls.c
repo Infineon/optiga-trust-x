@@ -49,7 +49,7 @@
 #include "mbedtls/x509.h"
 #include "mbedtls/x509_crt.h"
 
-// MAximum size of the ssignature (for P256 0x40)
+// Maximum size of the signature (for P256 0x40)
 #define LENGTH_MAX_SIGNATURE				0x40
 
 mbedtls_entropy_context 					entropy;
