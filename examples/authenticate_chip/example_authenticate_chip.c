@@ -36,7 +36,7 @@
 #include "optiga/common/AuthLibSettings.h"
 #include "pal_crypt.h"
 
-///size of public key for NIST-P256
+///Size of public key for NIST-P256
 #define LENGTH_PUB_KEY_NISTP256     0x41
 
 ///Length of R and S vector
@@ -54,7 +54,7 @@
 // Length of SH256
 #define LENGTH_SHA256			32
 
-///size of end entity certificate of OPTIGA™ Trust X
+///Size of end entity certificate of OPTIGA™ Trust X
 #define LENGTH_OPTIGA_CERT          512
 
 #ifdef MODULE_ENABLE_ONE_WAY_AUTH
@@ -132,7 +132,7 @@ static optiga_lib_status_t __get_chip_cert(uint16_t cert_oid,
 			break;
 		}
 
-		//Get end entity device certificate
+		// Get end entity device certificate
 		status = optiga_util_read_data(cert_oid, 0, p_tmp_cert_pointer, p_cert_size);
 		if(OPTIGA_LIB_SUCCESS != status)
 		{
@@ -201,7 +201,7 @@ static optiga_lib_status_t __authenticate_chip(uint8_t* p_pubkey, uint16_t pubke
 
     do
     {
-        //Get PwChallengeLen byte random stream
+        // Get PwChallengeLen byte random stream
         status = pal_crypt_random(LENGTH_CHALLENGE, random);
         if(OPTIGA_LIB_SUCCESS != status)
         {
@@ -215,7 +215,7 @@ static optiga_lib_status_t __authenticate_chip(uint8_t* p_pubkey, uint16_t pubke
             break;
         }
 
-		//Sign random with OPTIGA™ Trust X
+		// Sign random with OPTIGA™ Trust X
         status = optiga_crypt_ecdsa_sign(digest, LENGTH_SHA256,
 									     privkey_oid,
 										 signature, &signature_size);
@@ -225,7 +225,7 @@ static optiga_lib_status_t __authenticate_chip(uint8_t* p_pubkey, uint16_t pubke
             break;
         }
 
-		//Verify the signature on the random number by Security Chip
+		// Verify the signature on the random number by Security Chip
 		status = pal_crypt_verify_signature(p_pubkey, pubkey_size,
 				                            signature, signature_size,
 											digest, LENGTH_SHA256);
@@ -285,7 +285,7 @@ optiga_lib_status_t example_authenticate_chip(void)
 			break;
 		}
 
-		//Certificate verification
+		// Certificate verification
     	status = __authenticate_chip(chip_pubkey, chip_pubkey_size, chip_privkey_oid);
 		if(OPTIGA_LIB_SUCCESS != status)
 		{

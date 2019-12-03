@@ -49,7 +49,7 @@
 #include "mbedtls/x509.h"
 #include "mbedtls/x509_crt.h"
 
-// MAximum size of the ssignature (for P256 0x40)
+// Maximum size of the signature (for P256 0x40)
 #define LENGTH_MAX_SIGNATURE				0x40
 
 mbedtls_entropy_context 					entropy;
@@ -93,7 +93,7 @@ static int32_t __verify_ecc_signature(const uint8_t* p_pubkey, uint16_t pubkey_s
         mbedtls_ecp_point_read_binary(&grp, &Q, p_pk, pubkey_size);
 
         //Import the signature
-        asn1_to_ecdsa_rs(p_signature, signature_size, signature_rs, &signature_rs_size);
+        asn1_to_ecdsa_rs(p_signature, signature_size, signature_rs, signature_rs_size);
         mbedtls_mpi_read_binary(&r, signature_rs, LENGTH_MAX_SIGNATURE/2);
         mbedtls_mpi_read_binary(&s, signature_rs + LENGTH_MAX_SIGNATURE/2, LENGTH_MAX_SIGNATURE/2);
 
