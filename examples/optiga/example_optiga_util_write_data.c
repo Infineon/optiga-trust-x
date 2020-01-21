@@ -117,7 +117,7 @@ optiga_lib_status_t example_optiga_util_write_data(void)
 											  coprocessor_uid,
 											  &coprocessor_uid_len);
 
-        if ((coprocessor_uid[26] < 11) || (coprocessor_uid[27] < 18))
+        if ((coprocessor_uid[25] < 11) || (coprocessor_uid[26] < 18))
         {
         	// Need to write something different, for instance current limitation
         	optiga_oid = eCURRENT_LIMITATION;
