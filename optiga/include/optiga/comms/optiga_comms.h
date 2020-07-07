@@ -96,6 +96,10 @@ LIBRARY_EXPORTS host_lib_status_t optiga_comms_transceive(optiga_comms_t *p_ctx,
  */
 LIBRARY_EXPORTS host_lib_status_t optiga_comms_close(optiga_comms_t *p_ctx);
 
+#ifdef __cplusplus
+}
+#endif
+    
 /**
 * @}
 */
