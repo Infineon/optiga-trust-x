@@ -50,6 +50,8 @@ optiga_lib_status_t example_optiga_util_read_data(void)
     do
     {
         //Read device end entity certificate from OPTIGA
+	//Please keep in mind, that the actual DER encoded certificate starts from the 9th byte (offest = 9)
+	//While the certificate is prepended with identiy and length tags (see SRM document)
         optiga_oid = eDEVICE_PUBKEY_CERT_IFX;
         offset = 0x00;
         bytes_to_read = sizeof(read_data_buffer);
