@@ -1,0 +1,25 @@
+{
+    "name": "optiga_trust_x_lib",
+    "config": {
+        "i2c-frequency": {
+            "help": "Sets the I2C frequency.",
+            "value": "100",
+            "macro_name": "OPTIGA_TRUST_X_I2C_FREQ"
+        },
+        "i2c-sda-pin": {
+            "help": "Sets the SDA pin.",
+            "value": "I2C_SDA",
+            "macro_name": "OPTIGA_TRUST_X_I2C_SDA"
+        },
+        "i2c-scl-pin": {
+            "help": "Sets the SCL pin.",
+            "value": "I2C_SCL",
+            "macro_name": "OPTIGA_TRUST_X_I2C_SCL"
+        },
+        "reset-pin": {
+            "help": "Sets the reset pin.",
+            "value": "D2",
+            "macro_name": "OPTIGA_TRUST_X_RESET"
+        }
+    }
+}
