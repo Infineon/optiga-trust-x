@@ -1,0 +1,14 @@
+optiga-trust-x/certificates/**
+optiga-trust-x/examples/**
+optiga-trust-x/externals/**
+optiga-trust-x/pal/efm32pg_zephyr/**
+optiga-trust-x/pal/esp32_awsfreertos/**
+optiga-trust-x/pal/esp32_freertos/**
+optiga-trust-x/pal/libusb/**
+optiga-trust-x/pal/linux/**
+optiga-trust-x/pal/mbedos/**
+optiga-trust-x/pal/nrf5x/**
+optiga-trust-x/pal/stm32l475iot_awsfreertos/**
+optiga-trust-x/pal/xmc_dave/**
+optiga-trust-x/pal/xmc4800_awsfreertos/**
+optiga-trust-x/optiga/comms/ifx_i2c/ifx_i2c_config.c
