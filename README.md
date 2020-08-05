@@ -27,7 +27,7 @@ The [OPTIGA™ Trust X](https://github.com/Infineon/Assets/raw/master/PDFs/OPTIG
 * Compliant with the USB Type-C™ Authentication standard
 * I2C interface
 * Up to 10 KB user memory
-* Cryptographic support: ECC256, AES128, SHA-256, TRNG, DRNG
+* Cryptographic support: ECC256, AES128 (via on-chip DTLS client), SHA-256, TRNG, DRNG
 * PG-USON-10-2 package (3 x 3 mm)
 * Standard & extended temperature ranges
 * Full system integration support
