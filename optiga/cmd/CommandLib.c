@@ -1758,7 +1758,7 @@ int32_t CmdLib_CalcHash(sCalcHash_d* PpsCalcHash)
 
             PpsCalcHash->sOutHash.wRespLength = Utility_GetUint16(sApduData.prgbRespBuffer + LEN_APDUHEADER + BYTES_SEQ);
 			
-			//Length check for wRespLength
+            //Length check for wRespLength
             if((PpsCalcHash->sOutHash.wRespLength) != CALC_HASH_SHA256_SIZE)
             {
                 i4Status = (int32_t)CMD_LIB_INSUFFICIENT_MEMORY;
@@ -1781,7 +1781,7 @@ int32_t CmdLib_CalcHash(sCalcHash_d* PpsCalcHash)
 
             PpsCalcHash->sContextInfo.dwContextLen = Utility_GetUint16(sApduData.prgbRespBuffer + LEN_APDUHEADER + BYTES_SEQ);
 			
-			//Length check for Context Len
+            //Length check for Context Len
             if((PpsCalcHash->sContextInfo.dwContextLen) != CALC_HASH_SHA256_CONTEXT_SIZE)
             {
                 i4Status = (int32_t)CMD_LIB_INSUFFICIENT_MEMORY;
