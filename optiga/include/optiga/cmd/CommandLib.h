@@ -89,9 +89,6 @@
 ///Length of the hash context information for SHA 256 
 #define CALC_HASH_SHA256_CONTEXT_SIZE           (130)
 
-///Length of the hash for SHA 256 
-#define CALC_HASH_SHA256_SIZE                   (32)
-
 ///Overhead for all hash calculation operations (Tag and Length size (3 bytes) + APDU header (4 bytes))
 #define CALC_HASH_FIXED_OVERHEAD_SIZE           (0x03 + 0x04)
 
