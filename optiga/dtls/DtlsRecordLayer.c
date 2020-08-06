@@ -161,10 +161,10 @@ _STATIC_H int32_t DtlsRL_Record_ProcessRecord(const sRecordLayer_d* PpsRecordLay
         //Reset the flag for each record being being processed which indicates 
         *PpsRecordLayer->pbDec = 0x00;
 		
-        //Check the Fragment length, it shouldn't be more than the buffer
+        //Check the received record length, it shouldn't be more than the buffer
 		//This check has been performed earlier as well at the time of packet reception
 		//Function DtlsRL_GetRecordCount
-        if (wRecvFragLen > TLBUFFER_SIZE) || (wRecvFragLen > MAX_PMTU))
+        if (((uint32_t)wRecvFragLen + LENGTH_RL_HEADER) > (uint32_t)PpsBlobRecord->wLen)
         {
             i4Status = (int32_t)OCP_RL_BAD_RECORD;
 			break;
