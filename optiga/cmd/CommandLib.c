@@ -1757,6 +1757,14 @@ int32_t CmdLib_CalcHash(sCalcHash_d* PpsCalcHash)
             }
 
             PpsCalcHash->sOutHash.wRespLength = Utility_GetUint16(sApduData.prgbRespBuffer + LEN_APDUHEADER + BYTES_SEQ);
+			
+            //Length check for wRespLength
+            if((PpsCalcHash->sOutHash.wRespLength) != SHA256_HASH_LEN)
+            {
+                i4Status = (int32_t)CMD_LIB_INSUFFICIENT_MEMORY;
+                break;
+            }
+			
             OCP_MEMCPY(PpsCalcHash->sOutHash.prgbBuffer, (sApduData.prgbRespBuffer + CALC_HASH_FIXED_OVERHEAD_SIZE), PpsCalcHash->sOutHash.wRespLength);
         }
 
@@ -1772,6 +1780,14 @@ int32_t CmdLib_CalcHash(sCalcHash_d* PpsCalcHash)
             }
 
             PpsCalcHash->sContextInfo.dwContextLen = Utility_GetUint16(sApduData.prgbRespBuffer + LEN_APDUHEADER + BYTES_SEQ);
+			
+            //Length check for Context Length
+            if((PpsCalcHash->sContextInfo.dwContextLen) != CALC_HASH_SHA256_CONTEXT_SIZE)
+            {
+                i4Status = (int32_t)CMD_LIB_INSUFFICIENT_MEMORY;
+                break;
+            }
+			
             OCP_MEMCPY(PpsCalcHash->sContextInfo.pbContextData, (sApduData.prgbRespBuffer + CALC_HASH_FIXED_OVERHEAD_SIZE), PpsCalcHash->sContextInfo.dwContextLen);
         }
         
