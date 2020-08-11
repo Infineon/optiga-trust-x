@@ -103,11 +103,12 @@ Other downloadable PDF documents can be found below:
 If you are planning to integrate OPTIGA™ Trust X in your PCB design have a look at the recommendations found [here](https://www.infineon.com/dgdl/Infineon-Board+Assembly+Recommendations-Discrete+Leadless-Package-v06_00-EN.pdf?fileId=5546d4626cb27db2016cbda27a9c544d).
 
 
-
-
 ## <a name="contributing"></a>Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## <a name="license"></a>License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## <a name="disclaimer"></a>Disclaimer
+Be aware that this software comes without any security claims and shall be used for evaluation purpose.
