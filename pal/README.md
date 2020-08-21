@@ -9,6 +9,7 @@ Contents:
   4. [Update PAL GPIO API](#pal_gpio_api)
   5. [Update PAL Timer API](#pal_os_timer_api)
   6. [Update Event management](#pal_os_event_api)
+  7. [Initialisation](#initialisation)
 
 [tocend]: # (toc end)
 
@@ -153,3 +154,45 @@ void pal_os_event_trigger_registered_callback(void)
 ```
 
 Other PAL implementations according to this guide can be found inside the [<repo_root>/pal](https://github.com/Infineon/optiga-trust-x/tree/develop/pal) folder 
+
+## Initialisation
+
+When you succesfully port the PAL on your target platform, you may run the following example to verify whether your code is working.
+
+Depending on a selected platform, the initialization routine might vary.
+The function `optiga_init()` should be called before any call to Crypt API or Util API
+Below is an examples which work for most of platforms:
+
+```c
+#include "optiga/optiga_util.h"
+#include "optiga/ifx_i2c/ifx_i2c_config.h"
+
+/* The communication context `ifx_i2c_context_0` is declared in the header file ifx_i2c_config.h */
+optiga_comms_t optiga_comms = {(void*)&ifx_i2c_context_0,NULL,NULL, OPTIGA_COMMS_SUCCESS};
+
+static int32_t optiga_init(void)
+{
+    int32_t status = (int32_t) OPTIGA_LIB_ERROR;
+
+    do
+    {
+        /* Optionally you might need to initialize some of the Trust X PAL functions. If you have them implemented
+           In this case they should be declared as extern.
+           pal_gpio_init();
+           pal_os_event_init();
+        */
+        status = optiga_util_open_application(&optiga_comms);
+        if(OPTIGA_LIB_SUCCESS != status)
+        {
+            printf( ("Failure: CmdLib_OpenApplication(): 0x%04X\n\r", status) );
+            break;
+        }
+
+        status = OPTIGA_LIB_SUCCESS;
+    } while(0);
+
+    return status;
+}
+
+```
+
