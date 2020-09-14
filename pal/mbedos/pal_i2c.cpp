@@ -259,7 +259,7 @@ pal_status_t pal_i2c_write(pal_i2c_t* p_i2c_context, uint8_t* p_data , uint16_t 
         if (0 != p_i2c->write((p_i2c_context->slave_address << 1), (char *) p_data, (int) length, (bool) false))
         {
             //pc1.printf("I2C write failed!\r\n");
-            status = PAL_STATUS_I2C_BUSY;
+            status = PAL_STATUS_FAILURE;
             //lint --e{611} suppress "void* function pointer is type casted to app_event_handler_t type"
             ((app_event_handler_t)(p_i2c_context->upper_layer_event_handler))
                                                             (p_i2c_context->upper_layer_ctx, PAL_I2C_EVENT_ERROR);
