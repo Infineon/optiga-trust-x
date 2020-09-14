@@ -422,6 +422,9 @@ optiga_lib_status_t optiga_crypt_tls_prf_sha256(uint16_t secret,
     sDeriveKeyOptions_d derivekey_options;
     sbBlob_d derivekey_output_buffer;
 
+    (void)label;
+    (void)label_length;
+
     derivekey_options.eKDM             = eTLS_PRF_SHA256;
     derivekey_options.sSeed.prgbStream = seed;
     derivekey_options.sSeed.wLen       = seed_length;

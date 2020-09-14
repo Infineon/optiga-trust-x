@@ -139,6 +139,8 @@ pal_status_t pal_gpio_init(const pal_gpio_t * p_gpio_context)
 #define VALUE_MAX 30
     char path[VALUE_MAX] = {0};
 
+	(void)p_gpio_context;
+
 	if (optiga_reset_0.p_gpio_hw != NULL)
 	{
         pal_linux_gpio_t* gpio_reset = optiga_reset_0.p_gpio_hw;
@@ -199,6 +201,8 @@ pal_status_t pal_gpio_init(const pal_gpio_t * p_gpio_context)
 //lint --e{714,715} suppress "This function is used for to support multiple platforms "
 pal_status_t pal_gpio_deinit(const pal_gpio_t * p_gpio_context)
 {
+	(void)p_gpio_context;
+
 	if (optiga_reset_0.p_gpio_hw != NULL)
 	{
         pal_linux_gpio_t* gpio = (pal_linux_gpio_t*)(optiga_reset_0.p_gpio_hw);

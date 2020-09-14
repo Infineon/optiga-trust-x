@@ -37,12 +37,13 @@
 ///Length of metadata
 #define LENGTH_METADATA             0x1C
 
-volatile static host_lib_status_t optiga_comms_status;
+static volatile host_lib_status_t optiga_comms_status;
 
 #ifdef MODULE_ENABLE_READ_WRITE
 
 static void __optiga_util_comms_event_handler(void* upper_layer_ctx, host_lib_status_t event)
 {
+    (void)upper_layer_ctx;
 	optiga_comms_status = event;
 }
 

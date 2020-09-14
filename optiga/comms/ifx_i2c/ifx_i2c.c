@@ -355,6 +355,8 @@ host_lib_status_t ifx_i2c_set_slave_address(ifx_i2c_context_t *p_ctx, uint8_t sl
 //lint --e{715} suppress "This is ignored as ifx_i2c_event_handler_t handler function prototype requires this argument"
 void ifx_i2c_tl_event_handler(ifx_i2c_context_t* p_ctx,host_lib_status_t event, const uint8_t* p_data, uint16_t data_len)
 {
+    (void)p_data;
+    (void)data_len;
     // If there is no upper layer handler, don't do anything and return
     if (NULL != p_ctx->upper_layer_event_handler)
     {
@@ -374,6 +376,11 @@ void ifx_i2c_tl_event_handler(ifx_i2c_context_t* p_ctx,host_lib_status_t event, 
     }
 }
 
+static host_lib_status_t ifx_i2c_init(ifx_i2c_context_t* p_ifx_i2c_context);
+static void ifx_i2c_init_cb(void * p_ifx_i2c_context)
+{
+    (void)ifx_i2c_init((ifx_i2c_context_t *) p_ifx_i2c_context);
+}
 
 static host_lib_status_t ifx_i2c_init(ifx_i2c_context_t* p_ifx_i2c_context)
 {    
@@ -392,7 +399,7 @@ static host_lib_status_t ifx_i2c_init(ifx_i2c_context_t* p_ifx_i2c_context)
 				}
 				pal_gpio_set_low(p_ifx_i2c_context->p_slave_reset_pin);
 				p_ifx_i2c_context->reset_state = IFX_I2C_STATE_RESET_PIN_HIGH;
-				pal_os_event_register_callback_oneshot((register_callback)ifx_i2c_init,
+				pal_os_event_register_callback_oneshot((register_callback)ifx_i2c_init_cb,
                                                        (void *)p_ifx_i2c_context, RESET_LOW_TIME_MSEC);
 				api_status = IFX_I2C_STACK_SUCCESS;
 				break;
@@ -405,7 +412,7 @@ static host_lib_status_t ifx_i2c_init(ifx_i2c_context_t* p_ifx_i2c_context)
 				}
 				pal_gpio_set_high(p_ifx_i2c_context->p_slave_reset_pin);
 				p_ifx_i2c_context->reset_state = IFX_I2C_STATE_RESET_INIT;
-				pal_os_event_register_callback_oneshot((register_callback)ifx_i2c_init,
+				pal_os_event_register_callback_oneshot((register_callback)ifx_i2c_init_cb,
                                                        (void *)p_ifx_i2c_context, STARTUP_TIME_MSEC);
 				api_status = IFX_I2C_STACK_SUCCESS;
 				break;
