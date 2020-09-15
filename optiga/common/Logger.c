@@ -47,6 +47,9 @@ pFWriteData pfWriter = (pFWriteData)UartWriteData;
 static int32_t WriteData(uint32_t PdwHandle, const uint8_t* PprgbBuf, uint32_t PdwDataLen)
 {
     //lint --e{715} suppress "The parameters are not used as this is filler function"
+    (void)PdwHandle;
+    (void)PprgbBuf;
+    (void)PdwDataLen;
     return 1;
 }
 pFWriteData pfWriter = (pFWriteData)WriteData;

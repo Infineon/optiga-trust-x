@@ -65,6 +65,10 @@ static void handler(int sig, siginfo_t *si, void *uc)
 {
 	register_callback callback;
 	
+	(void)sig;
+	(void)si;
+	(void)uc;
+
 	if (pal_os_event_0.callback_registered)
     {
         callback = pal_os_event_0.callback_registered;

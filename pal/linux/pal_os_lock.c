@@ -40,7 +40,7 @@ typedef struct pal_os_lock
     uint8_t lock;
 } pal_os_lock_t;
 
-volatile static pal_os_lock_t pal_os_lock = {.lock = 0};
+static volatile pal_os_lock_t pal_os_lock = {.lock = 0};
 
 pal_status_t pal_os_lock_acquire(void)
 {

@@ -69,6 +69,39 @@ ifx_i2c_context_t ifx_i2c_context_0 =
     &optiga_reset_0,
     /// optiga pal i2c context
     &optiga_pal_i2c_context_0,
+
+        /// Upper layer event handler
+    NULL,
+    /// Upper layer context
+    NULL,
+    /// Pointer to upper layer rx buffer
+    NULL,
+    /// Pointer to length of upper layer rx buffer
+    NULL,
+    
+    /// Protocol variables
+	/// ifx i2c wrapper apis state
+    0,
+	/// ifx i2c wrapper api status
+    0,
+    /// reset states
+    0,
+    /// type of reset
+    0,
+    /// init pal
+    0,
+    
+    /// Transport layer context
+    { },
+    /// Datalink layer context
+    { },
+    /// Physical layer context
+    { },
+    
+    /// IFX I2C tx frame of max length
+    { 0, },
+    /// IFX I2C rx frame of max length
+    { 0, },
 };
 
 /***********************************************************************************************************************
