@@ -59,6 +59,8 @@ typedef int32_t (*pFWriteData)(uint32_t PdwPort, uint8_t* PprgbBuf, uint32_t Pdw
 ///This is pointer to log writer
 extern pFWriteData pfWriter;
 
+extern int32_t UartWriteData(uint32_t PdwUartPort, uint8_t* PprgbBuf, uint32_t PdwDataLen);
+
 ///This function converts Uint8 value to Hex String
 void ConvUint8ToHexString (uint8_t* PprgbHexByteArray, uint8_t* PprgbHexString, \
                         uint32_t dwNoOfBytes, uint8_t PbIsSpaceReq);

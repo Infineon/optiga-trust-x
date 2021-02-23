@@ -72,7 +72,7 @@ A user can define more switches in the following way and add it before the defau
 //By Default all are enabled
 #ifndef FEATURE_ENABLED
 	#define MODULE_ENABLE_READ_WRITE
-	#define MODULE_ENABLE_ONE_WAY_AUTH
+//	#define MODULE_ENABLE_ONE_WAY_AUTH
 //	#define MODULE_ENABLE_DTLS_MUTUAL_AUTH
 	#define MODULE_ENABLE_TOOLBOX
 #endif
