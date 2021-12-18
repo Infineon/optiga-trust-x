@@ -750,6 +750,7 @@ static void ifx_i2c_pl_soft_reset(ifx_i2c_context_t *p_ctx)
 //lint --e{818} suppress "This is ignored as upper layer handler function prototype requires this argument"
 static void ifx_i2c_pl_pal_slave_addr_event_handler(void *p_ctx, host_lib_status_t event)
 {
+    (void)p_ctx;
     pal_event_status = event;
 }
 

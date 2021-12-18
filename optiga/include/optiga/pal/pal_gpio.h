@@ -81,6 +81,9 @@ void pal_gpio_set_high(const pal_gpio_t* p_gpio_context);
  */
 void pal_gpio_set_low(const pal_gpio_t* p_gpio_context);
 
+pal_status_t pal_gpio_init(const pal_gpio_t * p_gpio_context);
+pal_status_t pal_gpio_deinit(const pal_gpio_t * p_gpio_context);
+
 #ifdef __cplusplus
 }
 #endif

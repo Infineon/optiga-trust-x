@@ -66,6 +66,9 @@ typedef uint16_t pal_status_t;
  * API Prototypes
  *********************************************************************************************************************/
 
+pal_status_t pal_init(void);
+pal_status_t pal_deinit(void);
+
 #endif /* _PAL_H_ */
 
 /**
